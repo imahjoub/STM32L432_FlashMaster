@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Src">
+      <UniqueIdentifier>{8d055c20-bc32-4c51-9e5f-d14c2a1c7cda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\App">
+      <UniqueIdentifier>{b2cc3723-ba5b-4522-a1c1-c47b0787cbd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\Cdd">
+      <UniqueIdentifier>{573d8b9f-dbf3-4b9a-bdf7-9fb6ddcdd949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\Cdd\CddSpi">
+      <UniqueIdentifier>{9331e664-bc8c-48ff-b83e-58128d69dbdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\Cdd\CddExtFlash">
+      <UniqueIdentifier>{a726832b-9e91-47c3-915a-333be984fd5e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Src\App\main.c">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\App\stm32f446re_startup.c">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
+      <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Cdd\CddSpi\CddSpi.c">
+      <Filter>Source Files\Src\Cdd\CddSpi</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

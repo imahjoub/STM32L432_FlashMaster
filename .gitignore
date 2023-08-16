@@ -1,0 +1,4 @@
+Build/tools/gcc/gcc-11.2.0-arm-none-eabi/**
+Build/VS/STM32F446_FlashCraft/STM32F446_FlashCraft.vcxproj.user
+Build/VS/STM32F446_FlashCraft/.vs/
+Build/VS/STM32F446_FlashCraft.vcxproj.user
