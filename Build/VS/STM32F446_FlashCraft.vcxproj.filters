@@ -22,16 +22,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Src\App\main.c">
+    <ClCompile Include="..\..\Src\App\main.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Src\App\stm32f446re_startup.c">
+    <ClCompile Include="..\..\Src\App\stm32f446re_startup.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
+    <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Src\Cdd\CddSpi\CddSpi.c">
+    <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClCompile>
   </ItemGroup>

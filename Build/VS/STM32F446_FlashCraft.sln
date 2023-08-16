@@ -7,13 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "STM32F446_FlashCraft", "STM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5FB4B273-0725-4F60-9017-B020EAEA6CA9}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\build.bat = ..\..\build.bat
+		..\build.bat = ..\build.bat
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Make", "Make", "{5F2988E0-506D-4A9D-8BB6-40D11D584841}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\Make\make_stm32f446re.gmk = ..\..\Make\make_stm32f446re.gmk
-		..\..\Make\stm32f446re.ld = ..\..\Make\stm32f446re.ld
+		..\Make\make_stm32f446re.gmk = ..\Make\make_stm32f446re.gmk
+		..\Make\stm32f446re.ld = ..\Make\stm32f446re.ld
 	EndProjectSection
 EndProject
 Global

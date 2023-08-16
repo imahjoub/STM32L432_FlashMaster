@@ -11,7 +11,7 @@
 # Paths and tools
 #------------------------------------------------------------------------------
 
-PATH_MAKE       = $(CURDIR)
+PATH_MAKE       = $(CURDIR)/../Make
 PATH_SRC        = $(CURDIR)/../../Src
 PATH_TMP        = $(CURDIR)/../Tmp/STM32F446_FlashCraft_x64
 PATH_BIN        = $(CURDIR)/../Bin/STM32F446_FlashCraft_x64
@@ -114,7 +114,7 @@ LDFLAGS        = -nostdlib                                                 \
                  -nostartfiles                                             \
                  -specs=nano.specs                                         \
                  -specs=nosys.specs                                        \
-                 -T $(CURDIR)/stm32f446re.ld                            \
+                 -T $(PATH_MAKE)/stm32f446re.ld                            \
                  -Wl,--print-memory-usage                                  \
                  -Wl,-Map,$(PATH_BIN)/stm32f446re.map
 

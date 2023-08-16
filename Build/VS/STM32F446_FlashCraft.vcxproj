@@ -6,6 +6,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Src\App\main.c" />
+    <ClCompile Include="..\..\Src\App\stm32f446re_startup.c" />
+    <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
+    <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{78213875-2517-48FD-B737-2AE54C8A935E}</ProjectGuid>
@@ -41,12 +47,6 @@
       <Path>$(SolutionDir)..\Tmp\$(Configuration)_$(Platform)\$(Configuration)_BuildLog.htm</Path>
     </BuildLog>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\Src\App\main.c" />
-    <ClCompile Include="..\..\..\Src\App\stm32f446re_startup.c" />
-    <ClCompile Include="..\..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
-    <ClCompile Include="..\..\..\Src\Cdd\CddSpi\CddSpi.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
