@@ -3,3 +3,5 @@ Build/VS/libwinpthread-1.dll filter=lfs diff=lfs merge=lfs -text
 Build/tools/gcc/gcc-11.2.0-arm-none-eabi.7z.* filter=lfs diff=lfs merge=lfs -text
 Build/tools/gcc/gcc-11.2.0-arm-none-eabi.exe filter=lfs diff=lfs merge=lfs -text
 images/teensy_blinky.jpg filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
