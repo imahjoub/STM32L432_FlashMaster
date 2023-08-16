@@ -29,7 +29,7 @@ OBJDUMP         = $(PATH_TOOLS_GCC)/arm-none-eabi-objdump.exe
 READELF         = $(PATH_TOOLS_GCC)/arm-none-eabi-readelf.exe
 
 ECHO            = $(PATH_TOOLS_UTIL)/bin/echo.exe
-MAKE            = $(PATH_TOOLS_UTIL)/make/make.exe
+MAKE            = $(PATH_TOOLS_UTIL)/bin/make.exe
 MKDIR           = $(PATH_TOOLS_UTIL)/bin/mkdir.exe
 RM              = $(PATH_TOOLS_UTIL)/bin/rm.exe
 SED             = $(PATH_TOOLS_UTIL)/bin/sed.exe
