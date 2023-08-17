@@ -5,3 +5,4 @@ Build/VS/STM32F446_FlashCraft.vcxproj.user
 Build/Bin/
 Build/Tmp/
 Build/VS/.vs/
+Build/Debug/stm32f446re.jdebug.user
