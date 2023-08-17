@@ -11,7 +11,7 @@ extern void __initial_stack_pointer();
 // *****************************************************************************
 // * Set the vector table and store it in the .isrvectors section.             *
 // *****************************************************************************
-uint32_t (* const vectortable[]) __attribute__ ((section(".isrvectors"))) = {
+uint32_t (* const vectortable[]) __attribute__ ((section(".isr_vector"))) = {
   /* Function Pointer                             Name              Addr    IRQn  EXn */
   (uint32_t *) __initial_stack_pointer,        /* SP                0x0000  N/A   N/A */
   (uint32_t *) __my_startup,                   /* Reset             0x0004  N/A     1 */

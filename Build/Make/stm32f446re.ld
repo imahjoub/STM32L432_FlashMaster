@@ -14,10 +14,10 @@ MEMORY
 
 SECTIONS
 {
-  .isrvectors 0x08000000 :
+  .isr_vector 0x08000000 :
   {
-    _sisrvectors = .;
-    KEEP(*(.isrvectors))
+    isr_vector = .;
+    KEEP(*(.isr_vector))
   } >FLASH
 
   .text :
