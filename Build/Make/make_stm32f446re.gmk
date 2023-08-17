@@ -97,7 +97,6 @@ CFLAGS         = -O2                                                       \
                  -ffunction-sections                                       \
                  -fdata-sections                                           \
                  -MMD -MF $(PATH_OBJ)/$(basename $(@F)).d                  \
-                 -I$(PATH_TARGET)                                          \
                  -I$(PATH_SRC)
 
 CPPFLAGS       = $(CFLAGS)                                                 \

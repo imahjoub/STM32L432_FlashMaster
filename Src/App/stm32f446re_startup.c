@@ -1,20 +1,23 @@
 #include <stdint.h>
 
-void __my_startup(void); // This is the first function to be executed.
-extern int main(void);   // ResetHandler will call main after initialization.
-
-extern void __initial_stack_pointer();
-
 #define ISR_NOT_IMPL ((void *) 0U)
 #define ISR_NOT_SET  ((void *) 0U)
+
+extern int main(void);
+void __my_startup(void) __attribute__((used, noinline));
+
+extern void __initial_stack_pointer(void);
+
+typedef void(*isr_type)(void);
 
 // *****************************************************************************
 // * Set the vector table and store it in the .isrvectors section.             *
 // *****************************************************************************
-uint32_t (* const vectortable[]) __attribute__ ((section(".isr_vector"))) = {
+const volatile isr_type __isr_vector[84] __attribute__ ((section(".isr_vector"))) =
+{
   /* Function Pointer                             Name              Addr    IRQn  EXn */
-  (uint32_t *) __initial_stack_pointer,        /* SP                0x0000  N/A   N/A */
-  (uint32_t *) __my_startup,                   /* Reset             0x0004  N/A     1 */
+  __initial_stack_pointer,                     /* SP                0x0000  N/A   N/A */
+  __my_startup,                                /* Reset             0x0004  N/A     1 */
   ISR_NOT_SET,                                 /* NMI               0x0008  -14     2 */
   ISR_NOT_SET,                                 /* HardFault         0x000C  -13     3 */
   ISR_NOT_SET,                                 /* MemManage         0x0010  -12     4 */
@@ -117,6 +120,12 @@ __attribute__ ((noreturn)) void __my_startup(void){
 
   char *dst = &_sdata;
   char *src = &_ldata;
+
+ (void)*src;
+ (void)*dst;
+ (void)_ebss;
+ (void)_sbss;
+ (void)_edata;
 
   // call main
   main();

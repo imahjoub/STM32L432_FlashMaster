@@ -11,6 +11,8 @@
 #define GPIOA_MODER         (*(volatile uint32_t*)(GPIOA_BASE + 0x00U))
 #define GPIOA_ODR           (*(volatile uint32_t*)(GPIOA_BASE + 0x14U))
 
+void SystemInit(void);
+
 int main(void)
 {
     // Enable the clock for GPIOA
@@ -29,4 +31,9 @@ int main(void)
     }
 
     return 0;
+}
+
+void SystemInit(void)
+{
+
 }
