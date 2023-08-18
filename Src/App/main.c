@@ -38,27 +38,12 @@
 #define HSE_STARTUP_TIMEOUT  ((uint16_t)0x0500)
 
 //  Regulator voltage scaling output selection
-#define PWR_CR_VOS                          ((uint16_t)0x4000)
-#define RCC_CFGR_HPRE_DIV1                  ((uint32_t)0x00000000)
-#define RCC_CFGR_PPRE2_DIV2                 ((uint32_t)0x00008000)
-#define RCC_CFGR_PPRE1_DIV4                 ((uint32_t)0x00001400)
 #define RCC_PLLCFGR_PLLSRC_HSE              ((uint32_t)0x00400000)
-#define RCC_CR_PLLON                        ((uint32_t)0x01000000)
-#define RCC_CR_PLLRDY                       ((uint32_t)0x02000000)
-#define FLASH_ACR_ICEN                      ((uint32_t)0x00000200)
-#define FLASH_ACR_DCEN                      ((uint32_t)0x00000400)
-#define FLASH_ACR_DCEN                      ((uint32_t)0x00000400)
-#define FLASH_ACR_LATENCY_5WS               ((uint32_t)0x00000005)
-#define RCC_CFGR_SW_PLL                     ((uint32_t)0x00000002)
-#define RCC_CFGR_SW                         ((uint32_t)0x00000003)
-#define RCC_CFGR_SWS                        ((uint32_t)0x0000000C)
-#define RCC_CFGR_SWS_PLL                    ((uint32_t)0x00000008)
 
 #define PLL_M      8
 #define PLL_N      288
 #define PLL_P      2
 #define PLL_Q      6
-
 
 void SystemInit(void);
 void SetSysClock(void);
@@ -84,7 +69,7 @@ int main(void)
     GPIOA_ODR ^= (1 << 5);
 
     // Simple delay
-    for (volatile int i = 0; i < 100000; ++i)
+    for (volatile uint32_t i = 0; i < (uint32_t)0x000FFFFFUL; ++i)
     {
     }
   }
@@ -94,27 +79,25 @@ int main(void)
 
 void SystemInit(void)
 {
-  // set CP10 and CP11 Full Access
-  SCB_CPACR |= ((3UL << 20)|(3UL << 22));
+  // set coprocessor access control register CP10 and CP11 Full Access
+  SCB_CPACR |= (uint32_t)((3UL << 20) | (3UL << 22));
 
-  // Set HSION bit
-  RCC_CR |= (uint32_t)0x00000001;
+  // Set HSION (internal high-speed clock) enable bit
+  RCC_CR |= (uint32_t)(1UL << 0);
+
+  // Reset HSEON, CSSON, HSEBYP and PLLON bits
+  RCC_CR &= (uint32_t)((~(1UL << 16)) | (~(1UL << 18))) | (~(1UL << 19)) | (~(1UL << 24));
 
   // Reset CFGR register
-  RCC_CFGR = 0x00000000UL;
-
-  // Reset HSEON, CSSON and PLLON bits
-  RCC_CR &= (uint32_t)0xFEF6FFFFUL;
+  RCC_CFGR = (uint32_t)0x00000000UL;
 
   // Reset PLLCFGR register
-  RCC_PLLCFGR = 0x24003010UL;
-
-  // Reset HSEBYP bit
-  RCC_CR &= (uint32_t)0xFFFBFFFFUL;
+  RCC_PLLCFGR = (uint32_t)0x24003010UL;
 
   // Disable all interrupts
-  RCC_CIR = 0x00000000UL;
+  RCC_CIR = (uint32_t)0x00000000UL;
 }
+
 
 void SetSysClock(void)
 {
@@ -122,71 +105,75 @@ void SetSysClock(void)
   uint32_t HSEStatus      = 0U;
 
   // Enable HSE
-  RCC_CR |= ((uint32_t)RCC_CR_HSEON);
+  RCC_CR |= ((uint32_t)(1UL << 16));
 
   // Wait till HSE is ready and if Time out is reached exit
-  do
+
+  while((HSEStatus == 0U) && (StartUpCounter != HSE_STARTUP_TIMEOUT))
   {
-    HSEStatus = RCC_CR & RCC_CR_HSERDY;
+    // check HSE clock ready flag
+    HSEStatus = RCC_CR & (1UL << 17);
 
     StartUpCounter++;
   }
-  while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
-  if ((RCC_CR & RCC_CR_HSERDY) != 0U)
+  if ((RCC_CR & (1UL << 17)) != 0U)
   {
-    HSEStatus = (uint32_t)0x01;
+    HSEStatus = (uint32_t)0x01U;
   }
   else
   {
-    HSEStatus = (uint32_t)0x00;
+    HSEStatus = (uint32_t)0x00U;
   }
 
-  if (HSEStatus == (uint32_t)0x01)
+  if (HSEStatus == (uint32_t)0x01U)
   {
     // Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz
-    RCC_APB1ENR |= RCC_APB1ENR_PWREN;
-    PWR_CR |= PWR_CR_VOS;
+    RCC_APB1ENR |= (uint32_t)(1UL << 28);
+
+    // Regulator voltage scaling output selection VOS
+    PWR_CR      |= (1UL << 14);  // Scale 3 mode
 
     // HCLK = SYSCLK / 1
-    RCC_CFGR |= RCC_CFGR_HPRE_DIV1;
+    RCC_CFGR |= (uint32_t)0x00000000UL; // system clock not divided
 
-    // PCLK2 = HCLK / 2
-    RCC_CFGR |= RCC_CFGR_PPRE2_DIV2;
+    // APB high-speed prescalerr (APB2)
+    // AHB clock divided by 2
+    RCC_CFGR |= (uint32_t)(1UL << 15);
 
-    // PCLK1 = HCLK / 4
-    RCC_CFGR |= RCC_CFGR_PPRE1_DIV4;
+    // APB Low speed prescaler (APB1)
+    // AHB clock divided by 4
+    RCC_CFGR |= (uint32_t)( (1UL << 10) | (1UL << 12));
 
     // Configure the main PLL
-    RCC_PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) |
-                   (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24);
+    RCC_PLLCFGR = (PLL_M << 0) | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) | (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24);
 
     // Enable the main PLL
-    RCC_CR |= RCC_CR_PLLON;
+    RCC_CR |= (uint32_t)(1UL << 24);
 
     // Wait till the main PLL is ready
-    while((RCC_CR & RCC_CR_PLLRDY) == 0)
+    while((RCC_CR & (uint32_t)(1UL << 25)) == 0)
     {
     }
 
     // Configure Flash prefetch, Instruction cache, Data cache and wait state
-    FLASH_ACR = FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
+    // Instruction cache enable
+    // Data cache enable
+    // Latency : 5 wait states (e ratio of the CPU clock period to the Flash memory access time)
+    FLASH_ACR = (uint32_t)((1UL << 9) | (1UL << 10) | (5UL << 0));
 
     // Select the main PLL as system clock source
-    RCC_CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
-    RCC_CFGR |= RCC_CFGR_SW_PLL;
+    RCC_CFGR &= (uint32_t)(~(3UL << 0));
+    RCC_CFGR |= (uint32_t)(2UL << 0);
 
     // Wait till the main PLL is used as system clock source
-    while ((RCC_CFGR & (uint32_t)RCC_CFGR_SWS ) != RCC_CFGR_SWS_PLL);
+    while ((RCC_CFGR & (uint32_t)(0x0CU << 0)) != (8UL << 0))
     {
     }
   }
   else
   {
-     // If HSE fails to start-up, the application will have wrong clock configuration.
-     // TBD handle this case
+    // If HSE fails to start-up, the application will have wrong clock configuration.
+    // TBD handle this case
   }
-
 }
-
-
