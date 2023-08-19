@@ -22,7 +22,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Src\App\main.c">
+    <ClCompile Include="..\..\Src\App\App.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\App\stm32f446re_startup.c">
@@ -34,5 +34,13 @@
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\App\cpu.c">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Src\App\cpu.h">
+      <Filter>Source Files\Src\App</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

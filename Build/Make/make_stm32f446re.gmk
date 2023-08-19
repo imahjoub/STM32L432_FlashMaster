@@ -122,7 +122,8 @@ LDFLAGS        = -nostdlib                                                 \
 # Source files
 #------------------------------------------------------------------------------
 
-SRC_FILES      = $(PATH_SRC)/App/main                                       \
+SRC_FILES      = $(PATH_SRC)/App/App                                       \
+                 $(PATH_SRC)/App/cpu                                       \
                  $(PATH_SRC)/App/stm32f446re_startup
 
 
