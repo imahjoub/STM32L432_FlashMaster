@@ -19,10 +19,10 @@
 #define RCC_APB1ENR         (*(volatile uint32_t*)(RCC_BASE + 0x40UL))
 
 // PWR registers
-#define PWR_CR              (*(volatile uint32_t*)(PWR_BASE + 0x00))
+#define PWR_CR              (*(volatile uint32_t*)(PWR_BASE + 0x00UL))
 
 // FLASH registers
-#define FLASH_ACR           (*(volatile uint32_t*)(FLASH_BASE + 0x00))
+#define FLASH_ACR           (*(volatile uint32_t*)(FLASH_BASE + 0x00UL))
 
 
 // GPIOA registers
@@ -30,29 +30,13 @@
 #define GPIOA_ODR           (*(volatile uint32_t*)(GPIOA_BASE + 0x14UL))
 
 
-#define RCC_APB1ENR_PWREN    ((uint32_t)0x10000000UL)
-#define RCC_CR_HSEON         ((uint32_t)0x00010000UL)
-#define RCC_CR_HSERDY        ((uint32_t)0x00020000UL)
-
-// Time out for HSE start up
-#define HSE_STARTUP_TIMEOUT  ((uint16_t)0x0500)
-
-//  Regulator voltage scaling output selection
-#define RCC_PLLCFGR_PLLSRC_HSE              ((uint32_t)0x00400000)
-
-#define PLL_M      8
-#define PLL_N      288
-#define PLL_P      2
-#define PLL_Q      6
-
 void SystemInit(void);
 void SetSysClock(void);
 
 int main(void)
 {
 
-  // Configure the System clock source, PLL Multiplier and Divider factors,
-  // AHB/APBx prescalers and Flash settings
+  // Configure the System clock source
   SystemInit();
 
   SetSysClock();
@@ -69,7 +53,7 @@ int main(void)
     GPIOA_ODR ^= (1 << 5);
 
     // Simple delay
-    for (volatile uint32_t i = 0; i < (uint32_t)0x000FFFFFUL; ++i)
+    for (volatile uint32_t i = 0; i < (uint32_t)0x005FFFFFUL; ++i)
     {
     }
   }
@@ -101,79 +85,52 @@ void SystemInit(void)
 
 void SetSysClock(void)
 {
-  uint32_t StartUpCounter = 0U;
-  uint32_t HSEStatus      = 0U;
-
   // Enable HSE
   RCC_CR |= ((uint32_t)(1UL << 16));
 
-  // Wait till HSE is ready and if Time out is reached exit
-
-  while((HSEStatus == 0U) && (StartUpCounter != HSE_STARTUP_TIMEOUT))
+  // Wait till HSE is ready
+  while(!(RCC_CR & ((uint32_t)1UL << 17)))
   {
-    // check HSE clock ready flag
-    HSEStatus = RCC_CR & (1UL << 17);
-
-    StartUpCounter++;
+    __asm volatile("nop");
   }
 
-  if ((RCC_CR & (1UL << 17)) != 0U)
+  // PWREN: Power interface clock enable
+  RCC_APB1ENR |= (uint32_t)(1UL << 28);
+
+  // Set HCLK  = sysclk / 1
+  // Set PCLK2 = hclk   / 2
+  // Set PCLK1 = hclk   / 4
+  RCC_CFGR |= (uint32_t)((5UL << 10) | (1UL << 15));
+
+  // Configure the main PLL
+  // PLL_M = 8
+  // PLL_N = 360
+  // PLL_P = 0 -> 2
+  // PLL_Q = 7
+  // SYSCLK = 180 MHz
+  RCC_PLLCFGR = (uint32_t)(8UL << 0) | (360UL << 6) | (0UL << 16) | (1UL << 22) | (7UL << 24);
+
+  // Enable the main PLL
+  RCC_CR |= (uint32_t)(1UL << 24);
+
+  // Wait till the main PLL is ready
+  while(!(RCC_CR & (uint32_t)1UL << 25))
   {
-    HSEStatus = (uint32_t)0x01U;
+    __asm volatile("nop");
   }
-  else
+
+  // Configure Flash prefetch, Instruction cache, Data cache and wait state
+  // Instruction cache enable
+  // Data cache enable
+  // Latency : 5 wait states (e ratio of the CPU clock period to the Flash memory access time)
+  FLASH_ACR = (uint32_t)((1UL << 9) | (1UL << 10) | (5UL << 0));
+
+  // Select the main PLL as system clock source
+  RCC_CFGR &= (uint32_t)(~(3UL << 0));
+  RCC_CFGR |= (uint32_t)(2UL << 0);
+
+  // Wait till the main PLL is used as system clock source
+  while ((RCC_CFGR & (uint32_t)(0x0CU << 0)) != (8UL << 0))
   {
-    HSEStatus = (uint32_t)0x00U;
-  }
-
-  if (HSEStatus == (uint32_t)0x01U)
-  {
-    // Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz
-    RCC_APB1ENR |= (uint32_t)(1UL << 28);
-
-    // Regulator voltage scaling output selection VOS
-    PWR_CR      |= (1UL << 14);  // Scale 3 mode
-
-    // HCLK = SYSCLK / 1
-    RCC_CFGR |= (uint32_t)0x00000000UL; // system clock not divided
-
-    // APB high-speed prescalerr (APB2)
-    // AHB clock divided by 2
-    RCC_CFGR |= (uint32_t)(1UL << 15);
-
-    // APB Low speed prescaler (APB1)
-    // AHB clock divided by 4
-    RCC_CFGR |= (uint32_t)( (1UL << 10) | (1UL << 12));
-
-    // Configure the main PLL
-    RCC_PLLCFGR = (PLL_M << 0) | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) | (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24);
-
-    // Enable the main PLL
-    RCC_CR |= (uint32_t)(1UL << 24);
-
-    // Wait till the main PLL is ready
-    while((RCC_CR & (uint32_t)(1UL << 25)) == 0)
-    {
-    }
-
-    // Configure Flash prefetch, Instruction cache, Data cache and wait state
-    // Instruction cache enable
-    // Data cache enable
-    // Latency : 5 wait states (e ratio of the CPU clock period to the Flash memory access time)
-    FLASH_ACR = (uint32_t)((1UL << 9) | (1UL << 10) | (5UL << 0));
-
-    // Select the main PLL as system clock source
-    RCC_CFGR &= (uint32_t)(~(3UL << 0));
-    RCC_CFGR |= (uint32_t)(2UL << 0);
-
-    // Wait till the main PLL is used as system clock source
-    while ((RCC_CFGR & (uint32_t)(0x0CU << 0)) != (8UL << 0))
-    {
-    }
-  }
-  else
-  {
-    // If HSE fails to start-up, the application will have wrong clock configuration.
-    // TBD handle this case
   }
 }
