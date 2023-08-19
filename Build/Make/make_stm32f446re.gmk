@@ -124,7 +124,7 @@ LDFLAGS        = -nostdlib                                                 \
 
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/App/Cpu                                       \
-                 $(PATH_SRC)/App/startup
+                 $(PATH_SRC)/App/SysStartup
 
 
 #------------------------------------------------------------------------------

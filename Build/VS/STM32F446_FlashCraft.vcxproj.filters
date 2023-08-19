@@ -25,9 +25,6 @@
     <ClCompile Include="..\..\Src\App\App.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\App\Startup.c">
-      <Filter>Source Files\Src\App</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClCompile>
@@ -35,6 +32,9 @@
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\App\Cpu.c">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\SysStartup.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
   </ItemGroup>
