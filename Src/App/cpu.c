@@ -53,7 +53,7 @@ void SetSysClock(void)
   RCC_CR |= (uint32_t)(1UL << 24);
 
   // Wait till the main PLL is ready
-  while(!(RCC_CR & (uint32_t)1UL << 25))
+  while(!(RCC_CR & (uint32_t)(1UL << 25)))
   {
     __asm volatile("nop");
   }
@@ -71,6 +71,17 @@ void SetSysClock(void)
   }
 }
 
+void SysTick_Init(void)
+{
+  STK_CTRL = (uint32_t)0x00000000UL;
 
+  // Counter enable
+  STK_CTRL |= (uint32_t)(1UL << 0);
 
+  // 10000000b = 0x989680UL --> 0.5s
+  STK_LOAD |= (uint32_t)(0x989680UL);
+
+  // Initialize current value register
+  STK_VAL = (uint32_t)0x00000000UL;
+}
 
