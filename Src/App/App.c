@@ -23,7 +23,7 @@ int main(void)
   // Configure GPIOA Pin 5 as output
   GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
 
-  while (1)
+  while(1)
   {
     if(STK_CTRL & (uint32_t)( 1UL << 16))
     {
