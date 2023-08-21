@@ -37,6 +37,9 @@
     <ClCompile Include="..\..\Src\App\SysStartup.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\App\IntVect.c">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\App\Cpu.h">

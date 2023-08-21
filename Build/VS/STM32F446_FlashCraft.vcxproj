@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c" />
     <ClCompile Include="..\..\Src\App\Cpu.c" />
+    <ClCompile Include="..\..\Src\App\IntVect.c" />
     <ClCompile Include="..\..\Src\App\SysStartup.c" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
