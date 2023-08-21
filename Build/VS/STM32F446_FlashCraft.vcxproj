@@ -8,14 +8,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c" />
-    <ClCompile Include="..\..\Src\App\Cpu.c" />
     <ClCompile Include="..\..\Src\App\IntVect.c" />
     <ClCompile Include="..\..\Src\App\SysStartup.c" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
+    <ClCompile Include="..\..\Src\Mcal\Mcu.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Src\App\Cpu.h" />
+    <ClInclude Include="..\..\Src\Mcal\Mcu.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -46,6 +46,7 @@
     <NMakePreprocessorDefinitions>__GNUC__=12;__attribute__()=</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\Tmp\$(Configuration)_$(Platform)\</IntDir>
+    <NMakeIncludeSearchPath>$(ProjectDir)../../Src</NMakeIncludeSearchPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashCraft|x64'">
     <BuildLog>

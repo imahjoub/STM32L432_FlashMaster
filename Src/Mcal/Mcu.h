@@ -1,5 +1,5 @@
-#ifndef CPU_2023_08_19_H
-  #define CPU_2023_08_19_H
+#ifndef MCU_2023_08_19_H
+  #define MCU_2023_08_19_H
 
   #include <stdint.h>
 
@@ -36,4 +36,4 @@
   void SetSysClock(void);
   void SysTick_Init(void);
 
-#endif // CPU_2023_08_19_H
+#endif // MCU_2023_08_19_H

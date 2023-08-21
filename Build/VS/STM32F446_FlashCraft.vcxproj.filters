@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Src\Cdd\CddExtFlash">
       <UniqueIdentifier>{a726832b-9e91-47c3-915a-333be984fd5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Mcal">
+      <UniqueIdentifier>{0f62af1e-b11f-4791-9267-2dcca28bb753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -31,19 +34,19 @@
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\App\Cpu.c">
-      <Filter>Source Files\Src\App</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\App\SysStartup.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\App\IntVect.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Mcal\Mcu.c">
+      <Filter>Source Files\Src\Mcal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Src\App\Cpu.h">
-      <Filter>Source Files\Src\App</Filter>
+    <ClInclude Include="..\..\Src\Mcal\Mcu.h">
+      <Filter>Source Files\Src\Mcal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
