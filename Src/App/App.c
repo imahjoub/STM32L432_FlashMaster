@@ -14,6 +14,9 @@ int main(void)
   SystemInit();
   SetSysClock();
 
+  // Configure systick timer to generate half second delay
+  SysTick_Init();
+
   // Enable the clock for GPIOA
   RCC_AHB1ENR |= (1 << 0);
 
@@ -22,12 +25,10 @@ int main(void)
 
   while (1)
   {
-    // Toggle the LED pin
-    GPIOA_ODR ^= (1 << 5);
-
-    // Simple delay
-    for (volatile uint32_t i = 0; i < (uint32_t)0x005FFFFFUL; ++i)
+    if(STK_CTRL & (uint32_t)( 1UL << 16))
     {
+      // Toggle the LED pin
+      GPIOA_ODR ^= (1 << 5);
     }
   }
 
