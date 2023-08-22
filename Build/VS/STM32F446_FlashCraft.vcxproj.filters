@@ -48,5 +48,11 @@
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
       <Filter>Source Files\Src\Mcal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h">
+      <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h">
+      <Filter>Source Files\Src\Cdd\CddSpi</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
