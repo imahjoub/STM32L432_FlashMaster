@@ -1,7 +1,6 @@
 #include <Mcal/Mcu.h>
 #include <Cdd/CddExtFlash/CddExtFlash.h>
 
-
 int main(void)
 {
   // Configure the System clock and flash

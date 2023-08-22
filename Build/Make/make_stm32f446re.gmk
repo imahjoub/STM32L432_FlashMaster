@@ -123,6 +123,8 @@ LDFLAGS        = -nostdlib                                                 \
 #------------------------------------------------------------------------------
 
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
+                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
+                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Mcu                                      \
                  $(PATH_SRC)/App/IntVect                                   \
                  $(PATH_SRC)/App/SysStartup

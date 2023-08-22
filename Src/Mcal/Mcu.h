@@ -25,6 +25,7 @@
   #define RCC_AHB1ENR         (*(volatile uint32_t*)(RCC_BASE + 0x30UL))
   #define RCC_CIR             (*(volatile uint32_t*)(RCC_BASE + 0x0CUL))
   #define RCC_APB1ENR         (*(volatile uint32_t*)(RCC_BASE + 0x40UL))
+  #define RCC_APB2ENR         (*(volatile uint32_t*)(RCC_BASE + 0x44UL))
 
   // PWR registers
   #define PWR_CR              (*(volatile uint32_t*)(PWR_BASE + 0x00UL))

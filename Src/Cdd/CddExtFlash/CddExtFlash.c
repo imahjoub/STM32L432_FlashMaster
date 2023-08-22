@@ -39,7 +39,7 @@ void is25lp128f_write_sector(uint32_t sector_address, uint8_t *data, uint32_t le
   }
 
   // Wait for completion
-  is25lp128f_wait_for_ready();
+  is25lp128f_wait_for_read();
 }
 
 
