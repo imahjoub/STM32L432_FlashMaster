@@ -1,7 +1,7 @@
 # STM32F446_FlashCraft
 
 <p align="center">
-    <a href="https://github.com/imahjoub/UniversalBareMetal/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">
+    <a href="https://github.com/imahjoub/STM32F446_FlashCraft/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">
         <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/imahjoub/STM32F446_FlashCraft?logo=github" alt="Issues" /></a>
     <a href="https://github.com/imahjoub/STM32F446_FlashCraft/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
