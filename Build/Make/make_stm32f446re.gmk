@@ -80,18 +80,19 @@ WFLAGS         = -Wall                                                     \
                  -Wdouble-promotion                                        \
                  -Wno-comment
 
-CFLAGS         = -O2                                                       \
+CFLAGS         = -O0                                                       \
                  $(WFLAGS)                                                 \
-                 -mcpu=cortex-m7                                           \
-                 -mtune=cortex-m7                                          \
+                 -mcpu=cortex-m4                                           \
+                 -mtune=cortex-m4                                          \
                  -mthumb                                                   \
                  -mfloat-abi=hard                                          \
-                 -march=armv7e-m+fpv5-d16                                  \
+                 -mfpu=fpv4-sp-d16                                         \
+                 -ffast-math                                               \
                  -mno-unaligned-access                                     \
                  -mno-long-calls                                           \
                  -ffast-math                                               \
-                 -finline-functions                                        \
-                 -finline-limit=32                                         \
+                 -fno-inline-functions                                     \
+                 -g                                                        \
                  -gdwarf-2                                                 \
                  -fno-exceptions                                           \
                  -ffunction-sections                                       \
@@ -109,7 +110,8 @@ CPPFLAGS       = $(CFLAGS)                                                 \
                  -Wzero-as-null-pointer-constant
 
 
-LDFLAGS        = -nostdlib                                                 \
+LDFLAGS        = $(CPPFLAGS)                                               \
+                 -nostdlib                                                 \
                  -nostartfiles                                             \
                  -specs=nano.specs                                         \
                  -specs=nosys.specs                                        \
@@ -125,9 +127,12 @@ LDFLAGS        = -nostdlib                                                 \
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
+                 $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
+                 $(PATH_SRC)/OS/Os                                         \
                  $(PATH_SRC)/App/IntVect                                   \
-                 $(PATH_SRC)/App/SysStartup
+                 $(PATH_SRC)/App/SysStartup                                \
+                 $(PATH_SRC)/App/AppShape
 
 
 #------------------------------------------------------------------------------
@@ -187,5 +192,5 @@ $(PATH_OBJ)/%.o : %.c
 
 $(PATH_OBJ)/%.o : %.cpp
 	@-$(ECHO) +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
-	@-$(CC) -x c++ -std=c++20 $(CPPFLAGS) -c $< -o $(PATH_OBJ)/$(basename $(@F)).o 2> $(PATH_OBJ)/$(basename $(@F)).err
+	@-$(CC) -x c++ -std=c++2a $(CPPFLAGS) -c $< -o $(PATH_OBJ)/$(basename $(@F)).o 2> $(PATH_OBJ)/$(basename $(@F)).err
 	@-$(SED) -e 's|.h:\([0-9]*\),|.h(\1) :|' -e 's|:\([0-9]*\):|(\1) :|' $(PATH_OBJ)/$(basename $(@F)).err

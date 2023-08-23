@@ -1,10 +1,12 @@
-#include <Mcal/Mcu.h>
+#include <stdbool.h>
 
+#include <Mcal/Gpt.h>
+#include <Mcal/Mcu.h>
 
 void SystemInit(void)
 {
   // set coprocessor access control register CP10 and CP11 Full Access
-  SCB_CPACR |= (uint32_t)((3UL << 20) | (3UL << 22));
+  SCB_CPACR |= (uint32_t)((uint32_t)(3UL << 20U) | (uint32_t)(3UL << 22U));
 
   // Set HSION (internal high-speed clock) enable bit
   RCC_CR |= (uint32_t)(1UL << 0);
@@ -20,6 +22,9 @@ void SystemInit(void)
 
   // Disable all interrupts
   RCC_CIR = (uint32_t)0x00000000UL;
+
+  // Configure Flash prefetch, Instruction cache, Data cache and wait state (5 wait states)
+  FLASH_ACR = (uint32_t)((1UL << 9) | (1UL << 10) | (5UL << 0));
 }
 
 void SetSysClock(void)
@@ -62,9 +67,6 @@ void SetSysClock(void)
   RCC_CFGR &= (uint32_t)(~(3UL << 0));
   RCC_CFGR |= (uint32_t)(2UL << 0);
 
-  // Configure Flash prefetch, Instruction cache, Data cache and wait state (5 wait states)
-  FLASH_ACR = (uint32_t)((1UL << 9) | (1UL << 10) | (5UL << 0));
-
   // Wait till the main PLL is used as system clock source
   while ((RCC_CFGR & (uint32_t)(0x0CU << 0)) != (8UL << 0))
   {
@@ -73,15 +75,22 @@ void SetSysClock(void)
 
 void SysTick_Init(void)
 {
+  // Reset the SysTick control register.
   STK_CTRL = (uint32_t)0x00000000UL;
 
-  // Counter enable
-  STK_CTRL |= (uint32_t)(1UL << 0);
+  // Set the SysTick reload register to be equivalent to 1ms.
+  STK_LOAD = (uint32_t)(180000UL);
 
-  // 10000000b = 0x989680UL --> 0.5s
-  STK_LOAD |= (uint32_t)(0x989680UL);
-
-  // Initialize current value register
+  // Initialize the SysTick counter value (clear it to zero).
   STK_VAL = (uint32_t)0x00000000UL;
+
+  // Set the SysTicl clock source to be the main processor clock.
+  STK_CTRL = (uint32_t)0x00000004UL;
+
+  // Enable the SysTick interrupt.
+  STK_CTRL |= (uint32_t)(2UL);
+
+  // Enable the SysTick counter.
+  STK_CTRL |= (uint32_t)(1UL << 0);
 }
 

@@ -23,6 +23,9 @@
     <Filter Include="Source Files\Src\Mcal">
       <UniqueIdentifier>{0f62af1e-b11f-4791-9267-2dcca28bb753}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\OS">
+      <UniqueIdentifier>{a0817184-09d9-47c0-b83c-a26352dec37e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -43,6 +46,15 @@
     <ClCompile Include="..\..\Src\Mcal\Mcu.c">
       <Filter>Source Files\Src\Mcal</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\OS\Os.c">
+      <Filter>Source Files\Src\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Mcal\Gpt.c">
+      <Filter>Source Files\Src\Mcal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\AppShape.cpp">
+      <Filter>Source Files\Src\App</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -53,6 +65,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\OS\Os.h">
+      <Filter>Source Files\Src\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\OS\OS_Cfg.h">
+      <Filter>Source Files\Src\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Mcal\Gpt.h">
+      <Filter>Source Files\Src\Mcal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
