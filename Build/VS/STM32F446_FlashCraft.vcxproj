@@ -15,14 +15,14 @@
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
     <ClCompile Include="..\..\Src\Mcal\Gpt.c" />
     <ClCompile Include="..\..\Src\Mcal\Mcu.c" />
-    <ClCompile Include="..\..\Src\OS\Os.c" />
+    <ClCompile Include="..\..\Src\OS\OS.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h" />
     <ClInclude Include="..\..\Src\Mcal\Gpt.h" />
     <ClInclude Include="..\..\Src\Mcal\Mcu.h" />
-    <ClInclude Include="..\..\Src\OS\Os.h" />
+    <ClInclude Include="..\..\Src\OS\OS.h" />
     <ClInclude Include="..\..\Src\OS\OS_Cfg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
