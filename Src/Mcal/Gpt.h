@@ -9,14 +9,4 @@
 
   Gpt_ValueType Gpt_GetTimeElapsed(const Gpt_ChannelType DummyChannelIndex);
 
-  static inline Gpt_ValueType TimerStart(const unsigned millisec)
-  {
-    return Gpt_GetTimeElapsed(0U) + millisec;
-  }
-
-  static inline bool TimerTimeout(Gpt_ValueType MyTimer)
-  {
-    return ((Gpt_GetTimeElapsed(0U) > MyTimer) ? true : false);
-  }
-
 #endif /* GPT_2023_08_23_H */
