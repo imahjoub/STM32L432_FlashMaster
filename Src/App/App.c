@@ -1,5 +1,72 @@
+#include <Mcal/Gpt.h>
+#include <Mcal/Mcu.h>
+#include <OS/OS.h>
+
+#include <Cdd/CddExtFlash/CddExtFlash.h>
+
+
+
+extern bool AppShape_CheckCircle(void);
+
+void Task01_Init(void);
+void Task02_Init(void);
+void Task03_Init(void);
+
+void Task01_Func(void);
+void Task02_Func(void);
+void Task03_Func(void);
+
+void Task01_Init(void) { }
+void Task02_Init(void) { }
+void Task03_Init(void) { }
+
+void Task01_Func(void)
+{
+  static uint64_t my_timer = 1U;
+
+  if(TimerTimeout(my_timer))
+  {
+    my_timer = TimerStart(1000U);
+
+    // Toggle the LED pin
+    GPIOA_ODR ^= (uint32_t) (1UL << 5U);
+  }
+}
+
+void Task02_Func(void) { }
+void Task03_Func(void) { }
+
+#if 1
+
+int main(void)
+{
+  // Initialize the ports.
+
+  // Enable the clock for GPIOA
+  RCC_AHB1ENR |= (1 << 0);
+
+  // Configure GPIOA Pin 5 as output
+  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
+
+  // Configure the System clock and flash
+  SystemInit();
+  SetSysClock();
+
+  // Configure systick timer.
+  SysTick_Init();
+
+  (void) AppShape_CheckCircle();
+
+  OS_Start();
+
+  return 0;
+}
+#endif
+
+#if 0
 #include <Mcal/Mcu.h>
 #include <Cdd/CddExtFlash/CddExtFlash.h>
+
 
 int main(void)
 {
@@ -10,7 +77,7 @@ int main(void)
   // Configure systick timer to generate half second delay
   SysTick_Init();
 
-  spi_init();
+  SpiInit();
 
   while(1U)
   {
@@ -31,41 +98,4 @@ int main(void)
   }
 }
 
-#if 0
-#include <Mcal/Mcu.h>
-
-// Base address for GPIOA
-#define GPIOA_BASE          0x40020000UL
-
-// GPIOA registers
-#define GPIOA_MODER         (*(volatile uint32_t*)(GPIOA_BASE + 0x00UL))
-#define GPIOA_ODR           (*(volatile uint32_t*)(GPIOA_BASE + 0x14UL))
-
-
-int main(void)
-{
-  // Configure the System clock and flash
-  SystemInit();
-  SetSysClock();
-
-  // Configure systick timer to generate half second delay
-  SysTick_Init();
-
-  // Enable the clock for GPIOA
-  RCC_AHB1ENR |= (1 << 0);
-
-  // Configure GPIOA Pin 5 as output
-  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
-
-  while(1)
-  {
-    if(STK_CTRL & (uint32_t)( 1UL << 16))
-    {
-      // Toggle the LED pin
-      GPIOA_ODR ^= (1 << 5);
-    }
-  }
-
-  return 0;
-}
 #endif

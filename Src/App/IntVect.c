@@ -114,7 +114,7 @@ typedef void (*isr_type)(void);
 
 
 // Interrupt vector table
-const volatile isr_type __isr_vector[STACK_SIZE] __attribute__ ((section(".isr_vector"))) =
+const volatile isr_type __isr_vector[] __attribute__ ((section(".isr_vector"))) =
 {
   /* ---------Core Exceptions---------------------------------------------------------- */
   __initial_stack_pointer,           /* The initial stack pointer                       */
@@ -213,8 +213,8 @@ const volatile isr_type __isr_vector[STACK_SIZE] __attribute__ ((section(".isr_v
   OTG_HS_EP1_IN_IRQHandler,          /* 75: USB OTG HS End Point 1 In                   */
   OTG_HS_WKUP_IRQHandler,            /* 76: USB OTG HS Wakeup through EXTI              */
   OTG_HS_IRQHandler,                 /* 77: USB OTG HS                                  */
-  DCMI_IRQHandler,                   /* 53: DCMI                                        */
-  CRYP_IRQHandler,                   /* 53: CRYP crypto                                 */
-  HASH_RNG_IRQHandler,               /* 53: Hash and Rng                                */
-  FPU_IRQHandler                     /* 53: FPU                                         */
+  DCMI_IRQHandler,                   /* 78: DCMI                                        */
+  CRYP_IRQHandler,                   /* 79: CRYP crypto                                 */
+  HASH_RNG_IRQHandler,               /* 80: Hash and Rng                                */
+  FPU_IRQHandler                     /* 81: FPU                                         */
 };
