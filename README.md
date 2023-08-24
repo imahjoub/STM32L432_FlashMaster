@@ -13,4 +13,4 @@
         <img src="https://img.shields.io/github/commit-activity/y/imahjoub/STM32F446_FlashCraft" /></a>
 </p>
 
-STM32F446_FlashCraft is a baremetal project that uses the STM32F446RE microcontroller. Its purpose is to communicate with the IS25LP128F flash chip through SPI and DMA, which helps transfer data effectively.
+STM32F446_FlashCraft is a baremetal project that uses the STM32F446RE microcontroller. Its purpose is to communicate with the IS25LP128F flash chip through SPI and DMA.
