@@ -1,8 +1,6 @@
 #ifndef OS_CFG_2023_08_23_H
   #define OS_CFG_2023_08_23_H
 
-  #include <OS/OS.h>
-
   #if defined(__cplusplus)
   extern "C"
   {

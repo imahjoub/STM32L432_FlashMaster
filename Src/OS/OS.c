@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <Mcal/Gpt.h>
 #include <OS/OS.h>
 #include <OS/OS_Cfg.h>
 #include <Util/UtilTimer.h>

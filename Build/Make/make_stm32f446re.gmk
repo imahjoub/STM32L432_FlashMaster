@@ -129,7 +129,9 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
+                 $(PATH_SRC)/Mcal/SysTick                                  \
                  $(PATH_SRC)/OS/OS                                         \
+                 $(PATH_SRC)/OS/OS_Task                                    \
                  $(PATH_SRC)/App/IntVect                                   \
                  $(PATH_SRC)/App/SysStartup                                \
                  $(PATH_SRC)/App/AppShape

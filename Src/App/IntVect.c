@@ -1,12 +1,17 @@
-// Stack size
+/* Stack size      */
 #define STACK_SIZE       0x00000200
 
-// extern functions
+
+/* ----------------------------------------------------------------------------------- */
+/*  extern functions                                                                   */
+/* ----------------------------------------------------------------------------------- */
 extern void __my_startup           (void);
 extern void __initial_stack_pointer(void);
 
-// Functions prototype
-static void Undefined_Handler(void);
+/* ----------------------------------------------------------------------------------- */
+/*  Functions prototype                                                                */
+/* ----------------------------------------------------------------------------------- */
+static void Undefined_Handler      (void);
 
 void Reset_Handler                 (void) __attribute__((weak, alias("Undefined_Handler")));
 void NMI_Handler                   (void) __attribute__((weak, alias("Undefined_Handler")));
@@ -102,18 +107,24 @@ void HASH_RNG_IRQHandler           (void) __attribute__((weak, alias("Undefined_
 void FPU_IRQHandler                (void) __attribute__((weak, alias("Undefined_Handler")));
 
 
-// Functions defintion
+/* ----------------------------------------------------------------------------------- */
+/*  Functions defintion                                                                */
+/* ----------------------------------------------------------------------------------- */
 static void Undefined_Handler(void)
 {
   while(1) { __asm("NOP"); }
 }
 
 
-// Types definition
+/* ----------------------------------------------------------------------------------- */
+/*  Types definition                                                                   */
+/* ----------------------------------------------------------------------------------- */
 typedef void (*isr_type)(void);
 
 
-// Interrupt vector table
+/* ----------------------------------------------------------------------------------- */
+/*  Interrupt vector table                                                             */
+/* ----------------------------------------------------------------------------------- */
 const volatile isr_type __isr_vector[] __attribute__ ((section(".isr_vector"))) =
 {
   /* ---------Core Exceptions---------------------------------------------------------- */

@@ -1,6 +1,7 @@
 #ifndef UTIL_TIMER_2023_08_24_H
   #define UTIL_TIMER_2023_08_24_H
 
+  #include <stdbool.h>
   #include <stdint.h>
 
   #include <Mcal/Gpt.h>

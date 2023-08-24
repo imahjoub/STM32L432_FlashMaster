@@ -90,31 +90,31 @@ SECTIONS
   /* The ROM-to-RAM initialized data section */
   .data :
   {
-    _data_begin = .;
+    _sdata = .;
     *(.data)
     . = ALIGN(4);
     KEEP (*(.data))
     *(.data*)
     . = ALIGN(4);
     KEEP (*(.data*))
-    _data_end = .;
+    _edata = .;
   } > RAM AT > ROM
 
   /* The uninitialized (zero-cleared) data section */
   .bss :
   {
-    _bss_begin = .;
+    _sbss = .;
     *(.bss)
     . = ALIGN(4);
     KEEP (*(.bss))
     *(.bss*)
     . = ALIGN(4);
     KEEP (*(.bss*))
-    _bss_end = .;
+    _ebss = .;
   } > RAM
 
   PROVIDE(end = .);
   PROVIDE(_fini = .);
 
-  _rom_data_begin = LOADADDR(.data);
+  _ldata = LOADADDR(.data);
 }
