@@ -1,6 +1,6 @@
 #include <Mcal/Gpt.h>
 #include <Mcal/Mcu.h>
-#include <OS/Os.h>
+#include <OS/OS.h>
 
 #include <Cdd/CddExtFlash/CddExtFlash.h>
 
