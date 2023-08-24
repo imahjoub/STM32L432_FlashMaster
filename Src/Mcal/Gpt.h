@@ -1,7 +1,6 @@
 #ifndef GPT_2023_08_23_H
   #define GPT_2023_08_23_H
 
-  #include <stdbool.h>
   #include <stdint.h>
 
   typedef uint64_t Gpt_ValueType;

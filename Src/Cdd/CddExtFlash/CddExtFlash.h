@@ -12,4 +12,3 @@
   void is25lp128f_write_sector(uint32_t sector_address, uint8_t *data, uint32_t len);
 
 #endif // CDD_EXT_FLASH_2023_08_22_H
-
