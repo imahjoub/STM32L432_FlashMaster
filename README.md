@@ -3,6 +3,8 @@
 <p align="center">
     <a href="https://github.com/imahjoub/STM32F446_FlashCraft/actions">
         <img src="https://github.com/imahjoub/STM32F446_FlashCraft/actions/workflows/STM32F446_FlashCraft.yml/badge.svg" alt="Build Status"></a>    
+    <a href="https://github.com/imahjoub/STM32F446_FlashCraft/actions/workflows/STM32F446_FlashCraft_CodeQl.yml">
+        <img src="https://github.com/imahjoub/STM32F446_FlashCraft/actions/workflows/STM32F446_FlashCraft_CodeQl.yml/badge.svg" alt="CodeQL"></a>
     <a href="https://github.com/imahjoub/STM32F446_FlashCraft/issues">
         <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/imahjoub/STM32F446_FlashCraft?logo=github" alt="Issues" /></a>
     <a href="https://github.com/imahjoub/STM32F446_FlashCraft/blob/main/LICENSE">
