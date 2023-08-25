@@ -1,6 +1,6 @@
 #include <Mcal/Gpt.h>
 #include <Mcal/SysTick.h>
-#
+
 void SysTick_Init(void)
 {
   /* Reset the SysTick control register */
