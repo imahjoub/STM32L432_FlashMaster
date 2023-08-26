@@ -8,25 +8,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c" />
-    <ClCompile Include="..\..\Src\App\AppShape.cpp" />
-    <ClCompile Include="..\..\Src\App\IntVect.c" />
-    <ClCompile Include="..\..\Src\App\SysStartup.c" />
+    <ClCompile Include="..\..\Src\App\OS\OS_Task.c" />
+    <ClCompile Include="..\..\Src\App\Shape\AppShape.cpp" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
     <ClCompile Include="..\..\Src\Mcal\Gpt.c" />
     <ClCompile Include="..\..\Src\Mcal\Mcu.c" />
     <ClCompile Include="..\..\Src\Mcal\SysTick.c" />
     <ClCompile Include="..\..\Src\OS\OS.c" />
-    <ClCompile Include="..\..\Src\OS\OS_Task.c" />
+    <ClCompile Include="..\..\Src\StartUp\IntVect.c" />
+    <ClCompile Include="..\..\Src\StartUp\SysStartup.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Src\App\OS\OS_Cfg.h" />
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h" />
     <ClInclude Include="..\..\Src\Mcal\Gpt.h" />
     <ClInclude Include="..\..\Src\Mcal\Mcu.h" />
+    <ClInclude Include="..\..\Src\Mcal\Reg.h" />
     <ClInclude Include="..\..\Src\Mcal\SysTick.h" />
     <ClInclude Include="..\..\Src\OS\OS.h" />
-    <ClInclude Include="..\..\Src\OS\OS_Cfg.h" />
     <ClInclude Include="..\..\Src\Util\UtilTimer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

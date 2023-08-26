@@ -2,6 +2,7 @@
 
 #include <Mcal/Mcu.h>
 #include <Mcal/SysTick.h>
+#include <Mcal/Reg.h>
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 

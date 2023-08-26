@@ -1,4 +1,5 @@
 #include <Mcal/Gpt.h>
+#include <Mcal/Reg.h>
 #include <Mcal/SysTick.h>
 
 void SysTick_Init(void)

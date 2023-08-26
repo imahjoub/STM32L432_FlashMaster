@@ -125,16 +125,16 @@ LDFLAGS        = $(CPPFLAGS)                                               \
 #------------------------------------------------------------------------------
 
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
+                 $(PATH_SRC)/App/OS/OS_Task                                \
+                 $(PATH_SRC)/App/Shape/AppShape                            \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
                  $(PATH_SRC)/Mcal/SysTick                                  \
                  $(PATH_SRC)/OS/OS                                         \
-                 $(PATH_SRC)/OS/OS_Task                                    \
-                 $(PATH_SRC)/App/IntVect                                   \
-                 $(PATH_SRC)/App/SysStartup                                \
-                 $(PATH_SRC)/App/AppShape
+                 $(PATH_SRC)/StartUp/IntVect                               \
+                 $(PATH_SRC)/StartUp/SysStartup
 
 
 #------------------------------------------------------------------------------
