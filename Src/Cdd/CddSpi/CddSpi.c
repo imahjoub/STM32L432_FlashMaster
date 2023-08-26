@@ -76,13 +76,13 @@ void SpiReceive(uint8_t *RxPtr, uint32_t DataLen)
   }
 }
 
-void SpiCsSelect(void)
+void SpiCsEnable(void)
 {
   GPIOA_ODR &= (uint32_t)(~(1UL << 4U));
 }
 
 
-void SpiCsDeselect(void)
+void SpiCsDisable(void)
 {
   GPIOA_ODR |= (uint32_t)(1UL << 4U);
 }

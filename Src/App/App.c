@@ -23,12 +23,12 @@ int main(void)
   SPICsInit();
 
   uint8_t ReadChipIDCmd[1u] = {0x9FU};
-  uint8_t ReadBuff[10U] = {0U};
+  uint8_t ReadBuff[10U]     = {0U};
 
   while (1)
   {
     // Enable chip select
-    SpiCsSelect();
+    SpiCsEnable();
 
     // Send the command to read the chip ID
     SpiSend(ReadChipIDCmd, 1U);
@@ -36,7 +36,7 @@ int main(void)
     SpiReceive(ReadBuff, 4U);
 
     // Disable chip select
-    SpiCsDeselect();
+    SpiCsDisable();
   }
 
   return 0;

@@ -7,8 +7,8 @@
   /* functions prototypes */
   void    SpiInit(void);
   void    SPICsInit(void);
-  void    SpiCsSelect(void);
-  void    SpiCsDeselect(void);
+  void    SpiCsEnable(void);
+  void    SpiCsDisable(void);
   uint8_t SpiTransfer(uint8_t TxData);
   void    SpiReceive(uint8_t *TxPtr, uint32_t DataLen);
   void    SpiSend(uint8_t *RxPtr, uint32_t DataLen);
