@@ -29,6 +29,15 @@
     <Filter Include="Source Files\Src\Util">
       <UniqueIdentifier>{1a3d877e-d053-4960-be11-052cb9222ad0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Startup">
+      <UniqueIdentifier>{3f9b0dce-ae98-49bb-b2c4-c66a2e4c81e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\App\OS">
+      <UniqueIdentifier>{8e15e664-2740-4779-ae07-43ee73980869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Src\App\Shape">
+      <UniqueIdentifier>{d9893ec6-5b60-412c-8f56-a71e5facada3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -40,29 +49,29 @@
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\App\IntVect.c">
-      <Filter>Source Files\Src\App</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Mcal\Mcu.c">
       <Filter>Source Files\Src\Mcal</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Mcal\Gpt.c">
       <Filter>Source Files\Src\Mcal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\App\SysStartup.c">
-      <Filter>Source Files\Src\App</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\App\AppShape.cpp">
-      <Filter>Source Files\Src\App</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\OS\OS.c">
-      <Filter>Source Files\Src\OS</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\OS\OS_Task.c">
       <Filter>Source Files\Src\OS</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Mcal\SysTick.c">
       <Filter>Source Files\Src\Mcal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\StartUp\IntVect.c">
+      <Filter>Source Files\Src\Startup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\StartUp\SysStartup.c">
+      <Filter>Source Files\Src\Startup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\OS\OS_Task.c">
+      <Filter>Source Files\Src\App\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App\Shape\AppShape.cpp">
+      <Filter>Source Files\Src\App\Shape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,9 +87,6 @@
     <ClInclude Include="..\..\Src\Mcal\Gpt.h">
       <Filter>Source Files\Src\Mcal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\OS\OS_Cfg.h">
-      <Filter>Source Files\Src\OS</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Util\UtilTimer.h">
       <Filter>Source Files\Src\Util</Filter>
     </ClInclude>
@@ -89,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Mcal\SysTick.h">
       <Filter>Source Files\Src\Mcal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\App\OS\OS_Cfg.h">
+      <Filter>Source Files\Src\App\OS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

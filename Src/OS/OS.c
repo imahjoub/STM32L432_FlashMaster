@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #include <OS/OS.h>
-#include <OS/OS_Cfg.h>
+#include <App/OS/OS_Cfg.h>
 #include <Util/UtilTimer.h>
 
 typedef struct TCB
