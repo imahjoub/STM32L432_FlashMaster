@@ -37,10 +37,12 @@
 
   /* GPIOA registers */
   #define GPIOA_MODER         (*(volatile uint32_t *)(GPIOA_BASE + 0x00UL))
+  #define GPIOA_OTYPER        (*(volatile uint32_t *)(GPIOA_BASE + 0x04UL))
   #define GPIOA_OSPEEDR       (*(volatile uint32_t *)(GPIOA_BASE + 0x08UL))
   #define GPIOA_PUPDR         (*(volatile uint32_t *)(GPIOA_BASE + 0x0CUL))
   #define GPIOA_ODR           (*(volatile uint32_t *)(GPIOA_BASE + 0x14UL))
   #define GPIOA_AFRL          (*(volatile uint32_t *)(GPIOA_BASE + 0x20UL))
+
 
   /* SPI1 registers */
   #define SPI_CR1             (*(volatile uint32_t *)(SPI_BASE + 0x00UL))

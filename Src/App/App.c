@@ -6,28 +6,39 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
+#include <Cdd/CddSpi/CddSpi.h>
+
 extern bool AppShape_CheckCircle(void);
 
 int main(void)
 {
-  // Initialize the ports.
-
-  // Enable the clock for GPIOA
-  RCC_AHB1ENR |= (1 << 0);
-
-  // Configure GPIOA Pin 5 as output
-  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
-
   // Configure the System clock and flash
   SystemInit();
   SetSysClock();
 
-  // Configure systick timer.
-  SysTick_Init();
+  // Spi initialization
+  SpiInit();
 
-  (void) AppShape_CheckCircle();
+  // Chip Select (CS) initialization
+  SPICsInit();
 
-  OS_Start();
+  uint8_t ReadChipIDCmd[1u] = {0x9FU};
+  uint8_t ReadBuff[10U] = {0U};
+
+  while (1)
+  {
+    // Enable chip select
+    SpiCsSelect();
+
+    // Send the command to read the chip ID
+    SpiSend(ReadChipIDCmd, 1U);
+
+    SpiReceive(ReadBuff, 4U);
+
+    // Disable chip select
+    SpiCsDeselect();
+  }
 
   return 0;
 }
+

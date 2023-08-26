@@ -1,59 +1,88 @@
 #include <Cdd/CddSpi/CddSpi.h>
 #include <Mcal/Reg.h>
 
-void spi_init(void)
+void SpiInit(void)
 {
+  // Enable clock to PortA of SPI Pins
+  RCC_AHB1ENR |= (uint32_t)(1UL << 0U);
+
   // Enable the Spi peripheral clock
-  RCC_APB2ENR |= (1UL << 12);
+  RCC_APB2ENR |= (uint32_t)(1UL << 12U);
 
   // Configure GPIO pins for SPI (SPI1 on PA5, PA6, and PA7)
-  GPIOA_MODER |= (2U << 10) | (2U << 12) | (2U << 14); // Set PA5, PA6, PA7 to alternate function mode
-  GPIOA_AFRL  |= (5U << 20) | (5U << 24) | (5U << 28); // Set alternate function for PA5, PA6, PA7 (SPI1)
+  GPIOA_MODER |= (uint32_t)((2U << 10U) | (2U << 12U) | (2U << 14U)); // Set PA5, PA6, PA7 to alternate function mode
+  GPIOA_AFRL  |= (uint32_t)((5U << 20U) | (5U << 24U) | (5U << 28U)); // Set alternate function for PA5, PA6, PA7 (SPI1)
 
   // Configure GPIO pins for SPI PA4 CS
-  GPIOA_MODER   |=  (1UL << 8); // Set PA4 to output mode
-  GPIOA_OSPEEDR |=  (3UL << 8); // Set output speed to high
-  GPIOA_PUPDR   &= ~(3UL << 8); // No pull-up, pull-down
+  GPIOA_MODER   |= (uint32_t)(1UL << 8U);    // Set PA4 to output mode
+  GPIOA_OSPEEDR |= (uint32_t)(3UL << 8U);    // Set output speed to high
+  GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U)); // No pull-up, pull-down
+
+  // Set Software slave management
+  SPI_CR1 |= (1U << 8U); // Internal slave select
+  SPI_CR1 |= (1U << 9U); // Software slave management enabled
+
+  // Baud rate configuration
+  SPI_CR1 |= (uint32_t)(6UL << 3U);
 
   // Configure SPI
-  SPI_CR1 = (uint32_t)((0UL << 0) | (0UL << 1) | (1UL << 2)); // Set master mode, clock polarity 0, clock phase 1
-  SPI_CR1 |= (1 << 6); // Enable SPI
+  SPI_CR1 |= (uint32_t)((0UL << 0U)| (0UL << 1U) | (1UL << 2U)); // Set master mode, clock polarity 0, clock phase 1
+  SPI_CR1 |= (uint32_t)(1UL << 6U); // Enable SPI
 }
 
-uint8_t spi_transfer(uint8_t tx_data)
+void SPICsInit(void)
 {
-  SPI_DR = tx_data;
+  // Enable the GPIOA peripheral clock
+  RCC_AHB1ENR |= (uint32_t)(1 << 0U);
 
-  while (!(SPI_SR & (1 << 1))); // Wait until transmission complete
+  // Set PA4 as output
+  GPIOA_MODER &= ((uint32_t)~ (uint32_t)(3 << 8U));  // Clear mode bits
+  GPIOA_MODER |= (uint32_t)(1 << 8U);   // Set mode to output
 
-  while (!(SPI_SR & (1 << 0))); // Wait until receive buffer not empty
+  // Set output type to push-pull (default)
+  GPIOA_OTYPER &= (uint32_t)(~(1 << 4U));
+
+  // Set output speed to high
+  GPIOA_OSPEEDR |= (uint32_t)(3U << 8U);
+
+  // Set no pull-up, no pull-down
+  GPIOA_PUPDR &= (uint32_t)(~(3UL << 8U));
+}
+
+uint8_t SpiTransfer(uint8_t TxData)
+{
+  SPI_DR = (uint8_t)TxData;
+
+  while (!(SPI_SR & (1 << 1U))); // Wait until transmission complete
+
+  //while (!(SPI_SR & (1 << 0))); // Wait until receive buffer not empty
 
   return (uint8_t)(SPI_DR);
 }
 
-void spi_write(uint8_t *tx_data, uint32_t len)
+void SpiSend(uint8_t *TxPtr, uint32_t DataLen)
 {
-  for (uint32_t i = 0; i < len; i++)
+  for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    spi_transfer(tx_data[i]);
+    SpiTransfer(TxPtr[i]);
   }
 }
 
-void spi_read(uint8_t *rx_data, uint32_t len)
+void SpiReceive(uint8_t *RxPtr, uint32_t DataLen)
 {
-  for (uint32_t i = 0; i < len; i++)
+  for (uint32_t i = 0U; i < DataLen; i++)
   {
-    rx_data[i] = spi_transfer(0xFF);
+    RxPtr[i] = SpiTransfer(0xFFU);
   }
 }
 
-void spi_cs_select(void)
+void SpiCsSelect(void)
 {
-  GPIOA_ODR &= (uint32_t)(~(1UL << 4));
+  GPIOA_ODR &= (uint32_t)(~(1UL << 4U));
 }
 
 
-void spi_cs_deselect(void)
+void SpiCsDeselect(void)
 {
-  GPIOA_ODR |= (uint32_t)(1UL << 4);
+  GPIOA_ODR |= (uint32_t)(1UL << 4U);
 }
