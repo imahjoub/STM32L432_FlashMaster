@@ -99,5 +99,8 @@
     <ClInclude Include="..\..\Src\App\OS\OS_Cfg.h">
       <Filter>Source Files\Src\App\OS</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Mcal\Reg.h">
+      <Filter>Source Files\Src\Mcal</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

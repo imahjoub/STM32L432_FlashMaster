@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include <Mcal/Mcu.h>
+#include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
 void Task01_Init(void);

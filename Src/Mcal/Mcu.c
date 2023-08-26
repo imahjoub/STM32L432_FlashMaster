@@ -1,4 +1,5 @@
 #include <Mcal/Mcu.h>
+#include <Mcal/Reg.h>
 
 void SystemInit(void)
 {

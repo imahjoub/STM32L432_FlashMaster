@@ -1,4 +1,5 @@
 #include <Cdd/CddSpi/CddSpi.h>
+#include <Mcal/Reg.h>
 
 void spi_init(void)
 {
