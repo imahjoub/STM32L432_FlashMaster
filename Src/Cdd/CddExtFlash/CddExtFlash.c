@@ -27,15 +27,15 @@ void CddExtFlashWriteSector(uint32_t SectorAddress, uint8_t *DataPtr, uint32_t D
   /* Send Page Program command */
   CddSpiTransfer(CMD_PAGE_PROGRAM);
 
+  /* Address byte 2 */
   CddSpiTransfer((SectorAddress >> 16U) & 0xFFU);
 
-  /* Address byte 2 */
+  /* Address byte 1 */
   CddSpiTransfer((SectorAddress >>  8U) & 0xFFU);
 
-  /* Address byte 1 */
+  /* Address byte 0 */
   CddSpiTransfer((SectorAddress >>  0U) & 0xFFU);
 
-  /* Address byte 0 */
   /* Write data     */
   for (uint32_t i = 0U; i < DataLen; ++i)
   {
