@@ -1,7 +1,7 @@
 #ifndef REG_2023_08_26_H
   #define REG_2023_08_26_H
 
-  #include <stdio.h>
+  #include <stdint.h>
 
   /* Base addresses for peripheral registers */
   #define SCB_BASE            0xE000ED00UL

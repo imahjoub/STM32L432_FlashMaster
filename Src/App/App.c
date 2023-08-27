@@ -17,10 +17,10 @@ int main(void)
   SetSysClock();
 
   // Spi initialization
-  SpiInit();
+  CddSpiInit();
 
   // Chip Select (CS) initialization
-  SPICsInit();
+  CddSpiCsInit();
 
   uint8_t ReadChipIDCmd[1u] = {0x9FU};
   uint8_t ReadBuff[10U]     = {0U};
@@ -28,15 +28,16 @@ int main(void)
   while (1)
   {
     // Enable chip select
-    SpiCsEnable();
+    CddSpiCsEnable();
 
     // Send the command to read the chip ID
-    SpiSend(ReadChipIDCmd, 1U);
+    CddSpiSend(ReadChipIDCmd, 1U);
 
-    SpiReceive(ReadBuff, 4U);
+    // Read chip ID
+    CddSpiReceive(ReadBuff, 4U);
 
     // Disable chip select
-    SpiCsDisable();
+    CddSpiCsDisable();
   }
 
   return 0;

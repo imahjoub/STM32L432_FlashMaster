@@ -5,12 +5,12 @@
   #include <Mcal/Mcu.h>
 
   /* functions prototypes */
-  void    SpiInit(void);
-  void    SPICsInit(void);
-  void    SpiCsEnable(void);
-  void    SpiCsDisable(void);
-  uint8_t SpiTransfer(uint8_t TxData);
-  void    SpiReceive(uint8_t *TxPtr, uint32_t DataLen);
-  void    SpiSend(uint8_t *RxPtr, uint32_t DataLen);
+  void    CddSpiInit(void);
+  void    CddSpiCsInit(void);
+  void    CddSpiCsEnable(void);
+  void    CddSpiCsDisable(void);
+  uint8_t CddSpiTransfer(uint8_t TxData);
+  void    CddSpiReceive(uint8_t *TxPtr, uint32_t DataLen);
+  void    CddSpiSend(uint8_t *RxPtr, uint32_t DataLen);
 
 #endif // CDD_SPI_2023_08_22_H
