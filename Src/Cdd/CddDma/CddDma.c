@@ -30,6 +30,9 @@ void Dma2Stream3SpiTxInit(void)
   /* Set DMA2 memory increment mode */
   DMA2_Stream3->CR |= (uint32_t)(1UL << 10U);
 
+  /* Set peripheral data size */
+  DMA2_Stream3->CR &= (uint32_t)(~(1UL << 12U) | ~(1UL << 11U));
+
   /* Select channel 3 used for SPI1 */
   DMA2_Stream3->CR |= (uint32_t)(3UL << 25U);
 
@@ -38,8 +41,6 @@ void Dma2Stream3SpiTxInit(void)
 
   /* FIFO threshold selection: full FIFO */
   DMA2_Stream3->FCR |= (uint32_t)(3UL << 0U);
-
-  /* TBD Add MSize */
 
   /* TBD Enable DMA interrupt trough NVIC */
 }
@@ -68,6 +69,9 @@ void Dma2Stream2SpiRxInit(void)
 
   /* Set DMA2 memory increment mode */
   DMA2_Stream2->CR |= (uint32_t)(1UL << 10U);
+
+  /* Set memory data size */
+  DMA2_Stream2->CR &= (uint32_t)(~(1UL << 14U) | ~(1UL << 13U));
 
   /* Select channel 3 used for SPI1 */
   DMA2_Stream2->CR |= (uint32_t)(3UL << 25U);
