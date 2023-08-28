@@ -9,40 +9,41 @@ void Dma2Stream3SpiTxInit(void)
 {
   /*-------------------- DMA configuration --------------------*/
   /* Enable the peripheral clock for DMA2 */
- RCC_AHB1ENR |= (uint32_t)(1UL << 22U);
+  RCC_AHB1ENR |= (uint32_t)(1UL << 22U);
 
   /* Disable the DMA2 stream for the configuration */
-  DMA2_Stream3->CR = (uint32_t)(0UL << 0U);
+  DMA2_STREAM3->CR = (uint32_t)(0UL << 0U);
 
   // Wait until the stream is disable */
-  while((DMA2_Stream3->CR & ((uint32_t)(1UL << 0U)))) { }
+  while((DMA2_STREAM3->CR & ((uint32_t)(1UL << 0U)))) { }
 
   /*------------------ DMA stream3 parameters ------------------*/
   /* Enable DMA2 transfer error interrupt */
-  DMA2_Stream3->CR |= (uint32_t)(1UL << 2U);
+  DMA2_STREAM3->CR |= (uint32_t)(1UL << 2U);
 
   /* Enable DMA2 transfer complete interrupt */
-  DMA2_Stream3->CR |= (uint32_t)(1UL << 4U);
+  DMA2_STREAM3->CR |= (uint32_t)(1UL << 4U);
 
   /* Set DMA2 data transfer direction (mem to peripheral) */
-  DMA2_Stream3->CR |= (uint32_t)(1UL << 6U);
+  DMA2_STREAM3->CR |= (uint32_t)(1UL << 6U);
 
   /* Set DMA2 memory increment mode */
-  DMA2_Stream3->CR |= (uint32_t)(1UL << 10U);
+  DMA2_STREAM3->CR |= (uint32_t)(1UL << 10U);
 
   /* Set peripheral data size */
-  DMA2_Stream3->CR &= (uint32_t)(~(1UL << 12U) | ~(1UL << 11U));
+  DMA2_STREAM3->CR &= (uint32_t)(~(1UL << 12U) | ~(1UL << 11U));
 
   /* Select channel 3 used for SPI1 */
-  DMA2_Stream3->CR |= (uint32_t)(3UL << 25U);
+  DMA2_STREAM3->CR |= (uint32_t)(3UL << 25U);
 
   /* Disable DMA2 direct mode disable */
-  DMA2_Stream3->FCR |= (uint32_t)(1UL << 2U);
+  DMA2_STREAM3->FCR |= (uint32_t)(1UL << 2U);
 
   /* FIFO threshold selection: full FIFO */
-  DMA2_Stream3->FCR |= (uint32_t)(3UL << 0U);
+  DMA2_STREAM3->FCR |= (uint32_t)(3UL << 0U);
 
-  /* TBD Enable DMA interrupt trough NVIC */
+  /* Enable DMA2_Stream3_IRQn interrupt */
+  NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)59) & 0x1FUL));
 }
 
 void Dma2Stream2SpiRxInit(void)
@@ -52,48 +53,76 @@ void Dma2Stream2SpiRxInit(void)
  RCC_AHB1ENR |= (uint32_t)(1UL << 22U);
 
   /* Disable the DMA2 stream for the configuration */
-  DMA2_Stream2->CR = (uint32_t)(0UL << 0U);
+  DMA2_STREAM2->CR = (uint32_t)(0UL << 0U);
 
   // Wait until the stream is disable */
-  while((DMA2_Stream2->CR & ((uint32_t)(1UL << 0U)))) { }
+  while((DMA2_STREAM2->CR & ((uint32_t)(1UL << 0U)))) { }
 
   /*------------------ DMA stream3 parameters ------------------*/
   /* Enable DMA2 transfer error interrupt */
-  DMA2_Stream2->CR |= (uint32_t)(1UL << 2U);
+  DMA2_STREAM2->CR |= (uint32_t)(1UL << 2U);
 
   /* Enable DMA2 transfer complete interrupt */
-  DMA2_Stream2->CR |= (uint32_t)(1UL << 4U);
+  DMA2_STREAM2->CR |= (uint32_t)(1UL << 4U);
 
   /* Set DMA2 data transfer direction (peripheral to mem) */
-  DMA2_Stream2->CR &= (uint32_t)(~(1UL << 6U) | ~(1UL << 7U));
+  DMA2_STREAM2->CR &= (uint32_t)(~(1UL << 6U) | ~(1UL << 7U));
 
   /* Set DMA2 memory increment mode */
-  DMA2_Stream2->CR |= (uint32_t)(1UL << 10U);
+  DMA2_STREAM2->CR |= (uint32_t)(1UL << 10U);
 
   /* Set memory data size */
-  DMA2_Stream2->CR &= (uint32_t)(~(1UL << 14U) | ~(1UL << 13U));
+  DMA2_STREAM2->CR &= (uint32_t)(~(1UL << 14U) | ~(1UL << 13U));
 
   /* Select channel 3 used for SPI1 */
-  DMA2_Stream2->CR |= (uint32_t)(3UL << 25U);
+  DMA2_STREAM2->CR |= (uint32_t)(3UL << 25U);
 
   /* Disable DMA2 direct mode disable */
-  DMA2_Stream2->FCR |= (uint32_t)(1UL << 2U);
+  DMA2_STREAM2->FCR |= (uint32_t)(1UL << 2U);
 
   /* FIFO threshold selection: full FIFO */
-  DMA2_Stream2->FCR |= (uint32_t)(3UL << 0U);
+  DMA2_STREAM2->FCR |= (uint32_t)(3UL << 0U);
 
-  /* TBD Add PSize */
 
-  /* TBD Enable DMA interrupt trough NVIC */
+  /* Enable DMA2_Stream2_IRQn interrupt */
+  NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)58) & 0x1FUL));
 
 }
 
-void Dma2Stream3SpiSend(void)
+void Dma2Stream3SpiSend(uint8_t* TxDataPtr, const size_t DataLen)
 {
+  // Clear interrupt flags
+  DMA2 |= (uint32_t)((1UL << 27U) | (1UL << 25U));
+
+  // Set peripheral address
+  DMA2_STREAM3->PAR = (uint32_t)(&(SPI_DR));
+
+  // Set memory address
+  DMA2_STREAM3->M0AR = (uint32_t)&TxDataPtr;
+
+  // Set transfer length
+  DMA2_STREAM3->NDTR = (uint32_t)DataLen;
+
+  // Enable the DMA stream
+  DMA2_STREAM3->CR |= (uint32_t)(1UL << 0U);
 }
 
-void Dma2Stream2SpiReceive(void)
+void Dma2Stream2SpiReceive(uint8_t* RxDataPtr, const size_t DataLen)
 {
+  // Clear interrupt flags
+  DMA2 |= (uint32_t)((1UL << 21U) | (1UL << 19U));
+
+  // Set peripheral address
+  DMA2_STREAM2->PAR = (uint32_t)(&(SPI_DR));
+
+  // Set memory address
+  DMA2_STREAM2->M0AR = (uint32_t)&RxDataPtr;
+
+  // Set transfer length
+  DMA2_STREAM2->NDTR = DataLen;
+
+  // Enable the DMA stream
+  DMA2_STREAM2->CR |= (uint32_t)(1UL << 0U);
 }
 
 void DMA2_Stream2_IRQHandler(void)
