@@ -1,6 +1,10 @@
+#include <stdbool.h>
 
 #include <Cdd/CddDma/CddDma.h>
 #include <Mcal/Reg.h>
+
+volatile bool SpiTransferComplete = false;
+volatile bool SpiReceiveComplete  = false;
 
 void DMA2_Stream2_IRQHandler(void);
 void DMA2_Stream3_IRQHandler(void);
@@ -14,7 +18,7 @@ void Dma2Stream3SpiTxInit(void)
   /* Disable the DMA2 stream for the configuration */
   DMA2_STREAM3->CR = (uint32_t)(0UL << 0U);
 
-  // Wait until the stream is disable */
+  /* Wait until the stream is disable */
   while((DMA2_STREAM3->CR & ((uint32_t)(1UL << 0U)))) { }
 
   /*------------------ DMA stream3 parameters ------------------*/
@@ -55,7 +59,7 @@ void Dma2Stream2SpiRxInit(void)
   /* Disable the DMA2 stream for the configuration */
   DMA2_STREAM2->CR = (uint32_t)(0UL << 0U);
 
-  // Wait until the stream is disable */
+  /* Wait until the stream is disable */
   while((DMA2_STREAM2->CR & ((uint32_t)(1UL << 0U)))) { }
 
   /*------------------ DMA stream3 parameters ------------------*/
@@ -91,44 +95,75 @@ void Dma2Stream2SpiRxInit(void)
 
 void Dma2Stream3SpiSend(uint8_t* TxDataPtr, const size_t DataLen)
 {
-  // Clear interrupt flags
-  DMA2 |= (uint32_t)((1UL << 27U) | (1UL << 25U));
+  /* Clear interrupt flags */
+  DMA2_LIFCR |= (uint32_t)((1UL << 27U) | (1UL << 25U));
 
-  // Set peripheral address
+  /* Set peripheral address */
   DMA2_STREAM3->PAR = (uint32_t)(&(SPI_DR));
 
-  // Set memory address
+  /* Set memory address */
   DMA2_STREAM3->M0AR = (uint32_t)&TxDataPtr;
 
-  // Set transfer length
+  /* Set transfer length */
   DMA2_STREAM3->NDTR = (uint32_t)DataLen;
 
-  // Enable the DMA stream
+  /* Enable the DMA stream */
   DMA2_STREAM3->CR |= (uint32_t)(1UL << 0U);
 }
 
 void Dma2Stream2SpiReceive(uint8_t* RxDataPtr, const size_t DataLen)
 {
-  // Clear interrupt flags
-  DMA2 |= (uint32_t)((1UL << 21U) | (1UL << 19U));
+  /* Clear interrupt flags */
+  DMA2_LIFCR |= (uint32_t)((1UL << 21U) | (1UL << 19U));
 
-  // Set peripheral address
+  /* Set peripheral address */
   DMA2_STREAM2->PAR = (uint32_t)(&(SPI_DR));
 
-  // Set memory address
+  /* Set memory address */
   DMA2_STREAM2->M0AR = (uint32_t)&RxDataPtr;
 
-  // Set transfer length
+  /* Set transfer length */
   DMA2_STREAM2->NDTR = DataLen;
 
-  // Enable the DMA stream
+  /* Enable the DMA stream */
   DMA2_STREAM2->CR |= (uint32_t)(1UL << 0U);
 }
 
 void DMA2_Stream2_IRQHandler(void)
 {
+  if((DMA2_LISR) & ((uint32_t)(1UL << 21U)))
+  {
+    // TBD set global var
+    SpiReceiveComplete = true;
+
+  // clear flag
+    DMA2_LIFCR |= (uint32_t)(1UL << 21U);
+  }
+
+  // check if transfer error flag occurred
+  if((DMA2_LISR) & ((uint32_t)(1UL << 19U)))
+  {
+    // TBD set a global variable or module error flag
+    // clear flag
+    DMA2_LIFCR |= (uint32_t)(1UL << 19U);
+  }
 }
 
 void DMA2_Stream3_IRQHandler(void)
 {
+  if((DMA2_LISR) & ((uint32_t)(1UL << 27U)))
+  {
+    // TBD set global var
+    SpiTransferComplete = true;
+    // clear flag
+    DMA2_LIFCR |= (uint32_t)(1UL << 27U);
+  }
+
+  // check if transfer error flag occurred
+  if((DMA2_LISR) & ((uint32_t)(1UL << 25U)))
+  {
+    // TBD set a global variable or module error flag
+    // clear flag
+    DMA2_LIFCR |= (uint32_t)(1UL << 25U);
+  }
 }

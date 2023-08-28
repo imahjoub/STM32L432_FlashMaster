@@ -98,7 +98,9 @@
   #define SPI_TXCRCR          (*(volatile uint32_t*)(SPI_BASE + 0x18UL))
 
   /* DMA2 registers */
-  #define DMA2                (*(volatile uint32_t*)(DMA2_BASE+ 0x0000UL))
+  #define DMA2                (*(volatile uint32_t*)(DMA2_BASE + 0x000UL))
+  #define DMA2_LISR           (*(volatile uint32_t*)(DMA2_BASE + 0x000UL))
+  #define DMA2_LIFCR          (*(volatile uint32_t*)(DMA2_BASE + 0x008UL))
   #define DMA2_STREAM2_BASE   (*(volatile uint32_t*)(DMA2_BASE + 0x040UL))
   #define DMA2_STREAM3_BASE   (*(volatile uint32_t*)(DMA2_BASE + 0x058UL))
 
