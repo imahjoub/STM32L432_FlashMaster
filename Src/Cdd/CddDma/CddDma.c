@@ -133,18 +133,18 @@ void DMA2_Stream2_IRQHandler(void)
 {
   if((DMA2_LISR) & ((uint32_t)(1UL << 21U)))
   {
-    // TBD set global var
+    /* TBD set global var */
     SpiReceiveComplete = true;
 
-  // clear flag
+  /* clear flag */
     DMA2_LIFCR |= (uint32_t)(1UL << 21U);
   }
 
-  // check if transfer error flag occurred
+  /* check if transfer error flag occurred */
   if((DMA2_LISR) & ((uint32_t)(1UL << 19U)))
   {
-    // TBD set a global variable or module error flag
-    // clear flag
+    /* TBD set a global variable or module error flag */
+    /* clear flag */
     DMA2_LIFCR |= (uint32_t)(1UL << 19U);
   }
 }
@@ -153,17 +153,18 @@ void DMA2_Stream3_IRQHandler(void)
 {
   if((DMA2_LISR) & ((uint32_t)(1UL << 27U)))
   {
-    // TBD set global var
+    /* TBD set global var */
     SpiTransferComplete = true;
-    // clear flag
+
+    /* clear flag */
     DMA2_LIFCR |= (uint32_t)(1UL << 27U);
   }
 
-  // check if transfer error flag occurred
+  /* check if transfer error flag occurred */
   if((DMA2_LISR) & ((uint32_t)(1UL << 25U)))
   {
-    // TBD set a global variable or module error flag
-    // clear flag
+    /* TBD set a global variable or module error flag */
+    /* clear flag */
     DMA2_LIFCR |= (uint32_t)(1UL << 25U);
   }
 }

@@ -37,13 +37,13 @@
   /* Macros                                                                              */
   /* ----------------------------------------------------------------------------------- */
 
-  /* Memory mapping of Core Hardware */
+  /* System Control Space Base Address */
   #define SCS_BASE            (0xE000E000UL)
 
-  /* System Control Space Base Address */
-  #define STK_BASE            (*(volatile uint32_t*)(SCS_BASE +  0x0010UL))
-  #define NVIC_BASE           (*(volatile uint32_t*)(SCS_BASE +  0x0100UL))
-  #define SCB_BASE            (*(volatile uint32_t*)(SCS_BASE +  0x0D00UL))
+  /* Core peripherals */
+  #define STK_BASE            ((SCS_BASE + 0x0010UL))
+  #define NVIC_BASE           ((SCS_BASE + 0x0100UL))
+  #define SCB_BASE            ((SCS_BASE + 0x0D00UL))
 
   /* NVIC configuration struct */
   #define NVIC                ((volatile NVIC_Type*)NVIC_BASE)
@@ -97,14 +97,17 @@
   #define SPI_RXCRCR          (*(volatile uint32_t*)(SPI_BASE + 0x14UL))
   #define SPI_TXCRCR          (*(volatile uint32_t*)(SPI_BASE + 0x18UL))
 
+  /* DMA2 Streamx base adresses */
+  #define DMA2_STREAM2_BASE   (DMA2_BASE + 0x040UL)
+  #define DMA2_STREAM3_BASE   (DMA2_BASE + 0x058UL)
+
   /* DMA2 registers */
   #define DMA2                (*(volatile uint32_t*)(DMA2_BASE + 0x000UL))
   #define DMA2_LISR           (*(volatile uint32_t*)(DMA2_BASE + 0x000UL))
   #define DMA2_LIFCR          (*(volatile uint32_t*)(DMA2_BASE + 0x008UL))
-  #define DMA2_STREAM2_BASE   (*(volatile uint32_t*)(DMA2_BASE + 0x040UL))
-  #define DMA2_STREAM3_BASE   (*(volatile uint32_t*)(DMA2_BASE + 0x058UL))
 
-  #define DMA2_STREAM2        ((volatile DMA_Stream_TypeDef*) DMA2_STREAM2_BASE)
-  #define DMA2_STREAM3        ((volatile DMA_Stream_TypeDef*) DMA2_STREAM3_BASE)
+  /* DMA2 configuration struct */
+  #define DMA2_STREAM2        ((DMA_Stream_TypeDef*) DMA2_STREAM2_BASE)
+  #define DMA2_STREAM3        ((DMA_Stream_TypeDef*) DMA2_STREAM3_BASE)
 
 #endif /* REG_2023_08_26_H */
