@@ -26,7 +26,7 @@ int main(void)
   CddSpiCsInit();
 
   uint8_t ReadChipIDCmd[1u] = {0x9FU};
-  uint8_t ReadBuff[10U]     = {0U};
+  uint8_t ReadBuff[4U]     = {0xFFU, 0xFFU, 0xFFU, 0xFFU};
 
 
    Dma2Stream3SpiTxInit();

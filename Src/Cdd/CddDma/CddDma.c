@@ -102,7 +102,7 @@ void Dma2Stream3SpiSend(uint8_t* TxDataPtr, const size_t DataLen)
   DMA2_STREAM3->PAR = (uint32_t)(&(SPI_DR));
 
   /* Set memory address */
-  DMA2_STREAM3->M0AR = (uint32_t)&TxDataPtr;
+  DMA2_STREAM3->M0AR = (uint32_t)TxDataPtr;
 
   /* Set transfer length */
   DMA2_STREAM3->NDTR = (uint32_t)DataLen;
@@ -120,7 +120,7 @@ void Dma2Stream2SpiReceive(uint8_t* RxDataPtr, const size_t DataLen)
   DMA2_STREAM2->PAR = (uint32_t)(&(SPI_DR));
 
   /* Set memory address */
-  DMA2_STREAM2->M0AR = (uint32_t)&RxDataPtr;
+  DMA2_STREAM2->M0AR = (uint32_t)RxDataPtr;
 
   /* Set transfer length */
   DMA2_STREAM2->NDTR = DataLen;
