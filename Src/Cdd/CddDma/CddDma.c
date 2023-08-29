@@ -34,8 +34,8 @@ void Dma2Stream3SpiTxInit(void)
   /* Set DMA2 memory increment mode */
   DMA2_STREAM3->CR |= (uint32_t)(1UL << 10U);
 
-  /* Set peripheral data size */
-  DMA2_STREAM3->CR &= (uint32_t)(~(1UL << 12U) | ~(1UL << 11U));
+  /* Set memory data size */
+  //DMA2_STREAM3->CR &= (uint32_t)(~(3UL << 13U));
 
   /* Select channel 3 used for SPI1 */
   DMA2_STREAM3->CR |= (uint32_t)(3UL << 25U);
@@ -70,13 +70,13 @@ void Dma2Stream2SpiRxInit(void)
   DMA2_STREAM2->CR |= (uint32_t)(1UL << 4U);
 
   /* Set DMA2 data transfer direction (peripheral to mem) */
-  DMA2_STREAM2->CR &= (uint32_t)(~(1UL << 6U) | ~(1UL << 7U));
+  DMA2_STREAM2->CR &= (uint32_t)(~(3UL << 6U));
 
-  /* Set DMA2 memory increment mode */
-  DMA2_STREAM2->CR |= (uint32_t)(1UL << 10U);
+  /* Set DMA2 peripheral increment mode */
+  DMA2_STREAM2->CR |= (uint32_t)(1UL << 9U);
 
-  /* Set memory data size */
-  DMA2_STREAM2->CR &= (uint32_t)(~(1UL << 14U) | ~(1UL << 13U));
+  /* Set peripheral data size */
+  //DMA2_STREAM2->CR &= (uint32_t)(~(3UL << 11U));
 
   /* Select channel 3 used for SPI1 */
   DMA2_STREAM2->CR |= (uint32_t)(3UL << 25U);

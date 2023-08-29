@@ -25,8 +25,8 @@ int main(void)
   // Chip Select (CS) initialization
   CddSpiCsInit();
 
-  uint8_t ReadChipIDCmd[1u] = {0x9FU};
-  uint8_t ReadBuff[4U]     = {0xFFU, 0xFFU, 0xFFU, 0xFFU};
+  uint8_t ReadChipIDCmd[4u] = {0x9FU};
+  uint8_t ReadBuff[4U]     = {0U};
 
 
    Dma2Stream3SpiTxInit();
@@ -51,7 +51,7 @@ int main(void)
     }
     SpiTransferComplete = false;
 
-    Dma2Stream2SpiReceive(ReadBuff, 4U);
+    Dma2Stream2SpiReceive(ReadBuff, 1U);
     while(!(SpiReceiveComplete))
     {
       // Do nothing
