@@ -1,5 +1,4 @@
 # STM32F446_FlashCraft
-============================
 
 <p align="center">
     <a href="https://github.com/imahjoub/STM32F446_FlashCraft/actions">
