@@ -35,7 +35,7 @@ void Dma2Stream3SpiTxInit(void)
   DMA2_STREAM3->CR |= (uint32_t)(1UL << 10U);
 
   /* Set memory data size */
-  //DMA2_STREAM3->CR &= (uint32_t)(~(3UL << 13U));
+  DMA2_STREAM3->CR &= (uint32_t)(~(3UL << 13U));
 
   /* Select channel 3 used for SPI1 */
   DMA2_STREAM3->CR |= (uint32_t)(3UL << 25U);
@@ -89,12 +89,11 @@ void Dma2Stream2SpiRxInit(void)
   /* FIFO threshold selection: full FIFO */
   DMA2_STREAM2->FCR |= (uint32_t)(3UL << 0U);
 
-
   /* Enable DMA2_Stream2_IRQn interrupt */
   //NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)58) & 0x1FUL));
 
-   // Enable DMA interrupt trough NVIC
-   NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+  // Enable DMA interrupt trough NVIC
+  NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 }
 
 void Dma2Stream3SpiSend(uint32_t TxData, const size_t DataLen)
