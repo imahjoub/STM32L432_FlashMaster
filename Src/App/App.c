@@ -13,6 +13,10 @@ extern bool AppShape_CheckCircle(void);
 extern volatile bool SpiTransferComplete;
 extern volatile bool SpiReceiveComplete;
 
+uint8_t Tx[1U] = {0x9FU};
+uint8_t Rx[4U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU};
+
+
 int main(void)
 {
   // Configure the System clock and flash
@@ -25,10 +29,6 @@ int main(void)
   // Chip Select (CS) initialization
   CddSpiCsInit();
 
-  uint8_t ReadChipIDCmd[4u] = {0x9FU};
-  uint8_t ReadBuff[4U]     = {0U};
-
-
    Dma2Stream3SpiTxInit();
    Dma2Stream2SpiRxInit();
 
@@ -37,25 +37,12 @@ int main(void)
     // Enable chip select
     CddSpiCsEnable();
 
-    // Send the command to read the chip ID
-    //CddSpiSend(ReadChipIDCmd, 1U);
-
-    // Read chip ID
-    //CddSpiReceive(ReadBuff, 4U);
-
-
-    Dma2Stream3SpiSend(ReadChipIDCmd, 1U);
-    while(!(SpiTransferComplete))
-    {
-      // Do nothing
-    }
+    Dma2Stream3SpiSend((uint32_t)Tx, 1U);
+    while(!(SpiTransferComplete)) { /* Do nothing */ }
     SpiTransferComplete = false;
 
-    Dma2Stream2SpiReceive(ReadBuff, 1U);
-    while(!(SpiReceiveComplete))
-    {
-      // Do nothing
-    }
+    Dma2Stream2SpiReceive((uint32_t)Rx, 1U);
+    while(!(SpiReceiveComplete)) { /* Do nothing */ }
     SpiReceiveComplete = false;
 
     // Disable chip select
