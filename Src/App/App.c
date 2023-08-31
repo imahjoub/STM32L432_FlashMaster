@@ -32,7 +32,7 @@ int main(void)
    Dma2Stream3SpiTxInit();
    Dma2Stream2SpiRxInit();
 
-  while (1)
+  for(;;)
   {
     // Enable chip select
     CddSpiCsEnable();
