@@ -47,8 +47,9 @@ void CddSpiCsInit(void)
   /* Set output speed to high           */
   /* No pull-up, pull-down              */
   GPIOA_MODER   |= (uint32_t)(1UL << 8U);
-  GPIOA_OSPEEDR |= (uint32_t)(3UL << 8U);
-  GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U));
+  GPIOA_MODER   &= (uint32_t)(~(1UL << 9U));
+  //GPIOA_OSPEEDR |= (uint32_t)(3UL << 8U);
+  //GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U));
 }
 
 uint8_t CddSpiTransfer(uint8_t TxData)
