@@ -41,9 +41,9 @@ int main(void)
     while(!(SpiTransferComplete)) { /* Do nothing */ }
     SpiTransferComplete = false;
 
-    Dma2Stream2SpiReceive((uint32_t)Rx, 1U);
-    while(!(SpiReceiveComplete)) { /* Do nothing */ }
-    SpiReceiveComplete = false;
+    //Dma2Stream2SpiReceive((uint32_t)Rx, 1U);
+    //while(!(SpiReceiveComplete)) { /* Do nothing */ }
+    //SpiReceiveComplete = false;
 
     // Disable chip select
     CddSpiCsDisable();
