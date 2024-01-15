@@ -10,6 +10,7 @@
   void    CddSpiCsEnable(void);
   void    CddSpiCsDisable(void);
   uint8_t CddSpiTransfer(uint8_t TxData);
+  uint8_t CddSpiWriteRead(uint8_t TxData);
   void    CddSpiReceive(uint8_t *TxPtr, uint32_t DataLen);
   void    CddSpiSend(uint8_t *RxPtr, uint32_t DataLen);
 

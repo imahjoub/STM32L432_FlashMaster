@@ -27,7 +27,7 @@ void CddSpiInit(void)
   SPI_CR1 |= (uint32_t)(6UL << 3U);
 
   /* Configure SPI */
-  /* Set master mode, clock polarity 0, clock phase 1 */
+  /* Set master mode, clock polarity 0, clock phase 0 */
   SPI_CR1 |= (uint32_t)((0UL << 0U)| (0UL << 1U) | (1UL << 2U));
 
   /* Enable Tx/Rx buffer DMA  */
@@ -60,7 +60,8 @@ uint8_t CddSpiTransfer(uint8_t TxData)
   while (!(SPI_SR & (1UL << 1U)));
 
   /* TBD check why this following check does not work */
-  /* while (!(SPI_SR & (1 << 0))); /* Wait until receive buffer not empty */
+  while (!(SPI_SR & (1 << 0))); /* Wait until receive buffer not empty */
+
   return (uint8_t)(SPI_DR);
 }
 
@@ -78,6 +79,15 @@ void CddSpiReceive(uint8_t *RxPtr, uint32_t DataLen)
   {
     RxPtr[i] = CddSpiTransfer(0xFFU);
   }
+}
+
+uint8_t CddSpiWriteRead(uint8_t TxData)
+{
+  uint8_t ReadBuff = 0U;
+  CddSpiTransfer(TxData);
+  //CddSpiTransfer(0xFFU);
+  ReadBuff = CddSpiTransfer(0xFFU);
+  return ReadBuff;
 }
 
 void CddSpiCsEnable(void)
