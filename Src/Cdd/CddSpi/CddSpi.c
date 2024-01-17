@@ -1,59 +1,107 @@
 #include <Cdd/CddSpi/CddSpi.h>
 #include <Mcal/Reg.h>
 
-void spi_init(void)
+void CddSpi_Init(void)
 {
-  // Enable the Spi peripheral clock
-  RCC_APB2ENR |= (1UL << 12);
+  /*---------------------  GPIO configuration  ---------------------*/
+  /* Enable clock to PortA of SPI Pins */
+  RCC_AHB1ENR |= (uint32_t)(1UL << 0U);
 
-  // Configure GPIO pins for SPI (SPI1 on PA5, PA6, and PA7)
-  GPIOA_MODER |= (2U << 10) | (2U << 12) | (2U << 14); // Set PA5, PA6, PA7 to alternate function mode
-  GPIOA_AFRL  |= (5U << 20) | (5U << 24) | (5U << 28); // Set alternate function for PA5, PA6, PA7 (SPI1)
+  /* Configure GPIO pins for SPI (SPI1 on PA5, PA6, and PA7) */
+  /* Set PA5, PA6, PA7 to alternate function mode            */
+  /* Set alternate function for PA5, PA6, PA7 (SPI1)         */
+  GPIOA_MODER |= (uint32_t)((2U << 10U) | (2U << 12U) | (2U << 14U));
+  GPIOA_AFRL  |= (uint32_t)((5U << 20U) | (5U << 24U) | (5U << 28U));
 
-  // Configure GPIO pins for SPI PA4 CS
-  GPIOA_MODER   |=  (1UL << 8); // Set PA4 to output mode
-  GPIOA_OSPEEDR |=  (3UL << 8); // Set output speed to high
-  GPIOA_PUPDR   &= ~(3UL << 8); // No pull-up, pull-down
+  /*---------------------  SPI configuration  ---------------------*/
+  /* Enable the Spi peripheral clock */
+  RCC_APB2ENR |= (uint32_t)(1UL << 12U);
 
-  // Configure SPI
-  SPI_CR1 = (uint32_t)((0UL << 0) | (0UL << 1) | (1UL << 2)); // Set master mode, clock polarity 0, clock phase 1
-  SPI_CR1 |= (1 << 6); // Enable SPI
+  /* Set Software slave management     */
+  /* Internal slave select             */
+  /* Software slave management enabled */
+  SPI_CR1 |= (uint32_t)(1U << 8U);
+  SPI_CR1 |= (uint32_t)(1U << 9U);
+
+  /* Baud rate configuration */
+  SPI_CR1 |= (uint32_t)(6UL << 3U);
+
+  /* Configure SPI */
+  /* Set master mode, clock polarity 0, clock phase 0 */
+  SPI_CR1 |= (uint32_t)((0UL << 0U)| (0UL << 1U) | (1UL << 2U));
+
+  /* Enable Tx/Rx buffer DMA  */
+  SPI_CR2 |= (uint32_t)((1UL << 0U) | (1UL << 1U));
+
+  /* Enable SPI */
+  SPI_CR1 |= (uint32_t)(1UL << 6U);
 }
 
-uint8_t spi_transfer(uint8_t tx_data)
+void CddSpi_CsInit(void)
 {
-  SPI_DR = tx_data;
+  /* Enable the GPIOA peripheral clock */
+  RCC_AHB1ENR |= (uint32_t)(1UL << 0U);
 
-  while (!(SPI_SR & (1 << 1))); // Wait until transmission complete
+  /* Configure GPIO pins for SPI PA4 CS */
+  /* Set PA4 to output mode             */
+  /* Set output speed to high           */
+  /* No pull-up, pull-down              */
+  GPIOA_MODER   |= (uint32_t)(1UL << 8U);
+  GPIOA_MODER   &= (uint32_t)(~(1UL << 9U));
+  //GPIOA_OSPEEDR |= (uint32_t)(3UL << 8U);
+  //GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U));
+}
 
-  while (!(SPI_SR & (1 << 0))); // Wait until receive buffer not empty
+uint8_t CddSpi_Transfer(uint8_t TxData)
+{
+  /* Put data into TXFIFO */
+  SPI_DR = (uint8_t)TxData;
 
+  /* Wait until transmission complete */
+  while (!(SPI_SR & (1UL << 1U)));
+
+ /* Wait until receive buffer not empty */
+  while (!(SPI_SR & (1UL << 0U)));
+
+  /* Empty the RXFIFO */
   return (uint8_t)(SPI_DR);
 }
 
-void spi_write(uint8_t *tx_data, uint32_t len)
+void CddSpi_Send(uint8_t *TxPtr, uint32_t DataLen)
 {
-  for (uint32_t i = 0; i < len; i++)
+  /* Send data into TXFIFO */
+  for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    spi_transfer(tx_data[i]);
+    CddSpi_Transfer(TxPtr[i]);
   }
 }
 
-void spi_read(uint8_t *rx_data, uint32_t len)
+void CddSpi_Receive(uint8_t *RxPtr, uint32_t DataLen)
 {
-  for (uint32_t i = 0; i < len; i++)
+  /* Get data from RXFIFO */
+  for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    rx_data[i] = spi_transfer(0xFF);
+    RxPtr[i] = CddSpi_Transfer(0xFFU);
   }
 }
 
-void spi_cs_select(void)
+uint8_t CddSpi_WriteRead(uint8_t TxData)
 {
-  GPIOA_ODR &= (uint32_t)(~(1UL << 4));
+  uint8_t ReadBuff = 0U;
+  CddSpi_Transfer(TxData);
+  ReadBuff = CddSpi_Transfer(0xFFU);
+  return ReadBuff;
+}
+
+void CddSpi_CsEnable(void)
+{
+  /* Clear the CE bit */
+  GPIOA_ODR &= (uint32_t)(~(1UL << 4U));
 }
 
 
-void spi_cs_deselect(void)
+void CddSpi_CsDisable(void)
 {
-  GPIOA_ODR |= (uint32_t)(1UL << 4);
+  /* Set the CE bit */
+  GPIOA_ODR |= (uint32_t)(1UL << 4U);
 }

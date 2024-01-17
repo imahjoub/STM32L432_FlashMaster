@@ -1,45 +1,161 @@
 #include <Cdd/CddExtFlash/CddExtFlash.h>
+#include <Cdd/CddSpi/CddSpi.h>
 
+/* Define IS25LP128F commands */
+#define EXTFLASH_CMD_WRITE_ENABLE   (uint8_t)0x06U
+#define EXTFLASH_CMD_PAGE_PROGRAM   (uint8_t)0x02U
+#define EXTFLASH_CMD_NORMAL_READ    (uint8_t)0x03U
+#define EXTFLASH_CMD_SEC_ERASE      (uint8_t)0xD7U
+#define EXTFLASH_CMD_READ_STATUS    (uint8_t)0x05U
+#define EXTFLASH_CMD_RDJDID         (uint8_t)0x9FU
 
-// Function to enable writing
-void is25lp128f_write_enable(void)
+/* Function to enable writing */
+void CddExtFlash_GetChipID(uint8_t* RxPtr)
 {
-  // Send Write Enable command
-  spi_transfer(CMD_WRITE_ENABLE);
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send RDID command */
+  CddSpi_Transfer(EXTFLASH_CMD_RDJDID);
+
+  /* Get the RDID */
+  CddSpi_Receive(RxPtr, 3U);
+
+  /* Chip select disable */
+  CddSpi_CsDisable();
 }
 
-// Function to wait until the chip is not busy
-void is25lp128f_wait_for_read(void)
+/* Function to enable writing */
+void CddExtFlash_WriteEnable(void)
 {
-  while (spi_transfer(0x05) & 0x01); // Poll Status Register until busy bit is cleared
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send Write Enable command */
+  CddSpi_Transfer(EXTFLASH_CMD_WRITE_ENABLE);
+
+  /* Chip select disable */
+  CddSpi_CsDisable();
 }
 
-// Function to write data to a sector
-void is25lp128f_write_sector(uint32_t sector_address, uint8_t *data, uint32_t len)
+/* Function to wait until the chip is not busy */
+void CddExtFlash_Ready(void)
 {
-  // Enable writing
-  is25lp128f_write_enable();
+  /* Chip select enable */
+  CddSpi_CsEnable();
 
-  // Send Page Program command
-  spi_transfer(CMD_PAGE_PROGRAM);
+  /* TBD Add timeout error check */
+  /* Poll Status Register until busy bit is cleared */
+  while (CddSpi_WriteRead(EXTFLASH_CMD_READ_STATUS) & (0x01U));
 
-  spi_transfer((sector_address >> 16) & 0xFF);
+  /* Chip select disable */
+  CddSpi_CsDisable();
+}
 
-  // Address byte 2
-  spi_transfer((sector_address >> 8) & 0xFF);
+/* Function to wait until the chip write enabled */
+void CddExtFlash_WriteReady(void)
+{
+  /* Chip select enable */
+  CddSpi_CsEnable();
 
-  // Address byte 1
-  spi_transfer(sector_address & 0xFF);
+  /* TBD Add timeout error check */
+  /* Poll Status Register until write enable latch is set */
+  while (!(CddSpi_WriteRead(EXTFLASH_CMD_READ_STATUS) & (1UL << 1U)));
 
-  // Address byte 0
-  // Write data
-  for (uint32_t i = 0; i < len; i++)
+  /* Chip select disable */
+  CddSpi_CsDisable();
+}
+
+/* Function to write data to a sector */
+void CddExtFlash_WritePage(uint32_t PageAddress, uint8_t* TxPtr, uint32_t DataLen)
+{
+  /* Enable writing */
+  CddExtFlash_WriteEnable();
+
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send Page Program command */
+  CddSpi_Transfer(EXTFLASH_CMD_PAGE_PROGRAM);
+
+  /* Address byte 2 */
+  CddSpi_Transfer((PageAddress >> 16U) & 0xFFU);
+
+  /* Address byte 1 */
+  CddSpi_Transfer((PageAddress >>  8U) & 0xFFU);
+
+  /* Address byte 0 */
+  CddSpi_Transfer((PageAddress >>  0U) & 0xFFU);
+
+  /* Write data     */
+  for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    spi_transfer(data[i]);
+    CddSpi_Transfer(TxPtr[i]);
   }
 
-  // Wait for completion
-  is25lp128f_wait_for_read();
+  /* Chip select disable */
+  CddSpi_CsDisable();
+
+  /* Wait for completion */
+  CddExtFlash_Ready();
 }
 
+/* Function to read data from a sector */
+void CddExtFlash_Read(uint32_t Address, uint8_t* RxPtr, uint32_t DataLen)
+{
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send read command */
+  CddSpi_Transfer(EXTFLASH_CMD_NORMAL_READ);
+
+  /* Address byte 2 */
+  CddSpi_Transfer((Address >> 16U) & 0xFFU);
+
+  /* Address byte 1 */
+  CddSpi_Transfer((Address >>  8U) & 0xFFU);
+
+  /* Address byte 0 */
+  CddSpi_Transfer((Address >>  0U) & 0xFFU);
+
+  /* Write data */
+  for (uint32_t i = 0U; i < DataLen; ++i)
+  {
+    RxPtr[i] = CddSpi_Transfer(0xFFU);
+  }
+
+  /* Chip select disable */
+  CddSpi_CsDisable();
+
+  /* Wait for completion */
+  CddExtFlash_Ready();
+}
+
+/* Function to erase data from a sector */
+void CddExtFlash_EraseSector(uint32_t SectorAddress)
+{
+  /* Enable writing */
+  CddExtFlash_WriteEnable();
+
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send erase sector command */
+  CddSpi_Transfer(EXTFLASH_CMD_SEC_ERASE);
+
+  /* Address byte 2 */
+  CddSpi_Transfer((SectorAddress >> 16U) & 0xFFU);
+
+  /* Address byte 1 */
+  CddSpi_Transfer((SectorAddress >>  8U) & 0xFFU);
+
+  /* Address byte 0 */
+  CddSpi_Transfer((SectorAddress >>  0U) & 0xFFU);
+
+  /* Chip select disable */
+  CddSpi_CsDisable();
+
+  /* Wait for completion */
+  CddExtFlash_Ready();
+}
 
