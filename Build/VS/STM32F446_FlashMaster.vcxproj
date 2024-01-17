@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="STM32F446_FlashCraft|x64">
-      <Configuration>STM32F446_FlashCraft</Configuration>
+    <ProjectConfiguration Include="STM32F446_FlashMaster|x64">
+      <Configuration>STM32F446_FlashMaster</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashCraft|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashMaster|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -48,11 +48,11 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashCraft|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashMaster|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashCraft|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashMaster|x64'">
     <NMakeBuildCommandLine>..\build.bat build</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
@@ -63,7 +63,7 @@
     <IntDir>$(SolutionDir)..\Tmp\$(Configuration)_$(Platform)\</IntDir>
     <NMakeIncludeSearchPath>$(ProjectDir)../../Src</NMakeIncludeSearchPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashCraft|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='STM32F446_FlashMaster|x64'">
     <BuildLog>
       <Path>$(SolutionDir)..\Tmp\$(Configuration)_$(Platform)\$(Configuration)_BuildLog.htm</Path>
     </BuildLog>
