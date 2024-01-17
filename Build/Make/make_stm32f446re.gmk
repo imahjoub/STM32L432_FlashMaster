@@ -136,6 +136,7 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/StartUp/IntVect                               \
                  $(PATH_SRC)/StartUp/SysStartup
 
+#                 $(PATH_SRC)/Cdd/CddDma/CddDma                             \
 
 #------------------------------------------------------------------------------
 # Dependencies and targets
