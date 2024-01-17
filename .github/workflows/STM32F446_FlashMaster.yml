@@ -5,7 +5,7 @@
 #  or copy at http://www.boost.org/LICENSE_1_0.txt)
 # -----------------------------------------------------
 
-name: STM32F446_FlashCraft
+name: STM32F446_FlashMaster
 on:
   push:
     branches:

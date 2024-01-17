@@ -6,3 +6,4 @@ Build/Bin/
 Build/Tmp/
 Build/VS/.vs/
 Build/Debug/stm32f446re.jdebug.user
+Build/VS/STM32F446_FlashMaster.vcxproj.user
