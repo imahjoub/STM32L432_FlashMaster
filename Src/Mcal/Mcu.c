@@ -3,7 +3,7 @@
 
 void SystemInit(void)
 {
-  /* Set coprocessor access control register CP10 and CP11 Full Access (Enable floating point unit) */
+  /* set coprocessor access control register CP10 and CP11 Full Access */
   SCB_CPACR |= (uint32_t)((uint32_t)(3UL << 20U) | (uint32_t)(3UL << 22U));
 
   /* Set HSION (internal high-speed clock) enable bit */

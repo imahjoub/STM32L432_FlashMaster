@@ -6,49 +6,28 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
-#include <Cdd/CddSpi/CddSpi.h>
-#include <Cdd/CddDma/CddDma.h>
-
 extern bool AppShape_CheckCircle(void);
-extern volatile bool SpiTransferComplete;
-extern volatile bool SpiReceiveComplete;
-
-uint8_t Tx[1U] = {0x9FU};
-uint8_t Rx[4U] = {0xFFU, 0xFFU, 0xFFU, 0xFFU};
-
 
 int main(void)
 {
+  // Initialize the ports.
+
+  // Enable the clock for GPIOA
+  RCC_AHB1ENR |= (1 << 0);
+
+  // Configure GPIOA Pin 5 as output
+  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
+
   // Configure the System clock and flash
   SystemInit();
   SetSysClock();
 
-  // Spi initialization
-  CddSpiInit();
+  // Configure systick timer.
+  SysTick_Init();
 
-  // Chip Select (CS) initialization
-  CddSpiCsInit();
+  (void) AppShape_CheckCircle();
 
-   Dma2Stream3SpiTxInit();
-   Dma2Stream2SpiRxInit();
-
-  for(;;)
-  {
-    // Enable chip select
-    CddSpiCsEnable();
-
-    Dma2Stream3SpiSend((uint32_t)Tx, 1U);
-    while(!(SpiTransferComplete)) { /* Do nothing */ }
-    SpiTransferComplete = false;
-
-    //Dma2Stream2SpiReceive((uint32_t)Rx, 1U);
-    //while(!(SpiReceiveComplete)) { /* Do nothing */ }
-    //SpiReceiveComplete = false;
-
-    // Disable chip select
-    CddSpiCsDisable();
-  }
+  OS_Start();
 
   return 0;
 }
-
