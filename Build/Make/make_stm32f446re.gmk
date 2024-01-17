@@ -13,8 +13,8 @@
 
 PATH_MAKE       = $(CURDIR)/../Make
 PATH_SRC        = $(CURDIR)/../../Src
-PATH_TMP        = $(CURDIR)/../Tmp/STM32F446_FlashCraft_x64
-PATH_BIN        = $(CURDIR)/../Bin/STM32F446_FlashCraft_x64
+PATH_TMP        = $(CURDIR)/../Tmp/STM32F446_FlashMaster_x64
+PATH_BIN        = $(CURDIR)/../Bin/STM32F446_FlashMaster_x64
 PATH_OBJ        = $(PATH_TMP)/Obj
 
 ifeq ($(TYP_OS),win)
