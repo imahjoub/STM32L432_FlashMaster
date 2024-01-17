@@ -3,8 +3,8 @@
 <p align="center">
     <a href="https://github.com/imahjoub/STM32F446_FlashMaster/actions">
         <img src="https://github.com/imahjoub/STM32F446_FlashMaster/actions/workflows/STM32F446_FlashMaster.yml/badge.svg" alt="Build Status"></a>    
-    <a href="https://github.com/imahjoub/STM32F446_FlashMaster/actions/workflows/STM32F446_FlashCraft_CodeQl.yml">
-        <img src="https://github.com/imahjoub/STM32F446_FlashMaster/actions/workflows/STM32F446_FlashCraft_CodeQl.yml/badge.svg" alt="CodeQL"></a>
+    <a href="https://github.com/imahjoub/STM32F446_FlashMaster/actions/workflows/STM32F446_FlashMaster_CodeQl.yml">
+        <img src="https://github.com/imahjoub/STM32F446_FlashMaster/actions/workflows/STM32F446_FlashMaster_CodeQl.yml/badge.svg" alt="CodeQL"></a>
     <a href="https://github.com/imahjoub/STM32F446_FlashMaster/issues">
         <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/imahjoub/STM32F446_FlashMaster?logo=github" alt="Issues" /></a>
     <a href="https://github.com/imahjoub/STM32F446_FlashMaster/blob/main/LICENSE">

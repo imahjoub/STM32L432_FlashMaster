@@ -31,4 +31,4 @@ jobs:
         working-directory: ./Build/VS
         run: |
           make -f ../Make/make_stm32f446re.gmk ${{ matrix.suite }} TYP_OS=unix
-          ls -la ../Bin/STM32F446_FlashCraft_x64/stm32f446re.elf ../Bin/STM32F446_FlashCraft_x64/stm32f446re.hex
+          ls -la ../Bin/STM32F446_FlashMaster_x64/stm32f446re.elf ../Bin/STM32F446_FlashMaster_x64/stm32f446re.hex
