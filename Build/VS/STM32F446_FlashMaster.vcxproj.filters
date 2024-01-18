@@ -38,12 +38,15 @@
     <Filter Include="Source Files\Src\App\Shape">
       <UniqueIdentifier>{d9893ec6-5b60-412c-8f56-a71e5facada3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Cdd\CddDma">
+      <UniqueIdentifier>{4b545bad-b3ae-413a-afd0-eca8be12a978}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
       <Filter>Source Files\Src\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
+    <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash_DataProcess.c">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c">
@@ -73,6 +76,12 @@
     <ClCompile Include="..\..\Src\App\Shape\AppShape.cpp">
       <Filter>Source Files\Src\App\Shape</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\CddDma\CddDma.c">
+      <Filter>Source Files\Src\Cdd\CddDma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
+      <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -81,7 +90,7 @@
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h">
       <Filter>Source Files\Src\Cdd\CddSpi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h">
+    <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash_DataProcess.h">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Mcal\Gpt.h">
@@ -101,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Mcal\Reg.h">
       <Filter>Source Files\Src\Mcal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddDma\CddDma.h">
+      <Filter>Source Files\Src\Cdd\CddDma</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h">
+      <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

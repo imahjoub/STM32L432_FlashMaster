@@ -16,18 +16,19 @@ TCB;
 
 static TCB TaskList[] = OS_CFG_TASK_LIST_INIT;
 
-void OS_Start(void)
+void OS_Init(void)
 {
+  // Initialize the OS
   for(size_t   i = (size_t) UINT8_C(0);
                i < (size_t) (sizeof(TaskList) / sizeof(TaskList[(size_t) UINT8_C(0)]));
              ++i)
   {
-    if(TimerTimeout(TaskList[i].CallTimeNext))
-    {
-      TaskList[i].pInit();
-    }
+    TaskList[i].pInit();
   }
+}
 
+void OS_Start(void)
+{
   for(;;)
   {
     for(size_t   i = (size_t) UINT8_C(0);

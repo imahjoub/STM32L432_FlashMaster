@@ -27,6 +27,10 @@ int main(void)
 
   (void) AppShape_CheckCircle();
 
+  /* Initialize the OS */
+  OS_Init();
+
+  /* Start running the OS */
   OS_Start();
 
   return 0;

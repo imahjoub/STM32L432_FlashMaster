@@ -1,9 +1,9 @@
-/* Stack size      */
+/*     Stack size      */
 #define STACK_SIZE       0x00000200
 
 
 /* ----------------------------------------------------------------------------------- */
-/*  extern functions                                                                   */
+/*  Extern functions                                                                   */
 /* ----------------------------------------------------------------------------------- */
 extern void __my_startup           (void);
 extern void __initial_stack_pointer(void);
