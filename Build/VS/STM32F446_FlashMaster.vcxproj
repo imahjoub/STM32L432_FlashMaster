@@ -10,6 +10,7 @@
     <ClCompile Include="..\..\Src\App\App.c" />
     <ClCompile Include="..\..\Src\App\OS\OS_Task.c" />
     <ClCompile Include="..\..\Src\App\Shape\AppShape.cpp" />
+    <ClCompile Include="..\..\Src\Cdd\CddDma\CddDma.c" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
     <ClCompile Include="..\..\Src\Mcal\Gpt.c" />
@@ -21,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\App\OS\OS_Cfg.h" />
+    <ClInclude Include="..\..\Src\Cdd\CddDma\CddDma.h" />
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h" />
     <ClInclude Include="..\..\Src\Mcal\Gpt.h" />

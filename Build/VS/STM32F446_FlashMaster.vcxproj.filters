@@ -38,6 +38,9 @@
     <Filter Include="Source Files\Src\App\Shape">
       <UniqueIdentifier>{d9893ec6-5b60-412c-8f56-a71e5facada3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Cdd\CddDma">
+      <UniqueIdentifier>{4b545bad-b3ae-413a-afd0-eca8be12a978}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -73,6 +76,9 @@
     <ClCompile Include="..\..\Src\App\Shape\AppShape.cpp">
       <Filter>Source Files\Src\App\Shape</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\CddDma\CddDma.c">
+      <Filter>Source Files\Src\Cdd\CddDma</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -101,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Mcal\Reg.h">
       <Filter>Source Files\Src\Mcal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddDma\CddDma.h">
+      <Filter>Source Files\Src\Cdd\CddDma</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
