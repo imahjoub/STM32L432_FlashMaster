@@ -52,7 +52,7 @@ void CddSpi_CsInit(void)
   //GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U));
 }
 
-uint8_t CddSpi_Transfer(uint8_t TxData)
+uint8_t CddSpi_TransferSingleByte(uint8_t TxData)
 {
   /* Put data into TXFIFO */
   SPI_DR = (uint8_t)TxData;
@@ -67,29 +67,29 @@ uint8_t CddSpi_Transfer(uint8_t TxData)
   return (uint8_t)(SPI_DR);
 }
 
-void CddSpi_Send(uint8_t *TxPtr, uint32_t DataLen)
+void CddSpi_WriteMultipleBytes(const uint8_t* TxPtr, const uint32_t DataLen)
 {
   /* Send data into TXFIFO */
   for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    CddSpi_Transfer(TxPtr[i]);
+    CddSpi_TransferSingleByte(TxPtr[i]);
   }
 }
 
-void CddSpi_Receive(uint8_t *RxPtr, uint32_t DataLen)
+void CddSpi_ReadMultipleBytes(uint8_t* RxPtr, const uint32_t DataLen)
 {
   /* Get data from RXFIFO */
   for (uint32_t i = 0U; i < DataLen; ++i)
   {
-    RxPtr[i] = CddSpi_Transfer(0xFFU);
+    RxPtr[i] = CddSpi_TransferSingleByte(0xFFU);
   }
 }
 
 uint8_t CddSpi_WriteRead(uint8_t TxData)
 {
   uint8_t ReadBuff = 0U;
-  CddSpi_Transfer(TxData);
-  ReadBuff = CddSpi_Transfer(0xFFU);
+  CddSpi_TransferSingleByte(TxData);
+  ReadBuff = CddSpi_TransferSingleByte(0xFFU);
   return ReadBuff;
 }
 

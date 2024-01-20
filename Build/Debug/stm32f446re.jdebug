@@ -32,7 +32,7 @@ void OnProjectLoad (void) {
   //
   // User settings
   //
-  File.Open ("$(ProjectDir)/../Bin/STM32F446_FlashCraft_x64/stm32f446re.elf");
+  File.Open ("$(ProjectDir)/../Bin/STM32F446_FlashMaster_x64/stm32f446re.elf");
 }
 
 /*********************************************************************
