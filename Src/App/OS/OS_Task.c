@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 
 #include <Mcal/Mcu.h>
 #include <Mcal/Reg.h>
@@ -9,6 +10,10 @@
 
 /* Global variables */
 static uint64_t my_timer = 0U;
+#if 0
+static CddExtFlash_PageType TxDummyPage;
+static CddExtFlash_PageType RxDummyPage;
+#endif
 
 /***************************** Task1  *****************************/
 void Task01_Init(void);
@@ -16,31 +21,39 @@ void Task01_Func(void);
 
 void Task01_Init(void)
 {
+#if 1
+  /* Initialize the ports. */
+  /* Enable the clock for GPIOA */
+  RCC_AHB1ENR |= (1 << 0);
+
+  /* Configure GPIOA Pin 5 as output */
+  GPIOA_MODER |= (1 << 10);
+
   my_timer = 1U;
 
-  // Toggle the LED pin
+  /* Toggle the LED pin */
   GPIOA_ODR |= (uint32_t) (1UL << 5U);
+#endif
 }
 
 void Task01_Func(void)
 {
-
+#if 1
   if(TimerTimeout(my_timer))
   {
-    my_timer = TimerStart(1000U);
+    my_timer = TimerStart(500U);
 
-    // Toggle the LED pin
+    /* Toggle the LED pin */
     GPIOA_ODR ^= (uint32_t) (1UL << 5U);
   }
+#endif
 }
 
 /***************************** Task2  *****************************/
 void Task02_Init(void);
 void Task02_Func(void);
 
-void Task02_Init(void) { }
-
-void Task02_Func(void)
+void Task02_Init(void)
 {
 #if 0
   /* Spi initialization */
@@ -48,38 +61,23 @@ void Task02_Func(void)
 
   /* Chip Select (CS) initialization */
   CddSpi_CsInit();
+#endif
+}
 
-  /* Test variables */
-  volatile uint8_t one_write_cmd = 0U;
-  volatile uint8_t one_erase_cmd = 0U;
+void Task02_Func(void)
+{
+#if 0
+  TxDummyPage.Data = 0xC001CAFEU;
 
-  uint8_t WTx[16U] =
-  {
-    0x1AU, 0x1BU, 0x1CU, 0x1DU, 0x2AU, 0x2BU, 0x2CU, 0x2DU,
-    0x3AU, 0x3BU, 0x3CU, 0x3DU, 0x4AU, 0x4BU, 0x4CU, 0x4DU
-  };
+  (void)CddExtFlash_Init();
 
-  uint8_t _Rx[32U] = {0x00U};
+  (void)CddExtFlash_EraseSector();
 
-  /* Erase */
-  if(one_erase_cmd < 1U)
-  {
-    CddExtFlash_EraseSector(UINT32_C(0x000000));
-    ++one_erase_cmd;
-  }
+  memset((void*)&RxDummyPage.Data, 0xFFU, sizeof(CddExtFlash_PageType));
 
-  /*Read after erase */
-  CddExtFlash_Read(UINT32_C(0x000000), _Rx, 16U);
+  (void)CddExtFlash_WritePage((const CddExtFlash_PageType*)&TxDummyPage.Data);
 
-  /* Write */
-  if(one_write_cmd < 1U)
-  {
-    CddExtFlash_WritePage(UINT32_C(0x000000), WTx, 16U);
-    ++one_write_cmd;
-  }
-
-  /*Read after write */
-  CddExtFlash_Read(UINT32_C(0x000000), _Rx, 30U);
+  (void)CddExtFlash_ReadPage((CddExtFlash_PageType*)&RxDummyPage);
 #endif
 }
 
