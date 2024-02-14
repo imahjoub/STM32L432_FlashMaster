@@ -136,7 +136,8 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/Mcal/SysTick                                  \
                  $(PATH_SRC)/OS/OS                                         \
                  $(PATH_SRC)/StartUp/IntVect                               \
-                 $(PATH_SRC)/StartUp/SysStartup
+                 $(PATH_SRC)/StartUp/SysStartup                            \
+                 $(PATH_SRC)/Util/Md5/Md5
 
 
 #------------------------------------------------------------------------------
