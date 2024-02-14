@@ -41,6 +41,9 @@
     <Filter Include="Source Files\Src\Cdd\CddDma">
       <UniqueIdentifier>{4b545bad-b3ae-413a-afd0-eca8be12a978}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Util\Md5">
+      <UniqueIdentifier>{c9012261-582d-49b8-b5f7-39eccf4d4e73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -82,6 +85,9 @@
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Util\Md5\Md5.c">
+      <Filter>Source Files\Src\Util\Md5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -116,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h">
       <Filter>Source Files\Src\Cdd\CddExtFlash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Util\Md5\Md5.h">
+      <Filter>Source Files\Src\Util\Md5</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
