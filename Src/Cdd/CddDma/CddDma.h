@@ -1,7 +1,8 @@
 #ifndef CDD_DMA_2023_08_27_H
   #define CDD_DMA_2023_08_27_H
 
-  #include <stdio.h>
+  #include <stddef.h>
+  #include <stdint.h>
 
   void Dma2Stream3SpiTxInit(void);
   void Dma2Stream2SpiRxInit(void);
