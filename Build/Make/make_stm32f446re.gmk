@@ -21,7 +21,7 @@ ifeq ($(TYP_OS),win)
 
 PATH_TOOLS = $(CURDIR)/../tools
 PATH_TOOLS_UTIL = $(PATH_TOOLS)/util
-PATH_TOOLS_GCC  = $(PATH_TOOLS)/gcc/gcc-11.2.0-arm-none-eabi/bin
+PATH_TOOLS_GCC  = $(PATH_TOOLS)/gcc/gcc-13.2.rel1-arm-none-eabi/bin
 
 CC              = $(PATH_TOOLS_GCC)/arm-none-eabi-g++.exe
 OBJCOPY         = $(PATH_TOOLS_GCC)/arm-none-eabi-objcopy.exe
