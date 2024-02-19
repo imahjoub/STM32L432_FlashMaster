@@ -8,10 +8,10 @@
 #include <Util/UtilTimer.h>
 
 /* Global variables */
-#if 0
+#if 1
 static uint64_t my_timer = 0U;
 #endif
-#if 1
+#if 0
 static CddExtFlash_PageType TxDummyPage;
 static CddExtFlash_PageType RxDummyPage;
 static uint8_t OneEraseCmd = 0x00U;
@@ -36,7 +36,7 @@ void Task01_Func(void);
 
 void Task01_Init(void)
 {
-#if 0
+#if 1
   // Initialize the ports.
   // Enable the clock for GPIOA
   RCC_AHB1ENR |= (1 << 0);
@@ -55,7 +55,7 @@ void Task01_Init(void)
 
 void Task01_Func(void)
 {
-#if 0
+#if 1
   if(TimerTimeout(my_timer))
   {
     my_timer = TimerStart(1000U);
@@ -73,6 +73,7 @@ void Task02_Func(void);
 
 void Task02_Init(void)
 {
+#if 0
   /* Initialize Spi */
   CddSpi_Init();
 
@@ -94,12 +95,12 @@ void Task02_Init(void)
   }
 
   //CddExtFlash_Init();
+#endif
 }
 
 void Task02_Func(void)
 {
 #if 0
-
   (void)CddExtFlash_ReadPage((CddExtFlash_PageType*)&RxDummyPage);
 
   if(OneEraseCmd == 0)
