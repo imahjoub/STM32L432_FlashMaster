@@ -6,7 +6,7 @@
   {
   #endif
 
-  void OS_Init(void);
+  void OS_Init (void);
   void OS_Start(void);
 
   #if defined(__cplusplus)

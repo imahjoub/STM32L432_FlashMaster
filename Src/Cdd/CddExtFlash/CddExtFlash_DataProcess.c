@@ -2,11 +2,26 @@
 #include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
 #include <Cdd/CddSpi/CddSpi.h>
 
-/*                Static functions                     */
-static void CddExtFlash_DataProcess_WriteEnable   (void);
-static void CddExtFlash_DataProcess_Ready         (void);
+static void CddExtFlash_DataProcess_WriteEnable(void);
 static void CddExtFlash_DataProcess_WriteIsEnabled(void);
+static void CddExtFlash_DataProcess_Ready(void);
 
+
+/* Function to enable writing */
+void CddExtFlash_DataProcess_GetChipID(uint8_t* RxPtr)
+{
+  /* Chip select enable */
+  CddSpi_CsEnable();
+
+  /* Send RDID command */
+  CddSpi_TransferSingleByte(IS25LP128F_CMD_RDJDID);
+
+  /* Get the RDID */
+  CddSpi_ReadMultipleBytes(RxPtr, 3U);
+
+  /* Chip select disable */
+  CddSpi_CsDisable();
+}
 
 /* Function to enable writing */
 static void CddExtFlash_DataProcess_WriteEnable(void)
@@ -30,33 +45,33 @@ static void CddExtFlash_DataProcess_Ready(void)
   /* Chip select enable */
   CddSpi_CsEnable();
 
-  /* TBD Add timeout error check */
-  /* Poll Status Register until busy bit is cleared */
-  while (CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (0x01U));
+  /* TBD Add timeout error check  */
+  /* Check if device is still busy */
+  while (CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (IS25LP128F_WIP));
 
   /* Chip select disable */
   CddSpi_CsDisable();
 }
 
 /* Function to wait until the chip write enabled */
-static void CddExtFlash_DataProcess_WriteIsEnabled(void)
+void CddExtFlash_DataProcess_WriteIsEnabled(void)
 {
   /* Chip select enable */
   CddSpi_CsEnable();
 
   /* TBD Add timeout error check */
   /* Poll Status Register until write enable latch is set */
-  while (!(CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (1UL << 1U)));
+  while (!(CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (IS25LP128F_WEL)));
 
   /* Chip select disable */
   CddSpi_CsDisable();
 }
 
 /* Function to write data to a sector */
-void CddExtFlash_DataProcess_WritePage(const uint32_t PageIndex, const CddExtFlash_PageType* PtrPageToWrite)
+void CddExtFlash_DataProcess_WritePage(const unsigned unPageIndex, const CddExtFlash_PageType* ptrPageToWrite)
 {
-  /* Chip Address */
-  const uint32_t PageAddress = (PageIndex * sizeof(CddExtFlash_PageType));
+  /* Chip address */
+  const uint32_t PageAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
 
   /* Enable writing */
   CddExtFlash_DataProcess_WriteEnable();
@@ -76,8 +91,8 @@ void CddExtFlash_DataProcess_WritePage(const uint32_t PageIndex, const CddExtFla
   /* Address byte 0 */
   CddSpi_TransferSingleByte((PageAddress >>  0U) & 0xFFU);
 
-  /* Write data */
-  CddSpi_WriteMultipleBytes((const uint8_t*)PtrPageToWrite, (uint32_t)sizeof(CddExtFlash_PageType));
+  /* Write data     */
+  CddSpi_WriteMultipleBytes((const uint8_t*) ptrPageToWrite, (unsigned) sizeof(CddExtFlash_PageType));
 
   /* Chip select disable */
   CddSpi_CsDisable();
@@ -87,10 +102,10 @@ void CddExtFlash_DataProcess_WritePage(const uint32_t PageIndex, const CddExtFla
 }
 
 /* Function to read data from a sector */
-void CddExtFlash_DataProcess_ReadPage(const uint32_t PageIndex, CddExtFlash_PageType* PtrPageToRead)
+void CddExtFlash_DataProcess_ReadPage(const unsigned unPageIndex, CddExtFlash_PageType* ptrPageToRead)
 {
-  /* Chip Address */
-  const uint32_t PageAddress = (PageIndex * sizeof(CddExtFlash_PageType));
+   /* Chip address */
+   const uint32_t PageAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
 
   /* Chip select enable */
   CddSpi_CsEnable();
@@ -107,8 +122,8 @@ void CddExtFlash_DataProcess_ReadPage(const uint32_t PageIndex, CddExtFlash_Page
   /* Address byte 0 */
   CddSpi_TransferSingleByte((PageAddress >>  0U) & 0xFFU);
 
-  /* Read data */
-  CddSpi_ReadMultipleBytes((uint8_t*)PtrPageToRead, (uint32_t)sizeof(CddExtFlash_PageType));
+  /* Write data */
+  CddSpi_ReadMultipleBytes((uint8_t*) ptrPageToRead, (unsigned) sizeof(CddExtFlash_PageType));
 
   /* Chip select disable */
   CddSpi_CsDisable();
@@ -118,10 +133,10 @@ void CddExtFlash_DataProcess_ReadPage(const uint32_t PageIndex, CddExtFlash_Page
 }
 
 /* Function to erase data from a sector */
-void CddExtFlash_DataProcess_EraseSector(const uint32_t PageIndex)
+void CddExtFlash_DataProcess_EraseSector(const unsigned unPageIndex)
 {
-  /* Chip Address */
-  const uint32_t SectorAddress = (PageIndex * sizeof(CddExtFlash_PageType));
+   /* Chip address */
+   const uint32_t SectorAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
 
   /* Enable writing */
   CddExtFlash_DataProcess_WriteEnable();
@@ -146,5 +161,27 @@ void CddExtFlash_DataProcess_EraseSector(const uint32_t PageIndex)
 
   /* Wait for completion */
   CddExtFlash_DataProcess_Ready();
+}
+
+void CddExtFlash_DataProcess_EraseChip(void)
+{
+  /* Enable writing */
+  CddExtFlash_DataProcess_WriteEnable();
+
+  /* Chip select enable */
+  CddSpi_CsEnable();
+  /* Send erase sector command */
+  CddSpi_TransferSingleByte(IS25LP128F_CMD_SEC_CER);
+  /* Chip select disable */
+  CddSpi_CsDisable();
+
+  /* Wait for completion */
+  CddExtFlash_DataProcess_Ready();
+
+}
+
+void CddExtFlash_DataProcess_PreInit(void)
+{
+  CddExtFlash_DataProcess_EraseChip();
 }
 
