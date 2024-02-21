@@ -1,4 +1,4 @@
-#include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <Mcal/Mcu.h>
@@ -11,20 +11,19 @@ extern bool AppShape_CheckCircle(void);
 
 int main(void)
 {
-  /* Configure the System clock and flash */
+  // Configure the System clock and flash
   SystemInit();
   SetSysClock();
 
-  /* Configure systick timer */
+  // Configure systick timer.
   SysTick_Init();
 
   (void) AppShape_CheckCircle();
 
-  /* Initialize the OS */
+  // Initialize the OS. This calls the task init-functions one time only.
   OS_Init();
 
-  /* Start running the OS */
+  // Start the cooperative multitasking scheduler.
   OS_Start();
-
   return 0;
 }

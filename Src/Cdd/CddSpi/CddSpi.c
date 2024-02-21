@@ -52,7 +52,30 @@ void CddSpi_CsInit(void)
   //GPIOA_PUPDR   &= (uint32_t)(~(3UL << 8U));
 }
 
-uint8_t CddSpi_TransferSingleByte(uint8_t TxData)
+bool CddSpi_WriteMultipleBytes(const uint8_t* pSrc, const unsigned DataLen)
+{
+  for(unsigned index = (unsigned) 0U; index < DataLen; ++index)
+  {
+    (void) CddSpi_TransferSingleByte(pSrc[index]);
+  }
+
+  /* TBD Do a significant check here */
+  return true;
+}
+
+bool CddSpi_ReadMultipleBytes(uint8_t* pDest, const unsigned DataLen)
+{
+  for(unsigned index = (unsigned) 0U; index < DataLen; ++index)
+  {
+    pDest[index] = CddSpi_TransferSingleByte(0xFFU);
+  }
+
+  /* TBD Do a significant check here */
+  return true;
+}
+
+
+uint8_t CddSpi_TransferSingleByte(const uint8_t TxData)
 {
   /* Put data into TXFIFO */
   SPI_DR = (uint8_t)TxData;
@@ -60,29 +83,11 @@ uint8_t CddSpi_TransferSingleByte(uint8_t TxData)
   /* Wait until transmission complete */
   while (!(SPI_SR & (1UL << 1U)));
 
- /* Wait until receive buffer not empty */
+  /* Wait until receive buffer not empty */
   while (!(SPI_SR & (1UL << 0U)));
 
   /* Empty the RXFIFO */
   return (uint8_t)(SPI_DR);
-}
-
-void CddSpi_WriteMultipleBytes(const uint8_t* TxPtr, const uint32_t DataLen)
-{
-  /* Send data into TXFIFO */
-  for (uint32_t i = 0U; i < DataLen; ++i)
-  {
-    CddSpi_TransferSingleByte(TxPtr[i]);
-  }
-}
-
-void CddSpi_ReadMultipleBytes(uint8_t* RxPtr, const uint32_t DataLen)
-{
-  /* Get data from RXFIFO */
-  for (uint32_t i = 0U; i < DataLen; ++i)
-  {
-    RxPtr[i] = CddSpi_TransferSingleByte(0xFFU);
-  }
 }
 
 uint8_t CddSpi_WriteRead(uint8_t TxData)
