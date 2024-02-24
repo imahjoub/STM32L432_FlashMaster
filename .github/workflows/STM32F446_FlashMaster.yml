@@ -21,14 +21,12 @@ jobs:
       fail-fast: false
       matrix:
         suite: [ all ]
-        gcc: ['7-2017-q4', 'latest']
     steps:
-      - uses: carlosperate/arm-none-eabi-gcc-action@v1
+      - uses: actions/checkout@v3
         with:
-          release: ${{ matrix.gcc }}
+          fetch-depth: '0'
       - name: update-tools
         run: sudo apt install gcc-arm-none-eabi
-      - run: arm-none-eabi-gcc --version
       - name: target-ubuntu-${{ matrix.suite }}
         working-directory: ./Build/VS
         run: |
