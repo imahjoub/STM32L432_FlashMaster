@@ -62,7 +62,7 @@
     </NMakeOutput>
     <NMakeCleanCommandLine>..\build.bat clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>..\build.bat all</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>__GNUC__=12;__attribute__()=</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>__GNUC__=13;__attribute__()=;__STDC_VERSION__=202311L</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\Tmp\$(Configuration)_$(Platform)\</IntDir>
     <NMakeIncludeSearchPath>$(ProjectDir)../../Src</NMakeIncludeSearchPath>

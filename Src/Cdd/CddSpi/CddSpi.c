@@ -24,7 +24,7 @@ void CddSpi_Init(void)
   SPI_CR1 |= (uint32_t)(1U << 9U);
 
   /* Baud rate configuration */
-  SPI_CR1 |= (uint32_t)(6UL << 3U);
+  SPI_CR1 |= (uint32_t)(3UL << 3U);
 
   /* Configure SPI */
   /* Set master mode, clock polarity 0, clock phase 0 */
@@ -59,7 +59,7 @@ bool CddSpi_WriteMultipleBytes(const uint8_t* pSrc, const unsigned DataLen)
     (void) CddSpi_TransferSingleByte(pSrc[index]);
   }
 
-  /* TBD Do a significant check here */
+  /* TBD make a significant check here */
   return true;
 }
 
@@ -70,7 +70,7 @@ bool CddSpi_ReadMultipleBytes(uint8_t* pDest, const unsigned DataLen)
     pDest[index] = CddSpi_TransferSingleByte(0xFFU);
   }
 
-  /* TBD Do a significant check here */
+  /* TBD make a significant check here */
   return true;
 }
 

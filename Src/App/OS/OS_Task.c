@@ -7,26 +7,18 @@
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
-/* Global variables */
-#if 1
-static uint64_t my_timer = 0U;
-#endif
-#if 0
-static CddExtFlash_PageType TxDummyPage;
-static CddExtFlash_PageType RxDummyPage;
-static uint8_t OneEraseCmd = 0x00U;
-static uint8_t OneWriteCmd = 0x00U;
-static int     PageIsok    = 0xFFU;
+//#define OS_TASK_USE_LED
+#define OS_TASK_USE_FLASH
+
+static uint64_t my_timer;
+
+#if defined(OS_TASK_USE_FLASH)
+CddExtFlash_PageType AppPage;
 
 void OS_TaskDummy(void);
 
 void OS_TaskDummy(void)
 {
-  (void) TxDummyPage;
-  (void) RxDummyPage;
-  (void) OneEraseCmd;
-  (void) OneWriteCmd;
-  (void) PageIsok;
 }
 #endif
 
@@ -36,7 +28,8 @@ void Task01_Func(void);
 
 void Task01_Init(void)
 {
-#if 1
+  #if defined(OS_TASK_USE_LED)
+
   // Initialize the ports.
   // Enable the clock for GPIOA
   RCC_AHB1ENR |= (1 << 0);
@@ -50,12 +43,14 @@ void Task01_Init(void)
   // Set the next timer timeout to be 1s later,
   // Toggling will be sequentially carried out in the task.
   my_timer = TimerStart(1000U);
-#endif
+
+  #endif
 }
 
 void Task01_Func(void)
 {
-#if 1
+  #if defined(OS_TASK_USE_LED)
+
   if(TimerTimeout(my_timer))
   {
     my_timer = TimerStart(1000U);
@@ -63,7 +58,8 @@ void Task01_Func(void)
     // Toggle the LED pin
     GPIOA_ODR ^= (uint32_t) (1UL << 5U);
   }
-#endif
+
+  #endif
 }
 
 
@@ -73,54 +69,32 @@ void Task02_Func(void);
 
 void Task02_Init(void)
 {
-#if 0
+  #if defined(OS_TASK_USE_FLASH)
+
   /* Initialize Spi */
   CddSpi_Init();
 
   /* Initialize Spi CS */
   CddSpi_CsInit();
 
-  TxDummyPage.Data = 0xDEADC0DEU;
+  CddExtFlash_Init();
 
-  // Debug code: Let's write all new pages.
-  for(uint8_t index = (uint8_t) 0U; index < (uint8_t) IS25LP128F_PAGES_NUM_USED; ++index)
-  {
-    const bool boResultOfReadIsOK = CddExtFlash_ReadPage((CddExtFlash_PageType*) &RxDummyPage);
-
-    (void) CddExtFlash_WritePage((CddExtFlash_PageType*) &TxDummyPage);
-
-    (void) boResultOfReadIsOK;
-
-    ++TxDummyPage.Data;
-  }
-
-  //CddExtFlash_Init();
-#endif
+  #endif
 }
 
 void Task02_Func(void)
 {
-#if 0
-  (void)CddExtFlash_ReadPage((CddExtFlash_PageType*)&RxDummyPage);
+  #if defined(OS_TASK_USE_FLASH)
 
-  if(OneEraseCmd == 0)
+  if(TimerTimeout(my_timer))
   {
-    (void)CddExtFlash_EraseSector();
-    OneEraseCmd = 1U;
-    memset((void*)&RxDummyPage.Data, 0xAAU, sizeof(CddExtFlash_PageType));
+    my_timer = TimerStart(2000U);
+
+    // Write the new data.
+    CddExtFlash_WritePage(&AppPage);
   }
 
-  (void)CddExtFlash_ReadPage((CddExtFlash_PageType*)&RxDummyPage);
-
-  if(OneWriteCmd == 0)
-  {
-    (void)CddExtFlash_WritePage((CddExtFlash_PageType*)&TxDummyPage.Data);
-     OneWriteCmd = 1U;
-  }
-
-  PageIsok = CddExtFlash_ReadPage((CddExtFlash_PageType*)&RxDummyPage);
-
-#endif
+  #endif
 }
 
 

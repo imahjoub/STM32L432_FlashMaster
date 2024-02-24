@@ -46,12 +46,10 @@ void Dma2Stream3SpiTxInit(void)
 
   /* FIFO threshold selection: full FIFO */
   DMA2_STREAM3->FCR |= (uint32_t)(0UL << 0U);
+  DMA2_STREAM3->FCR |= (uint32_t)(0UL << 1U);
 
   /* Enable DMA2_Stream3_IRQn interrupt */
   //NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)59) & 0x1FUL));
-
-  /* Set peripheral address */
-  DMA2_STREAM3->PAR = (uint32_t)(&(SPI_DR));
 
   NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 }
@@ -91,22 +89,23 @@ void Dma2Stream2SpiRxInit(void)
   DMA2_STREAM2->FCR |= (uint32_t)(1UL << 2U);
 
   /* FIFO threshold selection: full FIFO */
-  DMA2_STREAM2->FCR |= (uint32_t)(0UL << 0U);
+  DMA2_STREAM2->FCR |= (uint32_t)(1UL << 0U);
+  DMA2_STREAM2->FCR |= (uint32_t)(1UL << 1U);
 
   /* Enable DMA2_Stream2_IRQn interrupt */
   //NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)58) & 0x1FUL));
-
-  /* Set peripheral address */
-  DMA2_STREAM2->PAR = (uint32_t)(&(SPI_DR));
 
   // Enable DMA interrupt trough NVIC
   NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 }
 
-void Dma2Stream3SpiSend(uint32_t TxData, const size_t DataLen)
+void Dma2Stream3SpiSend(uint32_t TxData, const uint32_t DataLen)
 {
   /* Clear interrupt flags */
   DMA2_LIFCR |= (uint32_t)((1UL << 27U) | (1UL << 25U));
+
+    /* Set peripheral address */
+  DMA2_STREAM3->PAR =  (uint32_t)(&(SPI_DR));
 
   /* Set memory address */
   DMA2_STREAM3->M0AR = (uint32_t)TxData;
@@ -114,20 +113,33 @@ void Dma2Stream3SpiSend(uint32_t TxData, const size_t DataLen)
   /* Set transfer length */
   DMA2_STREAM3->NDTR = DataLen;
 
+  /* Clear all flags before starting transfer */
+  DMA2_LIFCR |= (uint32_t)(1UL << 27U);
+  DMA2_LIFCR |= (uint32_t)(1UL << 25U);
+  DMA2_LIFCR |= (uint32_t)(1UL << 22U);
+
   /* Enable the DMA stream */
   DMA2_STREAM3->CR |= (uint32_t)(1UL << 0U);
 }
 
-void Dma2Stream2SpiReceive(uint32_t RxData, const size_t DataLen)
+void Dma2Stream2SpiReceive(uint32_t RxData, const uint32_t DataLen)
 {
   /* Clear interrupt flags */
   DMA2_LIFCR |= (uint32_t)((1UL << 21U) | (1UL << 19U));
 
+  /* Set peripheral address */
+  DMA2_STREAM2->PAR = (uint32_t)RxData;
+
   /* Set memory address */
-  DMA2_STREAM2->M0AR = (uint32_t)RxData;
+  DMA2_STREAM2->M0AR =  (uint32_t)(&(SPI_DR));
 
   /* Set transfer length */
   DMA2_STREAM2->NDTR = DataLen;
+
+  /* Clear all flags before starting transfer */
+  DMA2_LIFCR |= (uint32_t)(1UL << 21U);
+  DMA2_LIFCR |= (uint32_t)(1UL << 19U);
+  DMA2_LIFCR |= (uint32_t)(1UL << 16U);
 
   /* Enable the DMA stream */
   DMA2_STREAM2->CR |= (uint32_t)(1UL << 0U);
