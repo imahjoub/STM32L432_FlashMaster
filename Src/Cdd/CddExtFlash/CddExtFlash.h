@@ -68,7 +68,7 @@
     CddExtFlash_HashContextType HashContext;
   } CddExtFlash_PageType;
 
-  //static_assert(sizeof(CddExtFlash_PageType) == 256U, "Error: Wrong configuration size of client flash page structure");
+  static_assert(sizeof(CddExtFlash_PageType) == 256U, "Error: Wrong configuration size of client flash page structure");
 
   void     CddExtFlash_Init(void);
   bool     CddExtFlash_WritePage(const CddExtFlash_PageType* ptrPageToWrite);

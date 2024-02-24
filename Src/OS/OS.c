@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <Cdd/CddExtFlash/CddExtFlash.h>
 #include <OS/OS.h>
 #include <App/OS/OS_Cfg.h>
 #include <Util/UtilTimer.h>
@@ -15,6 +16,8 @@ typedef struct TCB
 TCB;
 
 static TCB TaskList[] = OS_CFG_TASK_LIST_INIT;
+
+extern CddExtFlash_PageType AppPage;
 
 void OS_Init(void)
 {
@@ -36,6 +39,8 @@ void OS_Start(void)
                  i < (size_t) (sizeof(TaskList) / sizeof(TaskList[(size_t) UINT8_C(0)]));
                ++i)
     {
+      ++AppPage.Data;
+
       if(TimerTimeout(TaskList[i].CallTimeNext))
       {
         TaskList[i].CallTimeNext = TimerStart(TaskList[i].CallCycle);
