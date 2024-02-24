@@ -136,7 +136,6 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/App/OS/OS_Task                                \
                  $(PATH_SRC)/App/Shape/AppShape                            \
                  $(PATH_SRC)/Cdd/CddDma/CddDma                             \
-                 $(PATH_SRC)/Cdd/CddMpu9250/CddMpu9250                     \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
