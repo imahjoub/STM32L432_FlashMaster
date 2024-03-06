@@ -47,6 +47,9 @@
     <Filter Include="Source Files\Src\Cdd\CddSerLCD">
       <UniqueIdentifier>{feb78ec2-0126-4ea2-b22e-63b7b1fa7df0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Src\Cdd\CddI2c">
+      <UniqueIdentifier>{88a10139-abda-4402-901b-82d983f1f57e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\App\App.c">
@@ -94,6 +97,9 @@
     <ClCompile Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.c">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\Cddi2c\CddI2c.c">
+      <Filter>Source Files\Src\Cdd\CddI2c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -134,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.h">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\Cddi2c\CddI2c.h">
+      <Filter>Source Files\Src\Cdd\CddI2c</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

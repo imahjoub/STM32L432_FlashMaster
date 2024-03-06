@@ -157,7 +157,9 @@
   #define PWR_BASE            0x40007000UL
   #define FLASH_BASE          0x40023C00UL
   #define GPIOA_BASE          0x40020000UL
+  #define GPIOB_BASE          0x40020400UL
   #define SPI_BASE            0x40013000UL
+  #define I2C_BASE            0x40005400UL
   #define DMA2_BASE           0x40026400UL
 
   /* RCC Registers */
@@ -188,6 +190,14 @@
   #define GPIOA_ODR           (*(volatile uint32_t*)(GPIOA_BASE + 0x14UL))
   #define GPIOA_AFRL          (*(volatile uint32_t*)(GPIOA_BASE + 0x20UL))
 
+  /* GPIOB registers */
+  #define GPIOB_MODER         (*(volatile uint32_t*)(GPIOB_BASE + 0x00UL))
+  #define GPIOB_OTYPER        (*(volatile uint32_t*)(GPIOB_BASE + 0x04UL))
+  #define GPIOB_OSPEEDR       (*(volatile uint32_t*)(GPIOB_BASE + 0x08UL))
+  #define GPIOB_PUPDR         (*(volatile uint32_t*)(GPIOB_BASE + 0x0CUL))
+  #define GPIOB_ODR           (*(volatile uint32_t*)(GPIOB_BASE + 0x14UL))
+  #define GPIOB_AFRL          (*(volatile uint32_t*)(GPIOB_BASE + 0x20UL))
+  #define GPIOB_AFRH          (*(volatile uint32_t*)(GPIOB_BASE + 0x24UL))
 
   /* SPI1 registers */
   #define SPI_CR1             (*(volatile uint32_t*)(SPI_BASE + 0x00UL))
@@ -197,6 +207,16 @@
   #define SPI_CRCPR           (*(volatile uint32_t*)(SPI_BASE + 0x10UL))
   #define SPI_RXCRCR          (*(volatile uint32_t*)(SPI_BASE + 0x14UL))
   #define SPI_TXCRCR          (*(volatile uint32_t*)(SPI_BASE + 0x18UL))
+
+  /* I2C1 registers */
+  #define I2C_CR1             (*(volatile uint32_t*)(I2C_BASE + 0x00UL))
+  #define I2C_CR2             (*(volatile uint32_t*)(I2C_BASE + 0x04UL))
+  #define I2C_OAR1            (*(volatile uint32_t*)(I2C_BASE + 0x08UL))
+  #define I2C_OAR2            (*(volatile uint32_t*)(I2C_BASE + 0x0CUL))
+  #define I2C_DR              (*(volatile uint32_t*)(I2C_BASE + 0x10UL))
+  #define I2C_SR1             (*(volatile uint32_t*)(I2C_BASE + 0x14UL))
+  #define I2C_SR2             (*(volatile uint32_t*)(I2C_BASE + 0x18UL))
+
 
   /* DMA2 Streamx base adresses */
   #define DMA2_STREAM2_BASE   (DMA2_BASE + 0x040UL)
