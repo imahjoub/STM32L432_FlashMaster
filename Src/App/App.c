@@ -7,23 +7,35 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
+#include <Cdd/CddSpi/CddSpi.h>
+#include <Cdd/CddSerLCD/CddSerLCD.h>
+
 extern bool AppShape_CheckCircle(void);
 
 int main(void)
 {
-  // Configure the System clock and flash
+  /* Configure the System clock and flash */
   SystemInit();
   SetSysClock();
 
-  // Configure systick timer.
+  /* Configure systick timer */
   SysTick_Init();
 
   (void) AppShape_CheckCircle();
 
-  // Initialize the OS. This calls the task init-functions one time only.
+  /* Initialize Spi */
+  CddSpi_Init();
+  CddSpi_CsInit();
+
+  /* Initialize LCD */
+  CddSerLCD_Init();
+
+  /* Initialize the OS. This calls the task init-functions one time only */
   OS_Init();
 
-  // Start the cooperative multitasking scheduler.
+  /* Start the cooperative multitasking scheduler */
   OS_Start();
+
   return 0;
 }
+

@@ -138,6 +138,7 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/Cdd/CddDma/CddDma                             \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
+                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD                       \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \

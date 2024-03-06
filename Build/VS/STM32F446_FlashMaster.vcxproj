@@ -13,6 +13,7 @@
     <ClCompile Include="..\..\Src\Cdd\CddDma\CddDma.c" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.c" />
     <ClCompile Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash_DataProcess.c" />
+    <ClCompile Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
     <ClCompile Include="..\..\Src\Mcal\Gpt.c" />
     <ClCompile Include="..\..\Src\Mcal\Mcu.c" />
@@ -27,6 +28,7 @@
     <ClInclude Include="..\..\Src\Cdd\CddDma\CddDma.h" />
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash.h" />
     <ClInclude Include="..\..\Src\Cdd\CddExtFlash\CddExtFlash_DataProcess.h" />
+    <ClInclude Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h" />
     <ClInclude Include="..\..\Src\Mcal\Gpt.h" />
     <ClInclude Include="..\..\Src\Mcal\Mcu.h" />
