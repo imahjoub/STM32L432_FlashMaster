@@ -7,6 +7,9 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
+#include <Cdd/CddSpi/CddSpi.h>
+#include <Cdd/CddSerLcd/CddSerLcd.h>
+
 extern bool AppShape_CheckCircle(void);
 
 int main(void)
@@ -20,10 +23,17 @@ int main(void)
 
   (void) AppShape_CheckCircle();
 
+  CddSpi_Init();
+  CddSpi_CsInit();
+
+  CddSerLCD_Init();
+
   // Initialize the OS. This calls the task init-functions one time only.
   OS_Init();
 
   // Start the cooperative multitasking scheduler.
   OS_Start();
+
   return 0;
 }
+
