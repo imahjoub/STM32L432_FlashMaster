@@ -60,7 +60,7 @@ void CddI2c_StartTransmission(uint8_t address, uint8_t direction)
   while (!(I2C1_SR1 & (uint32_t)(1UL << 0U)));
 
   /* Send slave address and direction */
-  I2C1_DR = (address << 1) | direction;
+  I2C1_DR = (uint32_t)((address << 1) | direction);
 
   /* Wait for address to be acknowledged */
   if (direction == 0)

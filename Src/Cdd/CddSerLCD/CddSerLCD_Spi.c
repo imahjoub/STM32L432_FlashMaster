@@ -1,4 +1,4 @@
-#include <Cdd/CddSerLcd/CddSerLCD_Spi.h>
+#include <Cdd/CddSerLCD/CddSerLCD_Spi.h>
 #include <Cdd/CddSpi/CddSpi.h>
 
 #include <Util/UtilTimer.h>

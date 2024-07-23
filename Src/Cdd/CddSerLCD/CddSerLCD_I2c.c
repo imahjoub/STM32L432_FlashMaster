@@ -1,4 +1,4 @@
-#include <Cdd/CddSerLcd/CddSerLCD_I2c.h>
+#include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
 #include <Cdd/CddI2c/CddI2c.h>
 
 #include <Util/UtilTimer.h>
