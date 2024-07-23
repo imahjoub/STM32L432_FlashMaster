@@ -8,7 +8,7 @@
 #include <Util/UtilTimer.h>
 
 #include <Cdd/CddI2c/CddI2c.h>
-#include <Cdd/CddSerLcd/CddSerLcd_I2c.h>
+#include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
 #include <Cdd/CddSpi/CddSpi.h>
 
 extern bool AppShape_CheckCircle(void);
