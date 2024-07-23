@@ -22,7 +22,7 @@ __initial_stack_pointer = 0x20002000 - 4;
 MEMORY
 {
   VEC(rx)  : ORIGIN = 0x08000000, LENGTH = 0x300
-  ROM(rx)  : ORIGIN = 0x08000300, LENGTH = 32K - 0x300
+  ROM(rx)  : ORIGIN = 0x08000300, LENGTH = 512K - 0x300
   RAM(rwx) : ORIGIN = 0x20000000, LENGTH = 0x7000
 }
 

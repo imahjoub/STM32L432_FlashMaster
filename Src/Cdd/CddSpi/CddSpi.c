@@ -4,13 +4,14 @@
 void CddSpi_Init(void)
 {
   /*---------------------  GPIO configuration  ---------------------*/
-  /* Enable clock to PortA of SPI Pins */
+  /* Enable clock for GPIOA */
   RCC_AHB1ENR |= (uint32_t)(1UL << 0U);
 
   /* Configure GPIO pins for SPI (SPI1 on PA5, PA6, and PA7) */
   /* Set PA5, PA6, PA7 to alternate function mode            */
-  /* Set alternate function for PA5, PA6, PA7 (SPI1)         */
   GPIOA_MODER |= (uint32_t)((2U << 10U) | (2U << 12U) | (2U << 14U));
+
+  /* Set alternate function for PA5, PA6, PA7 (SPI1)         */
   GPIOA_AFRL  |= (uint32_t)((5U << 20U) | (5U << 24U) | (5U << 28U));
 
   /*---------------------  SPI configuration  ---------------------*/

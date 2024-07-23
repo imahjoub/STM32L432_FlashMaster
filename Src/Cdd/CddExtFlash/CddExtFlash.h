@@ -11,7 +11,7 @@
     |     Block No.    |      Blocks       |        Sectors        |         Pages          |    Address Range    |
     |    (64Kbyte)     |    (32Kbyte)      |   (4 Kbyte per Sec)   |  (256 bytes per Page)  |                     |
     |------------------|-------------------|-----------------------|------------------------|---------------------|
-    |                  |                   |       Sector 0        |     Page0 - Page15     |  000000h ï¿½ 000FFFh  |
+    |                  |                   |       Sector 0        |     Page0 - Page15     |  000000h – 000FFFh  |
     |                  |      Block 0      |-----------------------|- ----------------------|---------------------|
     |                  |                   |         ****          |         ****           |        ****         |
     |     Block 0      |-------------------|-----------------------|------------------------|---------------------|
@@ -23,13 +23,13 @@
     |        *                   *                    *                        *                       *          |
     |        *                   *                    *                        *                       *          |
     |-------------------------------------------------------------------------------------------------------------|
-    |                  |                   |      Sector 4080      |     Page0 - Page15     |  FF0000h ï¿½ FF0FFFh  |
+    |                  |                   |      Sector 4080      |     Page0 - Page15     |  FF0000h – FF0FFFh  |
     |                  |     Block 510     |-----------------------|- ----------------------|---------------------|
     |                  |                   |         ****          |         ****           |        ****         |
     |    Block 255     |-------------------|-----------------------|------------------------|---------------------|
     |                  |                   |         ****          |         ****           |        ****         |
     |                  |     Block 511     |-----------------------|------------------------|---------------------|
-    |                  |                   |       Sector 4095     |     Page0 - Page15     |  FFF000h ï¿½ FFFFFFh  |
+    |                  |                   |       Sector 4095     |     Page0 - Page15     |  FFF000h – FFFFFFh  |
      ------------------------------------------------------------------------------------------------------------- */
 
   /* Define IS25LP128F commands */
@@ -68,9 +68,7 @@
     CddExtFlash_HashContextType HashContext;
   } CddExtFlash_PageType;
 
-  #if(__STDC_VERSION__ >= 202311L)
   static_assert(sizeof(CddExtFlash_PageType) == 256U, "Error: Wrong configuration size of client flash page structure");
-  #endif
 
   void     CddExtFlash_Init(void);
   bool     CddExtFlash_WritePage(const CddExtFlash_PageType* ptrPageToWrite);
