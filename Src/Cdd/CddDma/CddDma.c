@@ -51,7 +51,7 @@ void Dma2Stream3SpiTxInit(void)
   /* Enable DMA2_Stream3_IRQn interrupt */
   //NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)59) & 0x1FUL));
 
-  NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+  //NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 }
 
 void Dma2Stream2SpiRxInit(void)
@@ -96,7 +96,7 @@ void Dma2Stream2SpiRxInit(void)
   //NVIC->ISER[1U] = (uint32_t)(1UL << (((uint32_t)58) & 0x1FUL));
 
   // Enable DMA interrupt trough NVIC
-  NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+  //NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 }
 
 void Dma2Stream3SpiSend(uint32_t TxData, const uint32_t DataLen)

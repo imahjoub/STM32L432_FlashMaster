@@ -1,5 +1,5 @@
-#ifndef CDD_SER_LCD
-  #define CDD_SER_LCD
+#ifndef CDD_SER_LCD_SPI
+  #define CDD_SER_LCD_SPI
 
   #include <stdint.h>
   #include <stddef.h>
@@ -17,8 +17,8 @@
   #define CDD_SERLCD_SIZE_LINES_01        (uint8_t)0x07U
 
 
-  void CddSerLCD_Init(void);
-  void CddSerLCD_WriteLine(const char* StringToPrint, const size_t StringSize, const size_t LineIndex);
+  void CddSerLCD_Spi_Init(void);
+  void CddSerLCD_Spi_WriteLine(const char* StringToPrint, const size_t StringSize, const size_t LineIndex);
 
 
-#endif // !CDD_SER_LCD
+#endif /* CDD_SER_LCD_SPI */

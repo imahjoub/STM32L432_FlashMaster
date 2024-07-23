@@ -16,3 +16,28 @@
 </p>
 
 STM32F446_FlashMaster is a baremetal project that uses the STM32F446RE microcontroller. Its purpose is to communicate with the IS25LP128F flash chip through SPI.
+
+## Devices Used
+
+- **STM32F446RE**: ARM Cortex-M4 microcontroller.
+- **IS25LP128F** : NOR flash chip for data storage.
+- **SerLCD**     : I2C-controlled LCD display.
+
+## Project Goals
+TBD
+
+## Getting Started
+
+### Prerequisites
+
+- NUCLEO-F446RE Development Board
+- IS25LP128F Serial Flash Memory
+- SparkFun 20x4 SerLCD
+
+### Setup & Communication Protocols
+
+1. Connect the IS25LP128F flash memory to the STM32F446RE using SPI (PA5, PA6, PA7).
+2. Connect the SerLCD to the STM32F446RE using I2C (PB6, PB7).
+3. Program the STM32F446RE using an ST-Link or J-Link programmer.
+
+

@@ -19,9 +19,12 @@ PATH_OBJ        = $(PATH_TMP)/Obj
 
 ifeq ($(TYP_OS),win)
 
-PATH_TOOLS = $(CURDIR)/../tools
+PATH_TOOLS      = $(CURDIR)/../tools
 PATH_TOOLS_UTIL = $(PATH_TOOLS)/util
 PATH_TOOLS_GCC  = $(PATH_TOOLS)/gcc/gcc-13.2.1-arm-none-eabi/bin
+PATH_ST_PERIPH  = $(PATH_SRC)/Mcal/ThirdParty/STM32F4xx_StdPeriph_Driver
+PATH_ST_CMSIS   = $(PATH_SRC)/Mcal/ThirdParty/CMSIS
+
 
 CC              = $(PATH_TOOLS_GCC)/arm-none-eabi-g++.exe
 OBJCOPY         = $(PATH_TOOLS_GCC)/arm-none-eabi-objcopy.exe
@@ -80,7 +83,13 @@ WFLAGS         = -Wall                                                     \
                  -Wdouble-promotion                                        \
                  -Wno-comment
 
+C_ST_INCLUDE   = -I$(PATH_ST_PERIPH)/inc                                   \
+                 -I$(PATH_ST_CMSIS)/Include                                \
+                 -I$(PATH_ST_CMSIS)/Device/ST/STM32F4xx/Include
+
 C_INCLUDES     = -I$(PATH_SRC)
+
+C_DEFINES      = -DSTM32F446xx
 
 CFLAGS_BASE    = $(WFLAGS)                                                 \
                  -mcpu=cortex-m4                                           \
@@ -99,7 +108,8 @@ CFLAGS_BASE    = $(WFLAGS)                                                 \
                  -ffunction-sections                                       \
                  -fdata-sections                                           \
                  -MMD -MF $(PATH_OBJ)/$(basename $(@F)).d                  \
-                 $(C_INCLUDES)
+                 $(C_INCLUDES)                                             \
+                 $(C_DEFINES)
 
 
 CFLAGS         = -O0                                                       \
@@ -131,14 +141,57 @@ LDFLAGS        = $(CPPFLAGS)                                               \
 #------------------------------------------------------------------------------
 # Source files
 #------------------------------------------------------------------------------
+SRC_ST_FILE   =  $(PATH_ST_PERIPH)/src/misc                                \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_adc                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_can                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_cec                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_crc                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_aes                  \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_des                  \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_tdes                 \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dac                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dbgmcu                    \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dcmi                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dfsdm                     \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dma                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dma2d                     \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_dsi                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_exti                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_flash                     \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_flash_ramfunc             \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_fmc                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_fmpi2c                    \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_gpio                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash_md5                  \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash_sha1                 \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_i2c                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_iwdg                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_lptim                     \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_ltdc                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_pwr                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_rcc                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_rng                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_rtc                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_sai                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_sdio                      \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_spdifrx                   \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_spi                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_syscfg                    \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_tim                       \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_usart                     \
+                 $(PATH_ST_PERIPH)/src/stm32f4xx_wwdg
 
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/App/OS/OS_Task                                \
                  $(PATH_SRC)/App/Shape/AppShape                            \
+                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
+                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_Spi                   \
                  $(PATH_SRC)/Cdd/CddDma/CddDma                             \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
-                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD                       \
+                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \

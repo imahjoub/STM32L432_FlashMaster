@@ -7,8 +7,9 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
+#include <Cdd/CddI2c/CddI2c.h>
+#include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
 #include <Cdd/CddSpi/CddSpi.h>
-#include <Cdd/CddSerLCD/CddSerLCD.h>
 
 extern bool AppShape_CheckCircle(void);
 
@@ -18,24 +19,30 @@ int main(void)
   SystemInit();
   SetSysClock();
 
-  /* Configure systick timer */
+  /* Configure systick timer.*/
   SysTick_Init();
 
   (void) AppShape_CheckCircle();
 
-  /* Initialize Spi */
-  CddSpi_Init();
-  CddSpi_CsInit();
+  /* Initialize I2C1 */
+  CddI2c_Init();
+  CddSerLCD_I2c_Init();
 
-  /* Initialize LCD */
-  CddSerLCD_Init();
+  for(;;)
+  {
+    CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+    /* Delay to ensure the clear command is processed */
+    CddSerLcd_I2c_msDelays(5U);
+    CddSerLCD_I2c_PrintString("Hello");
+    CddSerLcd_I2c_msDelays(2000U);
 
-  /* Initialize the OS. This calls the task init-functions one time only */
-  OS_Init();
+    CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+    /* Delay to ensure the clear command is processed */
+    CddSerLcd_I2c_msDelays(5U);
+    CddSerLCD_I2c_PrintString("World");
+    CddSerLcd_I2c_msDelays(2000U);
 
-  /* Start the cooperative multitasking scheduler */
-  OS_Start();
+  }
 
   return 0;
 }
-

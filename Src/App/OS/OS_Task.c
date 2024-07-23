@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <Cdd/CddExtFlash/CddExtFlash.h>
-#include <Cdd/CddSerLCD/CddSerLCD.h>
+#include <Cdd/CddSerLCD/CddSerLCD_Spi.h>
 #include <Cdd/CddSpi/CddSpi.h>
 #include <Mcal/Mcu.h>
 #include <Mcal/Reg.h>
@@ -104,9 +104,9 @@ void Task02_Func(void)
 
 /************************* TASK3 *********************************/
 static uint64_t TaskTimer03;
-static const char HelloWorldString01[] = "STM32F4_FlashMaster!";
-static const char HelloWorldString02[] = "SerLcd";
-static const char HelloWorldString03[] = "IS25LP128";
+static const char HelloWorldString01[] = "Flash Master";
+static const char HelloWorldString02[] = "            ";
+static const char HelloWorldString03[] = "STM32F446   ";
 
 void Task03_Init(void);
 void Task03_Func(void);
@@ -127,14 +127,14 @@ void Task03_Func(void)
     switch(StringIndex)
     {
       case 0U:
-        CddSerLCD_WriteLine(&HelloWorldString01[0], (size_t) (sizeof(HelloWorldString01) - 1U), LineIndex % 4U);
+        CddSerLCD_Spi_WriteLine(&HelloWorldString01[0], (size_t) (sizeof(HelloWorldString01) - 1U), LineIndex % 4U);
         break;
       case 1U:
-        CddSerLCD_WriteLine(&HelloWorldString02[0], (size_t) (sizeof(HelloWorldString02) - 1U), LineIndex % 4U);
+        CddSerLCD_Spi_WriteLine(&HelloWorldString02[0], (size_t) (sizeof(HelloWorldString02) - 1U), LineIndex % 4U);
         break;
       case 2U:
       default:
-        CddSerLCD_WriteLine(&HelloWorldString03[0], (size_t) (sizeof(HelloWorldString03) - 1U), LineIndex % 4U);
+        CddSerLCD_Spi_WriteLine(&HelloWorldString03[0], (size_t) (sizeof(HelloWorldString03) - 1U), LineIndex % 4U);
         break;
     }
 

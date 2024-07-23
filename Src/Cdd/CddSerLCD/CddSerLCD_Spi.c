@@ -1,9 +1,9 @@
-#include <Cdd/CddSerLCD/CddSerLCD.h>
+#include <Cdd/CddSerLCD/CddSerLCD_Spi.h>
 #include <Cdd/CddSpi/CddSpi.h>
 
 #include <Util/UtilTimer.h>
 
-static void CddSerLCD_msDelays(const unsigned ms_count)
+static void CddSerLcd_Spi_msDelays(const unsigned ms_count)
 {
   const uint64_t my_timer = TimerStart(ms_count + 1U);
 
@@ -13,62 +13,62 @@ static void CddSerLCD_msDelays(const unsigned ms_count)
   }
 }
 
-static void CddSerLcd_ClearLCD(void)
+static void CddSerLcd_Spi_ClearLCD(void)
 {
   /* Wait 500ms */
-  CddSerLCD_msDelays(500U);
+  CddSerLcd_Spi_msDelays(500U);
   /* Chip select enable */
   CddSpi_CsEnable();
 
   /* Send clear display command and move cursor to home */
   CddSpi_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
   CddSpi_TransferSingleByte(CDD_SERLCD_CLEAR_DISPLAY);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
 
  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-static void CddSerLcd_SetBlueBacklight(void)
+static void CddSerLcd_Spi_SetBlueBacklight(void)
 {
   /* Chip select enable */
   CddSpi_CsEnable();
 
   /* Set Backlight into Blue */
   CddSpi_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
   CddSpi_TransferSingleByte(CDD_SERLCD_BLUE_BACKLIGHT);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
 
  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-static void CddSerLcd_SetLCDSize(void)
+static void CddSerLcd_Spi_SetLCDSize(void)
 {
-  /*               Set lines to 4                    */
+  /* Change lines count to 4 */
   /* Chip select enable */
   CddSpi_CsEnable();
   CddSpi_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
   CddSpi_TransferSingleByte(CDD_SERLCD_SIZE_LINES_04);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
  /* Chip select disable */
   CddSpi_CsDisable();
 
-  /*                Set width to 20                 */
+  /* Change width count to 20 */
   /* Chip select enable */
   CddSpi_CsEnable();
   CddSpi_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
   CddSpi_TransferSingleByte(CDD_SERLCD_SIZE_WIDTH_20);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-static void CddSerLcd_SelectLine(const size_t LineIndexToUse)
+static void CddSerLcd_Spi_SelectLine(const size_t LineIndexToUse)
 {
   /* To set the active cursor position, send the control character 254 followed by 128 + row + position */
   /* OpenLCD.write(254); */
@@ -80,28 +80,28 @@ static void CddSerLcd_SelectLine(const size_t LineIndexToUse)
   CddSpi_CsEnable();
 
   CddSpi_TransferSingleByte(0xFEU);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
 
   CddSpi_TransferSingleByte(0x80U + IndexToRowTable[LineIndexToUse] + 0x00);
-  CddSerLCD_msDelays(4U);
+  CddSerLcd_Spi_msDelays(4U);
 
  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-void CddSerLCD_Init(void)
+void CddSerLCD_Spi_Init(void)
 {
   /* Clear display */
-  CddSerLcd_ClearLCD();
+  CddSerLcd_Spi_ClearLCD();
 
   /* Set blue backlight */
-  CddSerLcd_SetBlueBacklight();
+  CddSerLcd_Spi_SetBlueBacklight();
 
   /* Set blue backlight */
-  CddSerLcd_SetLCDSize();
+  CddSerLcd_Spi_SetLCDSize();
 }
 
-void CddSerLCD_WriteLine(const char* StringToPrint, const size_t StringSize, const size_t LineIndex)
+void CddSerLCD_Spi_WriteLine(const char* StringToPrint, const size_t StringSize, const size_t LineIndex)
 {
   // Limit to the maximum width of the display width.
   const size_t LineIndexToUse = ((LineIndex > (size_t) 3U) ? (size_t) 3U : LineIndex);
@@ -109,13 +109,13 @@ void CddSerLCD_WriteLine(const char* StringToPrint, const size_t StringSize, con
   // Limit to the maximum width of the display width.
   const size_t SizeToWrite = ((StringSize > (size_t) 20U) ? (size_t) 20U : StringSize);
 
-  CddSerLcd_SelectLine(LineIndexToUse);
+  CddSerLcd_Spi_SelectLine(LineIndexToUse);
 
   for(size_t idx = (size_t) 0U; idx < (size_t) 20U; ++idx)
   {
     /* Chip select enable */
     CddSpi_CsEnable();
-    CddSerLCD_msDelays(4U);
+    CddSerLcd_Spi_msDelays(4U);
 
     const char CharToWrite = ((idx < SizeToWrite) ? StringToPrint[idx] : ' ');
 
@@ -123,7 +123,7 @@ void CddSerLCD_WriteLine(const char* StringToPrint, const size_t StringSize, con
     CddSpi_TransferSingleByte(CharToWrite);
 
     /* Chip select disable */
-    CddSerLCD_msDelays(4U);
+    CddSerLcd_Spi_msDelays(4U);
     CddSpi_CsDisable();
 
   }
