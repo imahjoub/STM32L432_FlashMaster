@@ -192,7 +192,6 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
                  $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
                  $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
-                 $(PATH_SRC)/Cdd/CddMpu9250/CddMpu9250                     \
                  $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
