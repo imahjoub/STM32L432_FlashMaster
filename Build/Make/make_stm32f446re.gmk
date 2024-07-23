@@ -83,10 +83,11 @@ WFLAGS         = -Wall                                                     \
                  -Wdouble-promotion                                        \
                  -Wno-comment
 
-C_INCLUDES     = -I$(PATH_SRC)                                             \
-                 -I$(PATH_ST_PERIPH)/inc                                   \
+C_ST_INCLUDE   = -I$(PATH_ST_PERIPH)/inc                                   \
                  -I$(PATH_ST_CMSIS)/Include                                \
                  -I$(PATH_ST_CMSIS)/Device/ST/STM32F4xx/Include
+
+C_INCLUDES     = -I$(PATH_SRC)
 
 C_DEFINES      = -DSTM32F446xx
 

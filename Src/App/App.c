@@ -7,7 +7,7 @@
 #include <OS/OS.h>
 #include <Util/UtilTimer.h>
 
-#include <Cdd/CddI2C/CddI2c.h>
+#include <Cdd/CddI2c/CddI2c.h>
 #include <Cdd/CddSerLcd/CddSerLcd_I2c.h>
 #include <Cdd/CddSpi/CddSpi.h>
 
