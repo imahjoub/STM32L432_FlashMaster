@@ -94,11 +94,14 @@
     <ClCompile Include="..\..\Src\Util\Md5\Md5.c">
       <Filter>Source Files\Src\Util\Md5</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.c">
-      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Cdd\Cddi2c\CddI2c.c">
       <Filter>Source Files\Src\Cdd\CddI2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.c">
+      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_Spi.c">
+      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,11 +141,14 @@
     <ClInclude Include="..\..\Src\Util\Md5\Md5.h">
       <Filter>Source Files\Src\Util\Md5</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Cdd\CddSerLcd\CddSerLCD.h">
-      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\Cddi2c\CddI2c.h">
       <Filter>Source Files\Src\Cdd\CddI2c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.h">
+      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_Spi.h">
+      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
