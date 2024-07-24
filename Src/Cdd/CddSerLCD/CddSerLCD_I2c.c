@@ -13,21 +13,21 @@ void CddSerLcd_I2c_msDelays(const unsigned ms_count)
   }
 }
 
-void CddSerLCD_I2c_PrintString(char* Str)
+void CddSerLCD_I2c_PrintString(char* StringToPrint)
 {
   CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0);
 
-  while (*Str)
+  while (*StringToPrint)
   {
-    CddI2c_TransferSingleByte((uint8_t)(*Str));
-    ++Str;
+    CddI2c_TransferSingleByte((uint8_t)(*StringToPrint));
+    ++StringToPrint;
   }
 
   CddI2c_Stop();
 }
 
 
-void CddSerLCD_I2c_SendCommand(uint8_t command)
+void CddSerLCD_I2c_SendCommand(uint8_t Command)
 {
   /* Start, set slave address to write */
   CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0U);
@@ -36,7 +36,7 @@ void CddSerLCD_I2c_SendCommand(uint8_t command)
   CddI2c_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
 
   /* Send the command */
-  CddI2c_TransferSingleByte(command);
+  CddI2c_TransferSingleByte(Command);
 
   /* Stop condition */
   CddI2c_Stop();
