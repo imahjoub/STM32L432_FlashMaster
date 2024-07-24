@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <string.h>
+#include <stdbool.h>
 
 #include <Mcal/Mcu.h>
 #include <Mcal/SysTick.h>
