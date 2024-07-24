@@ -19,20 +19,14 @@ STM32F446_FlashMaster is a baremetal project that uses the STM32F446RE microcont
 
 ## Devices Used
 
-- **STM32F446RE**: ARM Cortex-M4 microcontroller.
-- **IS25LP128F** : NOR flash chip for data storage.
-- **SerLCD**     : I2C-controlled LCD display.
+- **STM32F446RE**: NUCLEO-F446RE Development Board.
+- **IS25LP128F** : Serial Flash Memory.
+- **SerLCD**     : SparkFun 20x4 SerLCD
 
 ## Project Goals
 TBD
 
 ## Getting Started
-
-### Prerequisites
-
-- NUCLEO-F446RE Development Board
-- IS25LP128F Serial Flash Memory
-- SparkFun 20x4 SerLCD
 
 ### Setup & Communication Protocols
 
