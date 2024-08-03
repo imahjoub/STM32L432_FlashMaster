@@ -9,12 +9,10 @@
   extern void Task01_Init(void);
   extern void Task02_Init(void);
   extern void Task03_Init(void);
-  extern void Task04_Init(void);
 
   extern void Task01_Func(void);
   extern void Task02_Func(void);
   extern void Task03_Func(void);
-  extern void Task04_Func(void);
 
   #define OS_CFG_TASK_LIST_ENTRY(init, func, t0, cycle) { (init), (func), (t0), (cycle) }
 
@@ -23,7 +21,6 @@
     OS_CFG_TASK_LIST_ENTRY(Task01_Init, Task01_Func, 0U,   17U), \
     OS_CFG_TASK_LIST_ENTRY(Task02_Init, Task02_Func, 3U,  229U), \
     OS_CFG_TASK_LIST_ENTRY(Task03_Init, Task03_Func, 7U,  514U), \
-    OS_CFG_TASK_LIST_ENTRY(Task04_Init, Task04_Func, 12U, 799U)  \
   }
 
   #if defined(__cplusplus)
