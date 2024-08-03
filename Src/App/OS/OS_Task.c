@@ -9,11 +9,13 @@
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
-//#define OS_TASK_USE_LED
+#define OS_TASK_USE_LED
 //#define OS_TASK_USE_FLASH
 //#define OS_TASK_USE_SERLCD_I2C
 
 CddExtFlash_PageType AppPage;
+
+static uint64_t TaskTimer02;
 
 #if defined(OS_TASK_USE_FLASH)
 
@@ -34,18 +36,18 @@ void Task01_Init(void)
 {
   #if defined(OS_TASK_USE_LED)
 
-  // Initialize the ports.
-  // Enable the clock for GPIOA
-  RCC_AHB1ENR |= (1 << 0);
+  /*. Enable GPIO Clock for GPIOB */
+  RCC_AHB2ENR |= (1U << 1U);
 
-  // Configure GPIOA Pin 5 as output
-  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
+  /*. Configure PB3 as output */
+  GPIOB_MODER |= (1U << 6U);
+  GPIOB_MODER &= ~(1U << 7U);
 
-  // Switch on the LED.
-  GPIOA_ODR |= (uint32_t) (1UL << 5U);
+  /* Toggle the LED pin */
+  GPIOB_ODR |= (uint32_t) (1UL << 3U);
 
-  // Set the next timer timeout to be 1s later,
-  // Toggling will be sequentially carried out in the task.
+  /* Set the next timer timeout to be 1s later, */
+  /* Toggling will be sequentially carried out in the task. */
   TaskTimer02 = TimerStart(1000U);
 
   #endif
@@ -59,8 +61,8 @@ void Task01_Func(void)
   {
     TaskTimer02 = TimerStart(1000U);
 
-    // Toggle the LED pin
-    GPIOA_ODR ^= (uint32_t) (1UL << 5U);
+    /* Toggle the LED pin */
+    GPIOB_ODR ^= (uint32_t) (1UL << 3U);
   }
 
   #endif
