@@ -1,9 +1,9 @@
 Build/tools/gcc/gcc-13.2.1-arm-none-eabi/**
-Build/VS/STM32F446_FlashCraft/STM32F446_FlashCraft.vcxproj.user
-Build/VS/STM32F446_FlashCraft/.vs/
-Build/VS/STM32F446_FlashCraft.vcxproj.user
+Build/VS/STM32L432_FlashMaster/STM32L432_FlashMaster.vcxproj.user
+Build/VS/STM32L432_FlashMaster/.vs/
+Build/VS/STM32L432_FlashMaster.vcxproj.user
 Build/Bin/
 Build/Tmp/
 Build/VS/.vs/
-Build/Debug/stm32f446re.jdebug.user
-Build/VS/STM32F446_FlashMaster.vcxproj.user
+Build/Debug/stm32l432kc.jdebug.user
+Build/VS/STM32L432_FlashMaster.vcxproj.user

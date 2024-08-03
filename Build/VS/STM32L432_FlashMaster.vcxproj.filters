@@ -100,9 +100,6 @@
     <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.c">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_Spi.c">
-      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -145,9 +142,6 @@
       <Filter>Source Files\Src\Cdd\CddI2c</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.h">
-      <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_Spi.h">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClInclude>
   </ItemGroup>

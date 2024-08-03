@@ -3,19 +3,19 @@
 
 #include <Cdd/CddExtFlash/CddExtFlash.h>
 #include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
-#include <Cdd/CddSerLCD/CddSerLCD_Spi.h>
 #include <Cdd/CddI2c/CddI2c.h>
 #include <Cdd/CddSpi/CddSpi.h>
 #include <Mcal/Mcu.h>
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
-//#define OS_TASK_USE_LED
+#define OS_TASK_USE_LED
 //#define OS_TASK_USE_FLASH
-//#define OS_TASK_USE_SERLCD_SPI
-#define OS_TASK_USE_SERLCD_I2C
+//#define OS_TASK_USE_SERLCD_I2C
 
 CddExtFlash_PageType AppPage;
+
+static uint64_t TaskTimer02;
 
 #if defined(OS_TASK_USE_FLASH)
 
@@ -36,18 +36,18 @@ void Task01_Init(void)
 {
   #if defined(OS_TASK_USE_LED)
 
-  // Initialize the ports.
-  // Enable the clock for GPIOA
-  RCC_AHB1ENR |= (1 << 0);
+  /*. Enable GPIO Clock for GPIOB */
+  RCC_AHB2ENR |= (1U << 1U);
 
-  // Configure GPIOA Pin 5 as output
-  GPIOA_MODER |= (1 << 10);  // Set pin 5 to output mode
+  /*. Configure PB3 as output */
+  GPIOB_MODER |= (1U << 6U);
+  GPIOB_MODER &= ~(1U << 7U);
 
-  // Switch on the LED.
-  GPIOA_ODR |= (uint32_t) (1UL << 5U);
+  /* Toggle the LED pin */
+  GPIOB_ODR |= (uint32_t) (1UL << 3U);
 
-  // Set the next timer timeout to be 1s later,
-  // Toggling will be sequentially carried out in the task.
+  /* Set the next timer timeout to be 1s later, */
+  /* Toggling will be sequentially carried out in the task. */
   TaskTimer02 = TimerStart(1000U);
 
   #endif
@@ -61,8 +61,8 @@ void Task01_Func(void)
   {
     TaskTimer02 = TimerStart(1000U);
 
-    // Toggle the LED pin
-    GPIOA_ODR ^= (uint32_t) (1UL << 5U);
+    /* Toggle the LED pin */
+    GPIOB_ODR ^= (uint32_t) (1UL << 3U);
   }
 
   #endif
@@ -106,63 +106,10 @@ void Task02_Func(void)
 
 
 /************************* TASK3 *********************************/
-#if defined(OS_TASK_USE_SERLCD_SPI)
-static uint64_t TaskTimer03;
-static const char HelloWorldString01[] = "Flash Master";
-static const char HelloWorldString02[] = "            ";
-static const char HelloWorldString03[] = "STM32F446   ";
-#endif
-
 void Task03_Init(void);
 void Task03_Func(void);
 
 void Task03_Init(void)
-{
-  #if defined(OS_TASK_USE_SERLCD_SPI)
-  #endif
-}
-
-void Task03_Func(void)
-{
-  #if defined(OS_TASK_USE_SERLCD_SPI)
-  static uint8_t LineIndex;
-  static uint8_t StringIndex;
-
-  if(TimerTimeout(TaskTimer03))
-  {
-    TaskTimer03 = TimerStart(1000U);
-
-    switch(StringIndex)
-    {
-      case 0U:
-        CddSerLCD_Spi_WriteLine(&HelloWorldString01[0], (size_t) (sizeof(HelloWorldString01) - 1U), LineIndex % 4U);
-        break;
-      case 1U:
-        CddSerLCD_Spi_WriteLine(&HelloWorldString02[0], (size_t) (sizeof(HelloWorldString02) - 1U), LineIndex % 4U);
-        break;
-      case 2U:
-      default:
-        CddSerLCD_Spi_WriteLine(&HelloWorldString03[0], (size_t) (sizeof(HelloWorldString03) - 1U), LineIndex % 4U);
-        break;
-    }
-
-    ++LineIndex;
-
-    ++StringIndex;
-
-    if(StringIndex == 3U)
-    {
-      StringIndex = 0U;
-    }
-  }
-  #endif
-}
-
-/************************* TASK4 *********************************/
-void Task04_Init(void);
-void Task04_Func(void);
-
-void Task04_Init(void)
 {
   #if defined(OS_TASK_USE_SERLCD_I2C)
 
@@ -173,7 +120,7 @@ void Task04_Init(void)
   #endif
 }
 
-void Task04_Func(void)
+void Task03_Func(void)
 {
   #if defined(OS_TASK_USE_SERLCD_I2C)
 

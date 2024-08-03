@@ -1,4 +1,4 @@
-# STM32F446_FlashMaster
+# STM32L432_FlashMaster
 
 <p align="center">
     <a href="https://github.com/imahjoub/STM32F446_FlashMaster/actions">
@@ -15,11 +15,11 @@
         <img src="https://img.shields.io/github/commit-activity/y/imahjoub/STM32F446_FlashMaster" /></a>
 </p>
 
-STM32F446_FlashMaster is a baremetal project that uses the STM32F446RE microcontroller. Its purpose is to communicate with the IS25LP128F flash chip through SPI.
+STM32L432_FlashMaster is a baremetal project that uses the STM32L432KC microcontroller. Its purpose is to communicate with the IS25LP128F flash chip through SPI.
 
 ## Devices Used
 
-- **STM32F446RE**: NUCLEO-F446RE Development Board.
+- **STM32L432KC**: NUCLEO-STM32L432KC Development Board.
 - **IS25LP128F** : Serial Flash Memory.
 - **SerLCD**     : SparkFun 20x4 SerLCD
 
@@ -30,8 +30,8 @@ TBD
 
 ### Setup & Communication Protocols
 
-1. Connect the IS25LP128F flash memory to the STM32F446RE using SPI (PA5, PA6, PA7).
-2. Connect the SerLCD to the STM32F446RE using I2C (PB6, PB7).
-3. Program the STM32F446RE using an ST-Link or J-Link programmer.
+1. Connect the IS25LP128F flash memory to the NUCLEO-STM32L432KC using SPI (PA5, PA6, PA7).
+2. Connect the SerLCD to the NUCLEO-STM32L432KC using I2C (PB6, PB7).
+3. Program the NUCLEO-STM32L432KC using an ST-Link or J-Link programmer.
 
 

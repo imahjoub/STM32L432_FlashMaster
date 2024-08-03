@@ -13,8 +13,8 @@
 
 PATH_MAKE       = $(CURDIR)/../Make
 PATH_SRC        = $(CURDIR)/../../Src
-PATH_TMP        = $(CURDIR)/../Tmp/STM32F446_FlashMaster_x64
-PATH_BIN        = $(CURDIR)/../Bin/STM32F446_FlashMaster_x64
+PATH_TMP        = $(CURDIR)/../Tmp/STM32L432_FlashMaster_x64
+PATH_BIN        = $(CURDIR)/../Bin/STM32L432_FlashMaster_x64
 PATH_OBJ        = $(PATH_TMP)/Obj
 
 ifeq ($(TYP_OS),win)
@@ -83,13 +83,11 @@ WFLAGS         = -Wall                                                     \
                  -Wdouble-promotion                                        \
                  -Wno-comment
 
-C_ST_INCLUDE   = -I$(PATH_ST_PERIPH)/inc                                   \
-                 -I$(PATH_ST_CMSIS)/Include                                \
-                 -I$(PATH_ST_CMSIS)/Device/ST/STM32F4xx/Include
+C_ST_INCLUDE   =
 
 C_INCLUDES     = -I$(PATH_SRC)
 
-C_DEFINES      = -DSTM32F446xx
+C_DEFINES      =
 
 CFLAGS_BASE    = $(WFLAGS)                                                 \
                  -mcpu=cortex-m4                                           \
@@ -133,7 +131,7 @@ LDFLAGS        = $(CPPFLAGS)                                               \
                  -nostartfiles                                             \
                  -specs=nano.specs                                         \
                  -specs=nosys.specs                                        \
-                 -T $(PATH_MAKE)/stm32f446re.ld                            \
+                 -T $(PATH_MAKE)/stm32l432kc.ld                            \
                  -Wl,--print-memory-usage                                  \
                  -Wl,-Map,$(PATH_BIN)/stm32f446re.map
 
@@ -141,58 +139,9 @@ LDFLAGS        = $(CPPFLAGS)                                               \
 #------------------------------------------------------------------------------
 # Source files
 #------------------------------------------------------------------------------
-SRC_ST_FILE   =  $(PATH_ST_PERIPH)/src/misc                                \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_adc                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_can                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_cec                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_crc                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_aes                  \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_des                  \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_cryp_tdes                 \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dac                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dbgmcu                    \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dcmi                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dfsdm                     \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dma                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dma2d                     \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_dsi                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_exti                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_flash                     \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_flash_ramfunc             \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_fmc                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_fmpi2c                    \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_gpio                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash_md5                  \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_hash_sha1                 \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_i2c                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_iwdg                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_lptim                     \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_ltdc                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_pwr                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_rcc                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_rng                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_rtc                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_sai                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_sdio                      \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_spdifrx                   \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_spi                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_syscfg                    \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_tim                       \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_usart                     \
-                 $(PATH_ST_PERIPH)/src/stm32f4xx_wwdg
-
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/App/OS/OS_Task                                \
                  $(PATH_SRC)/App/Shape/AppShape                            \
-                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
-                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_Spi                   \
-                 $(PATH_SRC)/Cdd/CddDma/CddDma                             \
-                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
-                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
-                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
-                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
                  $(PATH_SRC)/Mcal/SysTick                                  \
@@ -200,6 +149,15 @@ SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/StartUp/IntVect                               \
                  $(PATH_SRC)/StartUp/SysStartup                            \
                  $(PATH_SRC)/Util/Md5/Md5
+
+
+
+#                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
+#                 $(PATH_SRC)/Cdd/CddDma/CddDma                             \
+#                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
+#                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
+#                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
+#                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
 
 
 #------------------------------------------------------------------------------
@@ -214,7 +172,7 @@ FILES_O := $(addprefix $(PATH_OBJ)/, $(notdir $(addsuffix .o, $(SRC_FILES))))
 # Build targets
 #------------------------------------------------------------------------------
 
-all : clean_all print_version $(PATH_BIN)/Stm32f446re.elf
+all : clean_all print_version $(PATH_BIN)/stm32l432kc.elf
 
 .PHONY : clean_all
 clean_all :
@@ -236,17 +194,17 @@ print_version :
 	@$(CC) -v
 	@$(ECHO)
 
-$(PATH_BIN)/Stm32f446re.elf : $(FILES_O)
+$(PATH_BIN)/stm32l432kc.elf : $(FILES_O)
 	@-$(ECHO)
-	@-$(ECHO) +++ linking application to absolute object file $(PATH_BIN)/stm32f446re.elf
-	@-$(CC) -x none $(LDFLAGS) $(FILES_O) -o $(PATH_BIN)/stm32f446re.elf
+	@-$(ECHO) +++ linking application to absolute object file $(PATH_BIN)/stm32l432kc.elf
+	@-$(CC) -x none $(LDFLAGS) $(FILES_O) -o $(PATH_BIN)/stm32l432kc.elf
 	@-$(ECHO)
-	@-$(ECHO) +++ create HEX-file $(PATH_BIN)/stm32f446re.hex
-	@-$(OBJCOPY) $(PATH_BIN)/stm32f446re.elf -O ihex $(PATH_BIN)/stm32f446re.hex
-	@-$(ECHO) +++ create list file $(PATH_BIN)/stm32f446re.list
-	@-$(OBJDUMP) $(PATH_BIN)/stm32f446re.elf -d > $(PATH_BIN)/stm32f446re.list
-	@-$(ECHO) +++ create symbols with readelf in $(PATH_BIN)/stm32f446re.readelf
-	@-$(READELF) $(PATH_BIN)/stm32f446re.elf -a > $(PATH_BIN)/stm32f446re.readelf
+	@-$(ECHO) +++ create HEX-file $(PATH_BIN)/stm32l432kc.hex
+	@-$(OBJCOPY) $(PATH_BIN)/stm32l432kc.elf -O ihex $(PATH_BIN)/stm32l432kc.hex
+	@-$(ECHO) +++ create list file $(PATH_BIN)/stm32l432kc.list
+	@-$(OBJDUMP) $(PATH_BIN)/stm32l432kc.elf -d > $(PATH_BIN)/stm32l432kc.list
+	@-$(ECHO) +++ create symbols with readelf in $(PATH_BIN)/stm32l432kc.readelf
+	@-$(READELF) $(PATH_BIN)/stm32l432kc.elf -a > $(PATH_BIN)/stm32l432kc.readelf
 
 #------------------------------------------------------------------------------
 # Pattern rules
