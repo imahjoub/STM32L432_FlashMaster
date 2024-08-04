@@ -31,7 +31,12 @@
   #define RCC_BASE            0x40021000UL
   #define PWR_BASE            0x40007000UL
   #define FLASH_BASE          0x40022000UL
+  #define GPIOA_BASE          0x48000000UL
   #define GPIOB_BASE          0x48000400UL
+  #define I2C1_BASE           0x40005400UL
+  #define SPI1_BASE           0x40013000UL
+
+
 
   /* FLASH registers */
   #define FLASH_ACR           (*(volatile uint32_t*)(FLASH_BASE + 0x000UL))
@@ -52,6 +57,16 @@
   #define RCC_APB1ENR2        (*(volatile uint32_t*)(RCC_BASE + 0x5CUL))
   #define RCC_APB2ENR         (*(volatile uint32_t*)(RCC_BASE + 0x60UL))
 
+
+  /* GPIOA registers */
+  #define GPIOA_MODER         (*(volatile uint32_t*)(GPIOA_BASE + 0x00UL))
+  #define GPIOA_OTYPER        (*(volatile uint32_t*)(GPIOA_BASE + 0x04UL))
+  #define GPIOA_OSPEEDR       (*(volatile uint32_t*)(GPIOA_BASE + 0x08UL))
+  #define GPIOA_PUPDR         (*(volatile uint32_t*)(GPIOA_BASE + 0x0CUL))
+  #define GPIOA_ODR           (*(volatile uint32_t*)(GPIOA_BASE + 0x14UL))
+  #define GPIOA_AFRL          (*(volatile uint32_t*)(GPIOA_BASE + 0x20UL))
+  #define GPIOA_AFRH          (*(volatile uint32_t*)(GPIOA_BASE + 0x24UL))
+
   /* GPIOB registers */
   #define GPIOB_MODER         (*(volatile uint32_t*)(GPIOB_BASE + 0x00UL))
   #define GPIOB_OTYPER        (*(volatile uint32_t*)(GPIOB_BASE + 0x04UL))
@@ -60,6 +75,34 @@
   #define GPIOB_ODR           (*(volatile uint32_t*)(GPIOB_BASE + 0x14UL))
   #define GPIOB_AFRL          (*(volatile uint32_t*)(GPIOB_BASE + 0x20UL))
   #define GPIOB_AFRH          (*(volatile uint32_t*)(GPIOB_BASE + 0x24UL))
+
+  /* I2C1 registers */
+  #define I2C1_CR1            (*(volatile uint32_t*)(I2C1_BASE + 0x00UL))
+  #define I2C1_CR2            (*(volatile uint32_t*)(I2C1_BASE + 0x04UL))
+  #define I2C1_OAR1           (*(volatile uint32_t*)(I2C1_BASE + 0x08UL))
+  #define I2C1_OAR2           (*(volatile uint32_t*)(I2C1_BASE + 0x0CUL))
+  #define I2C1_TIMINGR        (*(volatile uint32_t*)(I2C1_BASE + 0x10UL))
+  #define I2C1_TIMEOUTR       (*(volatile uint32_t*)(I2C1_BASE + 0x14UL))
+  #define I2C1_ISR            (*(volatile uint32_t*)(I2C1_BASE + 0x18UL))
+  #define I2C1_ICR            (*(volatile uint32_t*)(I2C1_BASE + 0x1CUL))
+  #define I2C1_PECR           (*(volatile uint32_t*)(I2C1_BASE + 0x20UL))
+  #define I2C1_RXDR           (*(volatile uint32_t*)(I2C1_BASE + 0x24UL))
+  #define I2C1_TXDR           (*(volatile uint32_t*)(I2C1_BASE + 0x28UL))
+
+  /* SPI1 registers */
+  #define SPI1_CR1            (*(volatile uint32_t*)(SPI1_BASE + 0x00UL))
+  #define SPI1_CR2            (*(volatile uint32_t*)(SPI1_BASE + 0x04UL))
+  #define SPI1_SR             (*(volatile uint32_t*)(SPI1_BASE + 0x08UL))
+  #define SPI1_DR             (*(volatile uint16_t*)(SPI1_BASE + 0x0CUL))
+  #define SPI1_CRCPR          (*(volatile uint32_t*)(SPI1_BASE + 0x10UL))
+  #define SPI1_RXCRCR         (*(volatile uint32_t*)(SPI1_BASE + 0x14UL))
+  #define SPI1_TXCRCR         (*(volatile uint32_t*)(SPI1_BASE + 0x18UL))
+
+
+
+
+
+
 
 
 
