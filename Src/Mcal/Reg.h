@@ -51,6 +51,7 @@
   #define RCC_CFGR            (*(volatile uint32_t*)(RCC_BASE + 0x08UL))
   #define RCC_PLLCFGR         (*(volatile uint32_t*)(RCC_BASE + 0x0CUL))
   #define RCC_CIER            (*(volatile uint32_t*)(RCC_BASE + 0x18UL))
+  #define RCC_APB1RSTR1       (*(volatile uint32_t*)(RCC_BASE + 0x38UL))
   #define RCC_AHB1ENR         (*(volatile uint32_t*)(RCC_BASE + 0x48UL))
   #define RCC_AHB2ENR         (*(volatile uint32_t*)(RCC_BASE + 0x4CUL))
   #define RCC_APB1ENR1        (*(volatile uint32_t*)(RCC_BASE + 0x58UL))

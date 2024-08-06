@@ -9,13 +9,13 @@ void CddI2c_Init(void)
   /*---------------------  GPIO configuration  ---------------------*/
   /* Configure SCL (PB6) and SDA (PB7) as Alternate Function, Open-drain, Pull-up */
   /* Enable clock for GPIOB */
-  RCC_AHB1ENR |= (uint32_t)(1UL << 1U);
+  RCC_AHB2ENR |= (uint32_t)(1UL << 1U);
 
   /* Configure GPIO pins for I2C1 on PB6 & PB7   */
   /* Set PF0 & PF1 to alternate function mode    */
   GPIOB_MODER |= (uint32_t)((2UL << 12U) | (2UL << 14U));
 
-  /* Set alternate function for PF0 & PF1 (I2C1)  */
+  /* Set alternate function for PB6 and PB7 (AF4)  */
   GPIOB_AFRL  |= (uint32_t)((4UL << 24U) | (4UL << 28U));
 
   /* Set pins to output open-drain */
@@ -25,27 +25,22 @@ void CddI2c_Init(void)
   GPIOB_OSPEEDR |= (uint32_t)((3UL << 12U) | (3UL << 14U));
 
   /* Clear pull-up/pull-down bits */
-  GPIOB_PUPDR &= ~((3U << (2 * 6)) | (3U << (2 * 7)));
+  GPIOB_PUPDR &= (uint32_t)(~((3UL << (2 * 6)) | (3UL << (2 * 7))));
 
   /* Enable pull-up */
-  GPIOB_PUPDR |= (1 << (2 * 6)) | (1 << (2 * 7));
+  GPIOB_PUPDR |= (uint32_t)((1UL << (2 * 6)) | (1UL << (2 * 7)));
 
 
   /*--------------------- I2C1 configuration  ---------------------*/
   /* Enable clock  for I2C1 */
-  RCC_APB1ENR |= (uint32_t)(1UL << 21U);
+  RCC_APB1ENR1 |= (uint32_t)(1UL << 21U);
 
-  /* Fully reset the I2C1 */
-  I2C1_CR1 |= (uint32_t)(1UL << 15U);
-  I2C1_CR1 &= (uint32_t)(~(1UL << 15U));
+  /* Reset I2C1 */
+  RCC_APB1RSTR1 |= (uint32_t)(1UL << 21U);  // Set reset bit
+  RCC_APB1RSTR1 &= ~(uint32_t)(1UL << 21U); // Clear reset bit
 
-  /* Set the peripheral clock frequency to 16MHz */
-  I2C1_CR2 |= (uint32_t)(16UL << 0U);
-
-  /* Set the frequency of I2C SCL line to 100kHz  */
-  I2C1_CCR |= (uint32_t)(80UL << 0U);
-
-  I2C1_TRISE |= 0x10; /* Configure maximum rise tim
+  /* Set timing for 100kHz I2C operation */
+  I2C1_TIMINGR = 0x00702991; // Timing settings for 100kHz with 16MHz clock
 
   /* Enable I2C1 */
   I2C1_CR1 |= (uint32_t)(1UL << 0U);
@@ -60,7 +55,7 @@ void CddI2c_StartTransmission(uint8_t address, uint8_t direction)
   while (!(I2C1_SR1 & (uint32_t)(1UL << 0U)));
 
   /* Send slave address and direction */
-  I2C1_DR = (uint32_t)((address << 1) | direction);
+  I2C1_DR = (uint16_t)((address << 1U) | direction);
 
   /* Wait for address to be acknowledged */
   if (direction == 0)
