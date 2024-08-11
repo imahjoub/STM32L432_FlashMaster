@@ -9,13 +9,13 @@
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
-#define OS_TASK_USE_LED
+//#define OS_TASK_USE_LED
 //#define OS_TASK_USE_FLASH
-//#define OS_TASK_USE_SERLCD_I2C
+#define OS_TASK_USE_SERLCD_I2C
 
 CddExtFlash_PageType AppPage;
 
-static uint64_t TaskTimer02;
+//static uint64_t TaskTimer02;
 
 #if defined(OS_TASK_USE_FLASH)
 
@@ -124,19 +124,22 @@ void Task03_Func(void)
 {
   #if defined(OS_TASK_USE_SERLCD_I2C)
 
-  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  /* Delay to ensure the clear command is processed */
-  CddSerLcd_I2c_msDelays(5U);
-  CddSerLCD_I2c_PrintString("Hello");
-  CddSerLcd_I2c_msDelays(2000U);
+  //char HelloString[] = { "hello" };
+  //char WorldString[] = { "World" };
+  //
+  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  ///* Delay to ensure the clear command is processed */
+  //CddSerLcd_I2c_msDelays(5U);
+  //CddSerLCD_I2c_PrintString(HelloString, sizeof(HelloString)/sizeof(HelloString[0]));
+  //CddSerLcd_I2c_msDelays(2000U);
+  //
+  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  ///* Delay to ensure the clear command is processed */
+  //CddSerLcd_I2c_msDelays(5U);
+  //CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
+  //CddSerLcd_I2c_msDelays(2000U);
 
-  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  /* Delay to ensure the clear command is processed */
-  CddSerLcd_I2c_msDelays(5U);
-  CddSerLCD_I2c_PrintString("World");
-  CddSerLcd_I2c_msDelays(2000U);
-
-  #endif
+#endif
 }
 
 

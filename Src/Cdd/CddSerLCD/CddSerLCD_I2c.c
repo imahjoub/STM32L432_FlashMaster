@@ -13,9 +13,9 @@ void CddSerLcd_I2c_msDelays(const unsigned ms_count)
   }
 }
 
-void CddSerLCD_I2c_PrintString(char* StringToPrint)
+void CddSerLCD_I2c_PrintString(char* StringToPrint, uint8_t StringSize)
 {
-  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0);
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, StringSize, CDD_SERLCD_MODE_WRITE);
 
   while (*StringToPrint)
   {
@@ -30,7 +30,7 @@ void CddSerLCD_I2c_PrintString(char* StringToPrint)
 void CddSerLCD_I2c_SendCommand(uint8_t Command)
 {
   /* Start, set slave address to write */
-  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0U);
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 2U, CDD_SERLCD_MODE_WRITE);
 
   /* Command mode */
   CddI2c_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
@@ -49,6 +49,7 @@ static void CddSerLcd_I2c_ClearLCD(void)
   /* Delay to ensure the clear command is processed */
   CddSerLcd_I2c_msDelays(5U);
 }
+
 
 static void CddSerLcd_I2c_SetBlueBacklight(void)
 {
@@ -73,11 +74,11 @@ static void CddSerLcd_I2c_SelectLine(const size_t LineIndexToUse)
   /* To set the active cursor position, send the control character 254 followed by 128 + row + position */
   /* OpenLCD.write(254); */
   /* OpenLCD.write(128 + 64 + 9); //Change the position (128) of the cursor to 2nd row (64), position 9 (9) */
-
+  static const uint8_t SizeofIndexTable = 4U;
   static const uint8_t IndexToRowTable[4U] = { 0U, 64U, 20U, 84U };
 
   /* Start, set slave address to write */
-  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0U);
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, SizeofIndexTable, CDD_SERLCD_MODE_WRITE);
 
   CddSerLCD_I2c_SendCommand(0xFEU);
   CddSerLcd_I2c_msDelays(4U);
@@ -91,18 +92,44 @@ static void CddSerLcd_I2c_SelectLine(const size_t LineIndexToUse)
 
 void CddSerLCD_I2c_Init(void)
 {
+#if 0
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 1U, CDD_SERLCD_MODE_WRITE);
+  CddI2c_TransferSingleByte(CDD_SERLCD_SETTING_MODE);
+  CddI2c_Stop();
+
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 1U, CDD_SERLCD_MODE_WRITE);
+  CddI2c_TransferSingleByte(CDD_SERLCD_CLEAR_DISPLAY);
+  CddI2c_Stop();
+#endif
+
+
+  uint8_t data[] = { 'H', 'i' };
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, (sizeof(data) / sizeof(data[0])), CDD_SERLCD_MODE_WRITE);
+  CddI2c_TransferMultipleByte(data, (sizeof(data) / sizeof(data[0])));
+  CddI2c_Stop();
+
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 1U, CDD_SERLCD_MODE_WRITE);
+  CddI2c_TransferSingleByte('!');
+  CddI2c_Stop();
+
+
+
   /* Clear display */
-  CddSerLcd_I2c_ClearLCD();
+  //CddSerLcd_I2c_ClearLCD();
 
   /* Set blue backlight */
-  CddSerLcd_I2c_SetBlueBacklight();
+  //CddSerLcd_I2c_SetBlueBacklight();
 
   /* Set blue backlight */
-  CddSerLcd_I2c_SetLCDSize();
+  //CddSerLcd_I2c_SetLCDSize();
+
+
+
 }
 
 void CddSerLCD_I2c_WriteLine(const char* StringToPrint, const size_t StringSize, const size_t LineIndex)
 {
+#if 0
   // Limit to the maximum width of the display width.
   const size_t LineIndexToUse = ((LineIndex > (size_t) 3U) ? (size_t) 3U : LineIndex);
 
@@ -112,7 +139,7 @@ void CddSerLCD_I2c_WriteLine(const char* StringToPrint, const size_t StringSize,
   CddSerLcd_I2c_SelectLine(LineIndexToUse);
 
   /* Start, set slave address to write */
-  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 0U);
+  CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, CDD_SERLCD_MODE_WRITE);
 
   for(size_t idx = (size_t) 0U; idx < (size_t) 20U; ++idx)
   {
@@ -131,4 +158,5 @@ void CddSerLCD_I2c_WriteLine(const char* StringToPrint, const size_t StringSize,
 
   /* Stop condition */
   CddI2c_Stop();
+#endif
 }

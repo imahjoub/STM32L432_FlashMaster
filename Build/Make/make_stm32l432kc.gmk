@@ -142,21 +142,22 @@ LDFLAGS        = $(CPPFLAGS)                                               \
 SRC_FILES      = $(PATH_SRC)/App/App                                       \
                  $(PATH_SRC)/App/OS/OS_Task                                \
                  $(PATH_SRC)/App/Shape/AppShape                            \
+                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
+                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
                  $(PATH_SRC)/Mcal/Gpt                                      \
                  $(PATH_SRC)/Mcal/Mcu                                      \
                  $(PATH_SRC)/Mcal/SysTick                                  \
                  $(PATH_SRC)/OS/OS                                         \
                  $(PATH_SRC)/StartUp/IntVect                               \
                  $(PATH_SRC)/StartUp/SysStartup                            \
+                 $(PATH_SRC)/Util/Sha256/Sha256                            \
                  $(PATH_SRC)/Util/Md5/Md5
 
 
 
-#                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
 #                 $(PATH_SRC)/Cdd/CddDma/CddDma                             \
 #                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
 #                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
-#                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
 #                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
 
 
