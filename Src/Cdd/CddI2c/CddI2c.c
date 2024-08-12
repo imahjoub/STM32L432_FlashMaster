@@ -71,7 +71,7 @@ void CddI2c_Init(void)
   I2C1_CR1 |= (uint32_t)(1UL << 0U);
 }
 
-void CddI2c_StartTransmission(uint8_t DeviceAddress, size_t DataSize, uint8_t WriteReadMode)
+void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize, const uint8_t WriteReadMode)
 {
   uint32_t CddI2cTempReg = I2C1_CR2;
 
@@ -88,7 +88,7 @@ void CddI2c_StartTransmission(uint8_t DeviceAddress, size_t DataSize, uint8_t Wr
 
 }
 
-void CddI2c_TransferMultipleByte(uint8_t* Data, size_t DataSize)
+void CddI2c_TransferMultipleByte(const uint8_t* Data, const size_t DataSize)
 {
   for (uint8_t i = 0U; i < DataSize; i++)
   {
@@ -102,7 +102,7 @@ void CddI2c_TransferMultipleByte(uint8_t* Data, size_t DataSize)
   while (!(I2C1_ISR & (1UL << 6U)));
 }
 
-void CddI2c_TransferSingleByte(uint8_t Data)
+void CddI2c_TransferSingleByte(const uint8_t Data)
 {
   while (!(I2C1_ISR & (1UL << 1U))) { /* Wait until TX buffer is empty */ }
 

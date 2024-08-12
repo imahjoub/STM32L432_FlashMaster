@@ -124,20 +124,20 @@ void Task03_Func(void)
 {
   #if defined(OS_TASK_USE_SERLCD_I2C)
 
-  //char HelloString[] = { "hello" };
-  //char WorldString[] = { "World" };
-  //
-  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  ///* Delay to ensure the clear command is processed */
-  //CddSerLcd_I2c_msDelays(5U);
-  //CddSerLCD_I2c_PrintString(HelloString, sizeof(HelloString)/sizeof(HelloString[0]));
-  //CddSerLcd_I2c_msDelays(2000U);
-  //
-  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  ///* Delay to ensure the clear command is processed */
-  //CddSerLcd_I2c_msDelays(5U);
-  //CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
-  //CddSerLcd_I2c_msDelays(2000U);
+  char HelloString[] = { "hello" };
+  char WorldString[] = { "World" };
+
+  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  /* Delay to ensure the clear command is processed */
+  CddSerLcd_I2c_msDelays(5U);
+  CddSerLCD_I2c_PrintString(HelloString, sizeof(HelloString)/sizeof(HelloString[0]));
+  CddSerLcd_I2c_msDelays(2000U);
+
+  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  /* Delay to ensure the clear command is processed */
+  CddSerLcd_I2c_msDelays(5U);
+  CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
+  CddSerLcd_I2c_msDelays(2000U);
 
 #endif
 }
