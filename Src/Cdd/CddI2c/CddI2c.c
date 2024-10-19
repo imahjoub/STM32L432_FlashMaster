@@ -107,7 +107,7 @@ void CddI2c_TransferSingleByte(const uint8_t Data)
   while (!(I2C1_ISR & (1UL << 1U))) { /* Wait until TX buffer is empty */ }
 
   /* Write single byte to transmit data register */
-  I2C1_TXDR = (uint32_t)(Data & 0xFFU);
+  I2C1_TXDR = (uint8_t)(Data & 0xFFU);
 
   /* Wait until the transfer is complete */
   while (!(I2C1_ISR & (1UL << 6U)));
