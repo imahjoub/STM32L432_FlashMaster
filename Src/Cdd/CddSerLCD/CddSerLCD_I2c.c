@@ -19,7 +19,7 @@ void CddSerLCD_I2c_PrintString(char* StringToPrint, uint8_t StringSize)
 
   while (*StringToPrint)
   {
-    CddI2c_TransferMultipleByte((uint8_t)(*StringToPrint), StringSize);
+    CddI2c_TransferSingleByte((uint8_t)(*StringToPrint));
     ++StringToPrint;
   }
 
@@ -29,7 +29,7 @@ void CddSerLCD_I2c_PrintString(char* StringToPrint, uint8_t StringSize)
 
 void CddSerLCD_I2c_SendCommand(uint8_t Command)
 {
-#if 0
+#if 1
   /* LCD command buffer */
   const uint8_t LCDCmdBuffer[2U] = { CDD_SERLCD_SETTING_MODE, Command};
   const size_t  LCDCmdBufferSize =  (size_t)((sizeof(LCDCmdBuffer) / sizeof(LCDCmdBuffer[0])));
@@ -38,12 +38,13 @@ void CddSerLCD_I2c_SendCommand(uint8_t Command)
   CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 2U, CDD_SERLCD_MODE_WRITE);
 
   /* Command mode */
-  CddI2c_TransferMultipleByte(LCDCmdBuffer, LCDCmdBufferSize);
+  CddI2c_TransferMultipleBytes(LCDCmdBuffer, LCDCmdBufferSize);
 
   /* Stop condition */
   CddI2c_Stop();
 #endif
 
+#if 0
   /* Start, set slave address to write */
   CddI2c_StartTransmission(CDD_SERLCD_ADDRESS, 1U, CDD_SERLCD_MODE_WRITE);
   /* Command */
@@ -57,7 +58,7 @@ void CddSerLCD_I2c_SendCommand(uint8_t Command)
   /* Stop condition */
   CddI2c_Stop();
 
-
+#endif
 
 
 }

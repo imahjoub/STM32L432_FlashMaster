@@ -18,11 +18,11 @@ void CddI2c_Init(void)
   /* Configure GPIO pins for I2C1 on PB6 & PB7   */
   /* Set PF0 & PF1 to alternate function mode    */
   //GPIOB_MODER |= (uint32_t)((2UL << 12U) | (2UL << 14U));
-  GPIOB_MODER &= ~(1U << 12U);
-  GPIOB_MODER |=  (1U << 13U);
+  GPIOB_MODER &= ((uint32_t)~(1U << 12U));
+  GPIOB_MODER |= ((uint32_t) (1U << 13U));
 
-  GPIOB_MODER &= ~(1U << 14U);
-  GPIOB_MODER |= (1U << 15U);
+  GPIOB_MODER &= ((uint32_t)~(1U << 14U));
+  GPIOB_MODER |= ((uint32_t) (1U << 15U));
 
   /* Set alternate function for PF0 & PF1 (I2C1)  */
   GPIOB_AFRL  |= (uint32_t)((4UL << 24U) | (4UL << 28U));
@@ -31,10 +31,10 @@ void CddI2c_Init(void)
   GPIOB_OTYPER |= (uint32_t)((1UL << 6U) | (1UL << 7U));
 
   /* Set pins speed to high */
-  GPIOB_OSPEEDR |= (uint32_t)((3UL << 12U) | (3UL << 14U));
+  //GPIOB_OSPEEDR |= (uint32_t)((3UL << 12U) | (3UL << 14U));
 
   /* Clear pull-up/pull-down bits */
-  GPIOB_PUPDR &= ~((3U << (2 * 6)) | (3U << (2 * 7)));
+  //GPIOB_PUPDR &= ~((3U << (2 * 6)) | (3U << (2 * 7)));
 
   /* Enable pull-up */
   GPIOB_PUPDR |= (1 << (2 * 6)) | (1 << (2 * 7));
@@ -60,12 +60,14 @@ void CddI2c_Init(void)
      SCL Period(tSCL) = tSCLH + tSCLL = 10 us + 10 us = 20 us
      I2C Clock Frequency :
      fI2C = 1 / tSCL = 1 / 10 us = 100kHz */
-
+#if 0
   I2C1_TIMINGR = (uint32_t)((3 << 28) |    // PRESC
                             (0 << 20) |    // SCLDEL
                             (3 << 16) |    // SDADEL
                             (99 << 8) |    // SCLH
                             (99 << 0));    // SCLL
+#endif
+ I2C1_TIMINGR = (uint32_t)0x00303D5BUL;
 
   /* Enable I2C1 */
   I2C1_CR1 |= (uint32_t)(1UL << 0U);
@@ -88,14 +90,14 @@ void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize
 
 }
 
-void CddI2c_TransferMultipleByte(const uint8_t* Data, const size_t DataSize)
+void CddI2c_TransferMultipleBytes(const uint8_t* Data, const size_t DataSize)
 {
   for (uint8_t i = 0U; i < DataSize; i++)
   {
     while (!(I2C1_ISR & (1UL << 1U))) { /* Wait until TX buffer is empty */ }
 
     /* Write data to transmit data register */
-    I2C1_TXDR = Data[i] & 0xFFU;
+    I2C1_TXDR = (uint8_t)(Data[i] & 0xFFU);
   }
 
   /* Wait until the transfer is complete */
