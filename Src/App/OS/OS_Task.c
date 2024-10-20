@@ -122,7 +122,6 @@ void Task03_Init(void)
 
 void Task03_Func(void)
 {
-#if 0
   #if defined(OS_TASK_USE_SERLCD_I2C)
 
   char HelloString[] = { "hello" };
@@ -140,7 +139,6 @@ void Task03_Func(void)
   CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
   CddSerLcd_I2c_msDelays(2000U);
 
-#endif
 #endif
 }
 
