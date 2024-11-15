@@ -14,6 +14,8 @@ void CddI2c_Init(void)
   /* Configure SCL (PB6) and SDA (PB7) as Alternate Function, Open-drain, Pull-up */
   /* Enable clock for GPIOB */
   RCC_AHB2ENR |= (uint32_t)(1UL << 1U);
+    /* Enable clock  for I2C1 */
+  RCC_APB1ENR1 |= (uint32_t)(1UL << 21U);
 
   /* Configure GPIO pins for I2C1 on PB6 & PB7   */
   /* Set PF0 & PF1 to alternate function mode    */
@@ -41,8 +43,6 @@ void CddI2c_Init(void)
 
 
   /*--------------------- I2C1 configuration  ---------------------*/
-  /* Enable clock  for I2C1 */
-  RCC_APB1ENR1 |= (uint32_t)(1UL << 21U);
 
   /* (2) Reset I2C1 */
   RCC_APB1RSTR1 |= (uint32_t)(1UL << 21U);
@@ -67,12 +67,12 @@ void CddI2c_Init(void)
                             (99 << 8) |    // SCLH
                             (99 << 0));    // SCLL
 #endif
- I2C1_TIMINGR = (uint32_t)0x00303D5BUL;
+ I2C1_TIMINGR = (uint32_t)0x10805E89UL;
 
   /* Enable I2C1 */
   I2C1_CR1 |= (uint32_t)(1UL << 0U);
 }
-
+#if 0
 void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize, const uint8_t WriteReadMode)
 {
   uint32_t CddI2cTempReg = I2C1_CR2;
@@ -89,6 +89,37 @@ void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize
   I2C1_CR2 = CddI2cTempReg;
 
 }
+#endif
+void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize, const uint8_t WriteReadMode)
+{
+  uint32_t CddI2cTempReg = I2C1_CR2;
+
+  /* Clearing address, number of bytes, reload, autoend, and read/write bits */
+  CddI2cTempReg &= ~( (0x3FFUL << 0U) |  // Clear SADD (Slave address)
+                      (0xFFUL << 16U) |  // Clear NBYTES (Number of bytes)
+                      (1UL << 24U) |     // Clear RELOAD bit
+                      (1UL << 25U) |     // Clear AUTOEND bit
+                      (1UL << 10U));     // Clear RD_WRN (Read/Write direction)
+
+  /* Setting slave address (7-bit address shifted to the correct position) */
+  CddI2cTempReg |= ((DeviceAddress & 0x7FUL) << 1U);  // 7-bit address
+
+  /* Setting number of bytes to be transferred */
+  CddI2cTempReg |= ((DataSize & 0xFFUL) << 16U);  // Number of bytes (NBYTES)
+
+  /* Setting read/write mode (Write = 0, Read = 1) */
+  if (WriteReadMode == 1U)  // Read mode
+  {
+    CddI2cTempReg |= (1UL << 10U);  // Set RD_WRN bit for Read
+  }
+
+  /* Setting start bit to initiate transmission */
+  CddI2cTempReg |= (1UL << 13U);  // Set START bit
+
+  /* Writing updated value back to the CR2 register */
+  I2C1_CR2 = CddI2cTempReg;
+}
+
 
 void CddI2c_TransferMultipleBytes(const uint8_t* Data, const size_t DataSize)
 {
