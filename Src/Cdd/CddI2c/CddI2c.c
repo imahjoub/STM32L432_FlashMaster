@@ -123,7 +123,7 @@ void CddI2c_StartTransmission(const uint8_t DeviceAddress, const size_t DataSize
 
 void CddI2c_TransferMultipleBytes(const uint8_t* Data, const size_t DataSize)
 {
-  for (uint8_t i = 0U; i < DataSize; i++)
+  for (size_t i = 0U; i < DataSize; i++)
   {
     while (!(I2C1_ISR & (1UL << 1U))) { /* Wait until TX buffer is empty */ }
 
