@@ -1,187 +1,643 @@
-#include <Cdd/CddExtFlash/CddExtFlash.h>
-#include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
-#include <Cdd/CddSpi/CddSpi.h>
 
-static void CddExtFlash_DataProcess_WriteEnable(void);
-static void CddExtFlash_DataProcess_WriteIsEnabled(void);
-static void CddExtFlash_DataProcess_Ready(void);
+#include "Cdd/CddExtFlash/CddExtFlash_DataProcess.h"
+#include "Cdd/CddSpi/CddSpi.h"
+#include <Util/UtilTimer.h>
 
+static void Flash_msDelays(unsigned ms_count);
 
-/* Function to enable writing */
-void CddExtFlash_DataProcess_GetChipID(uint8_t* RxPtr)
+/*----------------------------------------------------------------------------
+- @brief Flash_msDelays
+
+- @desc ms delay function
+
+- @param ms_count delay time in ms
+
+- @return void
+-----------------------------------------------------------------------------*/
+static void Flash_msDelays(unsigned ms_count)
 {
-  /* Chip select enable */
+  ms_count *= 10U;
+
+  const uint64_t my_timer = TimerStart(ms_count + 1U);
+
+  while (!TimerTimeout(my_timer))
+  {
+    ;
+  }
+}
+
+/*----------------------------------------------------------------------------
+- @brief Flash_Receive
+
+- @desc
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+uint8_t Flash_Receive(uint8_t* data, uint16_t dataSize)
+{
+  SPI_Receive(data, dataSize);
+
+  return data[0U];
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_WaitForWriteToBeEnabled
+
+- @desc keeps looping inside this function until "BUSY" bit in SR1 register
+        becomes 0, meaning that the runnin data operation (writing or erasing)
+        on the chip, ended
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_WaitForWriteToBeEnabled(void)
+{
+  uint8_t buffer[2U] = { EXT_FLASH_R_SR1, 0XFF };
   CddSpi_CsEnable();
+  buffer[0U] = EXT_FLASH_R_SR1;
 
-  /* Send RDID command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_RDJDID);
+  SPI_Transmit(&buffer[0U], 1U);
 
-  /* Get the RDID */
-  CddSpi_ReadMultipleBytes(RxPtr, 3U);
+  do
+  {
+    Flash_Receive(&buffer[1U], 1U);  //SR1 is repeteadly sent until Flash is selected
+  } while (!(buffer[1U] & SR1_BIT_WEL));
 
-  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-/* Function to enable writing */
-static void CddExtFlash_DataProcess_WriteEnable(void)
+
+/*----------------------------------------------------------------------------
+- @brief Flash_WaitForWritingComplete
+
+- @desc keeps looping inside this function until "BUSY" bit in SR1 register
+        becomes 0, meaning that the runnin data operation (writing or erasing)
+        on the chip, ended
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+
+void Flash_WaitForWritingComplete(void)
 {
-  /* Chip select enable */
+  uint8_t buffer[2U] = { EXT_FLASH_R_SR1, 0XFF};
   CddSpi_CsEnable();
+  buffer[0U] = EXT_FLASH_R_SR1;
 
-  /* Send Write Enable command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_WRITE_ENABLE);
+  SPI_Transmit(&buffer[0U], 1);
 
-  /* Chip select disable */
-  CddSpi_CsDisable();
+  do
+  {
+    buffer[1U] = 0xFFU;
+    Flash_Receive(&buffer[1U], 1U);  /*SR1 is repeteadly sent until Flash is selected */
+  } while ((buffer[1U] & SR1_BIT_BUSY));
 
-  /* Check if write is enabled */
-  CddExtFlash_DataProcess_WriteIsEnabled();
-}
-
-/* Function to wait until the chip is not busy */
-static void CddExtFlash_DataProcess_Ready(void)
-{
-  /* Chip select enable */
-  CddSpi_CsEnable();
-
-  /* TBD Add timeout error check  */
-  /* Check if device is still busy */
-  while (CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (IS25LP128F_WIP));
-
-  /* Chip select disable */
-  CddSpi_CsDisable();
-}
-
-/* Function to wait until the chip write enabled */
-void CddExtFlash_DataProcess_WriteIsEnabled(void)
-{
-  /* Chip select enable */
-  CddSpi_CsEnable();
-
-  /* TBD Add timeout error check */
-  /* Poll Status Register until write enable latch is set */
-  while (!(CddSpi_WriteRead(IS25LP128F_CMD_READ_STATUS) & (IS25LP128F_WEL)));
-
-  /* Chip select disable */
   CddSpi_CsDisable();
 }
 
-/* Function to write data to a sector */
-void CddExtFlash_DataProcess_WritePage(const unsigned unPageIndex, const CddExtFlash_PageType* ptrPageToWrite)
+
+/*----------------------------------------------------------------------------
+- @brief Flash_Read
+
+- @desc reads from Flash Eeprom
+
+- @param  addr    EEPROM address to start reading
+          data    buffer to fill with read data
+          dataSize  number of bytes to read
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_Read(uint32_t addr, uint8_t* data, uint32_t dataSize)
 {
-  /* Chip address */
-  const uint32_t PageAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
+  //uint16_t data_to_transfer;
 
-  /* Enable writing */
-  CddExtFlash_DataProcess_WriteEnable();
+  uint8_t buffer[5];
 
-  /* Chip select enable */
+  buffer[0U] = FLASH_READ_COMMAND;
+  buffer[1U] = ((addr >> 16U) & 0xFFU);
+  buffer[2U] = ((addr >>  8U) & 0xFFU);
+  buffer[3U] = ((addr >>  0U) & 0xFFU);
+  buffer[4U] = EXT_FLASH_DUMMY;
+
   CddSpi_CsEnable();
 
-  /* Send Page Program command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_PAGE_PROGRAM);
+  SPI_Transmit(buffer, 4U);  // "normal/slow" read command doesn't need sending dummy byte
 
-  /* Address byte 2 */
-  CddSpi_TransferSingleByte((PageAddress >> 16U) & 0xFFU);
+  uint8_t DummyRead[1U] = {0xFFU};
 
-  /* Address byte 1 */
-  CddSpi_TransferSingleByte((PageAddress >>  8U) & 0xFFU);
+  for (unsigned index = (unsigned)0U; index < dataSize; ++index)
+  {
+    data[index] = Flash_Receive(DummyRead, 1U);
+  }
 
-  /* Address byte 0 */
-  CddSpi_TransferSingleByte((PageAddress >>  0U) & 0xFFU);
-
-  /* Write data     */
-  CddSpi_WriteMultipleBytes((const uint8_t*) ptrPageToWrite, (unsigned) sizeof(CddExtFlash_PageType));
-
-  /* Chip select disable */
   CddSpi_CsDisable();
-
-  /* Wait for completion */
-  CddExtFlash_DataProcess_Ready();
 }
 
-/* Function to read data from a sector */
-void CddExtFlash_DataProcess_ReadPage(const unsigned unPageIndex, CddExtFlash_PageType* ptrPageToRead)
-{
-   /* Chip address */
-   const uint32_t PageAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
 
-  /* Chip select enable */
+/*----------------------------------------------------------------------------
+- @brief Flash_SimpleWriteAPage
+
+- @desc it writes into a single FLASH page
+
+- @param  addr    EEPROM address to start writing
+          data    buffer containing data to write into EEPROM
+          dataSize  number of bytes to write
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_SimpleWriteAPage(uint32_t addr, uint8_t* data, uint32_t dataSize)
+{
+  uint8_t buffer_WEL[1U];
+
+  /* write enable */
+  CddSpi_CsEnable();
+  buffer_WEL[0U] = EXT_FLASH_W_ENABLE;
+  SPI_Transmit(buffer_WEL, 1U);
+  CddSpi_CsDisable();
+  Flash_WaitForWriteToBeEnabled();
+
+
+  uint8_t buffer[4U];
+  buffer[0] = EXT_FLASH_PAGE_P;
+  buffer[1] = ((addr >> 16U) & 0xFFU);
+  buffer[2] = ((addr >>  8U) & 0xFFU);
+  buffer[3] = ((addr >>  0U) & 0xFFU);
+
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4U);
+  SPI_Transmit(data, dataSize);
+  CddSpi_CsDisable();
+
+  Flash_WaitForWritingComplete();
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_Write
+
+- @desc function writing into EEPROM
+        Handling "write enable" commands
+        It splits (if needed) received data into the single pages,
+        lounching writing sessions for each page
+        and waiting the writing complete each time
+
+- @param  addr    EEPROM address to start writing
+          data    buffer containing data to write into EEPROM
+          dataSize  number of bytes to write
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_Write(uint32_t addr, uint8_t* data, uint32_t dataSize)
+{
+  uint8_t  buffer[4U];
+  uint16_t quota;
+  uint32_t inpage_addr;
+
+  if (dataSize != 0)
+  {
+    // quota is the data size transferred until now
+    quota = 0U;
+
+    // define the starting write position inside the first Flash page to write...
+    inpage_addr = addr & (EXT_FLASH_PAGE_SIZE - 1U);
+
+    // so I can detect if more than 1 Flash page has still to be written
+    while ((dataSize - quota + inpage_addr) > EXT_FLASH_PAGE_SIZE)
+    {
+      //loop here inside, until more than 1 Flash page...
+      CddSpi_CsEnable();
+      buffer[0] = EXT_FLASH_W_ENABLE;
+      SPI_Transmit(buffer, 1);
+      CddSpi_CsDisable();
+      Flash_SimpleWriteAPage(addr + quota, data + quota, (EXT_FLASH_PAGE_SIZE - inpage_addr));
+      quota += (uint16_t)(EXT_FLASH_PAGE_SIZE - inpage_addr);
+      // having aligned data to page border on the first writing
+      // next writings start from 0 position inside a page
+      inpage_addr = 0;
+      Flash_WaitForWritingComplete();
+    }
+
+    // now just the final Flash page
+    if (dataSize - quota)
+    {
+      CddSpi_CsEnable();
+      buffer[0] = EXT_FLASH_W_ENABLE;
+      SPI_Transmit(buffer, 1);
+      CddSpi_CsDisable();
+      Flash_SimpleWriteAPage(addr + quota, data + quota, (uint16_t)(dataSize - quota));
+      Flash_WaitForWritingComplete();
+    }
+  }
+}
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_SErase4k
+
+- @desc  Erase to 0XFF all bytes in a 4k block
+         4k block bounary is 0x1000, that means:
+         0x1000, 0x2000, 0x3000, ..
+         waiting the writing complete in each page
+
+- @param  addr  starting erase address
+          (it must be a 4k sector boundary)
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_SErase4k(uint32_t addr)
+{
+  uint8_t buffer[4U];
+
+  /* Write Enable */
+  CddSpi_CsEnable();
+  buffer[0U] = EXT_FLASH_W_ENABLE;
+  SPI_Transmit(buffer, 1U);
+  CddSpi_CsDisable();
+
+  Flash_WaitForWriteToBeEnabled();
+
+  /* Erase sector: 15 pages */
+  buffer[0U] = EXT_FLASH_S_ERASE4K;
+  buffer[1U] = ((addr >> 16U) & 0xFFU);
+  buffer[2U] = ((addr >>  8U) & 0xFFU);
+  buffer[3U] = ((addr >>  0U) & 0xFFU);
+
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4U);
+  CddSpi_CsDisable();
+
+  Flash_WaitForWritingComplete();
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_BErase32k
+
+- @desc  Erase to 0XFF all bytes in a 32k block
+         32k block bounary is 0x08000, that means:
+         0x008000, 0x010000, 0x018000, ...
+         waiting the writing complete in each page
+
+- @param  addr  starting erase address
+         (it must be a 32k block boundary)
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_BErase32k(uint32_t addr) {
+  uint8_t buffer[4];
+  CddSpi_CsEnable();
+  buffer[0] = EXT_FLASH_W_ENABLE;
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+
+  buffer[0] = EXT_FLASH_B_ERASE32K;
+  buffer[1] = (addr >> 16) & 0xFF;
+  buffer[2] = (addr >> 8) & 0xFF;
+  buffer[3] = addr & 0xFF;
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4);
+  CddSpi_CsDisable();
+  Flash_WaitForWritingComplete();
+}
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_BErase64k
+
+- @desc  Erase to 0XFF all bytes in a 64k block
+         64k block bounary is 0x08000, that means:
+         0x010000, 0x020000, 0x030000, ...
+         waiting the writing complete in each page
+
+- @param  addr  starting erase address
+         (it must be a 64k block boundary)
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_BErase64k(uint32_t addr)
+{
+  uint8_t buffer[4];
+  CddSpi_CsEnable();
+  buffer[0] = EXT_FLASH_W_ENABLE;
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+
+  buffer[0] = EXT_FLASH_B_ERASE64K;
+  buffer[1] = (addr >> 16) & 0xFF;
+  buffer[2] = (addr >> 8) & 0xFF;
+  buffer[3] = addr & 0xFF;
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4);
+  CddSpi_CsDisable();
+  Flash_WaitForWritingComplete();
+}
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_ChipErase
+
+- @desc  Full chip erase to 0XFF
+         Chip Erase may need up to 100s
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_ChipErase(void)
+{
+  uint8_t buffer[4];
+  CddSpi_CsEnable();
+  buffer[0] = EXT_FLASH_W_ENABLE;
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+
+  buffer[0] = EXT_FLASH_CH_ERASE;
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+  Flash_WaitForWritingComplete();
+}
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_PowerDown
+
+- @desc  Initiates a powerdown after a powerDown only accepted a porweUp command
+         opwerDown operation is 3us long
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_PowerDown(void)
+{
+  uint8_t buffer[4];
+
+  buffer[0] = EXT_FLASH_POWERDOWN;
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_PowerUp
+
+- @desc   Release from powerdown (3 us to restart) or read device ID
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_PowerUp(void)
+{
+  uint8_t buffer[4];
+
+  buffer[0] = EXT_FLASH_POWERUP_ID;
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 1);
+  CddSpi_CsDisable();
+  Flash_msDelays(1);
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_ReadDevID
+
+- @desc  read device id from chip
+
+- @param void
+
+- @return device id
+-----------------------------------------------------------------------------*/
+uint8_t Flash_ReadDevID(void)
+{
+  uint8_t buffer[4];
+  uint8_t data;
+
+  buffer[0U] = EXT_FLASH_POWERUP_ID;
+  buffer[1U] = EXT_FLASH_DUMMY;
+  buffer[2U] = EXT_FLASH_DUMMY;
+  buffer[3U] = EXT_FLASH_DUMMY;
+
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4U);
+  Flash_Receive(&data, 1U);
+  CddSpi_CsDisable();
+
+  return (uint8_t)data;
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_ReadManufactutrerAndDevID
+
+- @desc  ReadManufactutrerAndDevID
+
+- @param void
+
+- @return ManufactutrerAndDevID
+-----------------------------------------------------------------------------*/
+uint8_t Flash_ReadManufactutrerAndDevID(void)
+{
+  uint8_t  buffer[4U];
+  uint8_t data[2U] = { 0xFFU, 0xFFU};
+
+  buffer[0U] = EXT_FLASH_POWERUP_ID;
+  buffer[1U] = EXT_FLASH_DUMMY;
+  buffer[2U] = EXT_FLASH_DUMMY;
+  buffer[3U] = EXT_FLASH_DUMMY;
+
+  CddSpi_CsEnable();
+  SPI_Transmit(buffer, 4U);
+  Flash_Receive(data, 2U);
+  CddSpi_CsDisable();
+
+  return data;
+}
+
+/*----------------------------------------------------------------------------
+- @brief Flash_ReadSFDP
+
+- @desc
+
+- @param void
+
+- @return 256byte SFDP register content:
+-----------------------------------------------------------------------------*/
+void Flash_ReadSFDP(uint8_t* data)
+{
+  uint8_t buffer[5U];
+
+  buffer[0U] = EXT_FLASH_R_SFPD_REG;
+
+  for (uint8_t k = 1U; k < 5U; k++)
+  {
+    buffer[k] = 0U;
+  }
+
   CddSpi_CsEnable();
 
-  /* Send read command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_NORMAL_READ);
+  SPI_Transmit(buffer, 5U);
+  Flash_Receive(data, 256U);
 
-  /* Address byte 2 */
-  CddSpi_TransferSingleByte((PageAddress >> 16U) & 0xFFU);
-
-  /* Address byte 1 */
-  CddSpi_TransferSingleByte((PageAddress >>  8U) & 0xFFU);
-
-  /* Address byte 0 */
-  CddSpi_TransferSingleByte((PageAddress >>  0U) & 0xFFU);
-
-  /* Write data */
-  CddSpi_ReadMultipleBytes((uint8_t*) ptrPageToRead, (unsigned) sizeof(CddExtFlash_PageType));
-
-  /* Chip select disable */
   CddSpi_CsDisable();
-
-  /* Wait for completion */
-  CddExtFlash_DataProcess_Ready();
 }
 
-/* Function to erase data from a sector */
-void CddExtFlash_DataProcess_EraseSector(const unsigned unPageIndex)
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_TestAvailability
+
+- @desc  testing chip alive and kicking
+         reading SFDP record, it must return
+         a string beginning with "SFDP"
+
+- @param void
+
+- @return 1   test passed
+          0   test failed
+-----------------------------------------------------------------------------*/
+uint8_t Flash_TestAvailability(void)
 {
-   /* Chip address */
-   const uint32_t SectorAddress = (unPageIndex * IS25LP128F_PAGES_GRANULAR_BORDER);
+  uint8_t data[256U] = {0U};
 
-  /* Enable writing */
-  CddExtFlash_DataProcess_WriteEnable();
+  uint8_t test = 1U;
 
-  /* Chip select enable */
+  for (uint8_t k = 0U; k != 254U; k++)
+  {
+    data[k] = 0xFFU;
+  }
+
+  Flash_ReadSFDP(data);
+
+  if (data[0] != 'S') { test = 0U; }
+  if (data[1] != 'F') { test = 0U; }
+  if (data[2] != 'D') { test = 0U; }
+  if (data[3] != 'P') { test = 0U; }
+
+  return test;
+}
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_unblockChip
+
+- @desc remove write protection from chip
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_unblockChip(void)
+{
+  uint8_t buffer[4];
+  buffer[0U] = EXT_FLASH_W_ENABLE;
+  buffer[1U] = EXT_FLASH_W_SR1;
+  buffer[2U] = 0U;
+  buffer[3U] = 0U;
+
+  CddSpi_CsEnable();
+  SPI_Transmit(&buffer[0], 1);
+  CddSpi_CsDisable();
+
+  CddSpi_CsEnable();
+  SPI_Transmit(&buffer[1U], 1U);
+  SPI_Transmit(&buffer[2U], 1U);
+  CddSpi_CsDisable();
+
+  Flash_WaitForWritingComplete();
+}
+
+/*----------------------------------------------------------------------------
+- @brief Flash_readStsRegister
+
+- @desc Read status register
+
+- @param void
+
+- @return status register
+-----------------------------------------------------------------------------*/
+uint8_t Flash_readStsRegister(void)
+{
+
+  uint8_t Transfer[1U] = {0U};
+  uint8_t Receive[1U]  = {0xFFU};
+
   CddSpi_CsEnable();
 
-  /* Send erase sector command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_SEC_ERASE);
+  Transfer[0U] = EXT_FLASH_R_SR1;
+  SPI_Transmit(Transfer, 1);
 
-  /* Address byte 2 */
-  CddSpi_TransferSingleByte((SectorAddress >> 16U) & 0xFFU);
+  Flash_Receive(Receive, 2U);  //SR1 is repeteadly sent until Flash is selected
 
-  /* Address byte 1 */
-  CddSpi_TransferSingleByte((SectorAddress >>  8U) & 0xFFU);
-
-  /* Address byte 0 */
-  CddSpi_TransferSingleByte((SectorAddress >>  0U) & 0xFFU);
-
-  /* Chip select disable */
   CddSpi_CsDisable();
 
-  /* Wait for completion */
-  CddExtFlash_DataProcess_Ready();
+  return (uint32_t)Receive;
+
 }
 
-void CddExtFlash_DataProcess_EraseChip(void)
-{
-  /* Enable writing */
-  CddExtFlash_DataProcess_WriteEnable();
 
-  /* Chip select enable */
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_readStsRegister
+
+- @desc reading manufacutrer and device ID
+        checking if connected device is a Winbond Flash
+
+- @param void
+
+- @return status register
+-----------------------------------------------------------------------------*/
+uint8_t Flash_Init(void)
+{
+  uint32_t JedecID = 1U;
+
+  Flash_msDelays(6);  // supposing init is called on system startup: 5 ms (tPUW) required after power-up to be fully available
+  Flash_Reset();
+
+  if (!Flash_TestAvailability()) { JedecID = 0;}
+
+  JedecID = Flash_ReadManufactutrerAndDevID();  //select the memSize byte
+
+  if (((JedecID >> 16) & 0XFF) != 0x9D) { JedecID = 0; }
+
+  return (uint8_t)JedecID;
+}
+
+
+
+/*----------------------------------------------------------------------------
+- @brief Flash_Reset
+
+- @desc reset the chip
+
+
+- @param void
+
+- @return void
+-----------------------------------------------------------------------------*/
+void Flash_Reset(void)
+{
+  uint8_t command;
+  command = EXT_FLASH_RESET_EN;
   CddSpi_CsEnable();
-  /* Send erase sector command */
-  CddSpi_TransferSingleByte(IS25LP128F_CMD_SEC_CER);
-  /* Chip select disable */
+  SPI_Transmit(&command, 1);
   CddSpi_CsDisable();
 
-  /* Wait for completion */
-  CddExtFlash_DataProcess_Ready();
-
+  command = EXT_FLASH_RESET;
+  CddSpi_CsEnable();
+  SPI_Transmit(&command, 1);
+  CddSpi_CsDisable();
+  Flash_msDelays(1);  // 30us needed by resetting
 }
-
-void CddExtFlash_DataProcess_PreInit(void)
-{
-  CddExtFlash_DataProcess_EraseChip();
-}
-

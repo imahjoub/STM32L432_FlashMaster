@@ -1,25 +1,20 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
 #include <Cdd/CddExtFlash/CddExtFlash.h>
 #include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
 #include <Cdd/CddI2c/CddI2c.h>
 #include <Cdd/CddSpi/CddSpi.h>
+#include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
 #include <Mcal/Mcu.h>
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
 
 //#define OS_TASK_USE_LED
-#define OS_TASK_USE_FLASH
-#define OS_TASK_USE_SERLCD_I2C
+//#define OS_TASK_USE_FLASH
+//#define OS_TASK_USE_SERLCD_I2C
 
 CddExtFlash_PageType AppPage;
-
-//static uint64_t TaskTimer02;
-
-uint8_t ChipId[3U] = {0U};
-
 
 #if defined(OS_TASK_USE_FLASH)
 
@@ -74,6 +69,7 @@ void Task01_Func(void)
 
 
 /************************* TASK2 *********************************/
+uint8_t ostask_buffer_id[3U] = {0x00U};
 
 void Task02_Init(void);
 void Task02_Func(void);
@@ -84,13 +80,6 @@ void Task02_Init(void)
 
   /* Initialize Spi */
   CddSpi_Init();
-
-  /* Initialize Spi CS */
-  CddSpi_CsInit();
-
-  //CddExtFlash_Init();
-
-  CddExtFlash_DataProcess_GetChipID(ChipId);
 
   #endif
 }
@@ -105,8 +94,7 @@ void Task02_Func(void)
     TaskTimer02 = TimerStart(2000U);
 
     // Write the new data.
-    //CddExtFlash_WritePage(&AppPage);
-
+    CddExtFlash_WritePage(&AppPage);
   }
 
   #endif
@@ -120,35 +108,34 @@ void Task03_Func(void);
 
 void Task03_Init(void)
 {
-  #if defined(OS_TASK_USE_SERLCD_I2C)
-
+#if defined(OS_TASK_USE_SERLCD_I2C)
   /* Initialize I2C1 */
-  CddI2c_Init();
-  CddSerLCD_I2c_Init();
-
-  #endif
+  //CddI2c_Init();
+  //CddSerLCD_I2c_Init();
+#endif
 }
 
 void Task03_Func(void)
 {
+
   #if defined(OS_TASK_USE_SERLCD_I2C)
 
-  char HelloString[] = { "Flash" };
-  char WorldString[] = { "Master!" };
-
-  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  /* Delay to ensure the clear command is processed */
-  CddSerLcd_I2c_msDelays(5U);
-  CddSerLCD_I2c_PrintString(HelloString, sizeof(HelloString)/sizeof(HelloString[0]));
-  CddSerLcd_I2c_msDelays(2000U);
-
-  CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
-  /* Delay to ensure the clear command is processed */
-  CddSerLcd_I2c_msDelays(5U);
-  CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
-  CddSerLcd_I2c_msDelays(2000U);
-
+  //uint8_t HelloString[] = { "hello" };
+  //uint8_t WorldString[] = { "World" };
+  //
+  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  ///* Delay to ensure the clear command is processed */
+  //CddSerLcd_I2c_msDelays(5U);
+  //CddSerLCD_I2c_PrintString(HelloString, sizeof(HelloString)/sizeof(HelloString[0]));
+  //CddSerLcd_I2c_msDelays(2000U);
+  //
+  //CddSerLCD_I2c_SendCommand(CDD_SERLCD_CLEAR_DISPLAY);
+  ///* Delay to ensure the clear command is processed */
+  //CddSerLcd_I2c_msDelays(5U);
+  //CddSerLCD_I2c_PrintString(WorldString, sizeof(WorldString) / sizeof(WorldString[0]));
+  //CddSerLcd_I2c_msDelays(2000U);
 #endif
+
 }
 
 

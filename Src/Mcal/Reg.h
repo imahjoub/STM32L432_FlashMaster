@@ -99,12 +99,4 @@
   #define SPI1_RXCRCR         (*(volatile uint32_t*)(SPI1_BASE + 0x14UL))
   #define SPI1_TXCRCR         (*(volatile uint32_t*)(SPI1_BASE + 0x18UL))
 
-
-
-
-
-
-
-
-
 #endif /* REG_2023_08_26_H */

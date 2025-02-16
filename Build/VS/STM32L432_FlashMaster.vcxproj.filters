@@ -100,6 +100,9 @@
     <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.c">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Mcal\Gpio.c">
+      <Filter>Source Files\Src\Mcal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Mcal\Mcu.h">
@@ -143,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.h">
       <Filter>Source Files\Src\Cdd\CddSerLCD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Mcal\Gpio.h">
+      <Filter>Source Files\Src\Mcal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
