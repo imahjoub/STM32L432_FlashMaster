@@ -61,7 +61,6 @@ int main(void)
   }
 
   Flash_Read(0x00UL, ReadBuffer, 259U);
-#endif
   /* ---------------- SerLCD ----------------*/
 
   CddI2c_Init();
@@ -72,6 +71,7 @@ int main(void)
 
   (void)CddSerLcd_WriteString("Worlddddddddddddddddddddddd!");
   (void)CddSerLcd_Clear();
+#endif
 
 }
 

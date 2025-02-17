@@ -255,7 +255,7 @@ uint8_t CddSerLcd_WriteString(char *buffer)
   // transmission of data stream
   I2C_Transmit(DISPLAY_ADDRESS1 << 1U , (uint8_t*)buffer, strlen(buffer));
 
-  CddSerLcd_msDelays(10U); //This takes a bit longer
+  CddSerLcd_msDelays(50U); //This takes a bit longer
 
   return retval;
 }
