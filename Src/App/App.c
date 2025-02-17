@@ -6,7 +6,7 @@
 #include <OS/OS.h>
 
 #include <Cdd/CddExtFlash/CddExtFlash.h>
-#include <Cdd/CddExtFlash/CddExtFlash_Dataprocess.h>
+#include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
 
 #include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
 #include <Cdd/CddI2c/CddI2c.h>
