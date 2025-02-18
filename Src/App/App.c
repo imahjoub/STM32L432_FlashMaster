@@ -1,5 +1,5 @@
 #include <Mcal/Mcu.h>
-#include <Mcal/Systick.h>
+#include <Mcal/SysTick.h>
 #include <OS/OS.h>
 
 int main(void)
