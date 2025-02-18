@@ -114,7 +114,7 @@ void CddSpi_CsDisable(void)
 void SPI_Transmit(const uint8_t* pTxBuffer, uint32_t DataSize)
 {
   /* Set the transaction information */
-  uint16_t TxTransferCount = DataSize;
+  uint32_t TxTransferCount = DataSize;
 
   while(TxTransferCount > 0U)
   {
