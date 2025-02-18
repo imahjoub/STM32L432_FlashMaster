@@ -18,11 +18,17 @@
 This project implements **bare-metal** drivers for the **IS25LP128F** serial flash memory and the **SerLCD** 20x4 display on the **STM32L432KC** development board.
 The flash memory is controlled via **SPI**, and the LCD is driven using **I2C**, all without relying on STM32 HAL, CMSIS, or any third-party libraries.
 
-## Hardware Used
-- **STM32L432KC**: NUCLEO-STM32L432KC Development Board.  
-- **IS25LP128F**: Serial Flash Memory (SPI).  
-- **SerLCD**: SparkFun 20x4 Serial LCD Display (I2C). 
+&nbsp;&nbsp;&nbsp;&nbsp;
 
+## Hardware Used
+
+| **Part**              | **Description**                                      |
+|-----------------------|------------------------------------------------------|
+| **STM32L432KC**       | NUCLEO-STM32L432KC Development Board.                |
+| **IS25LP128F**        | Serial Flash Memory (SPI).                           |
+| **SerLCD**            | SparkFun 20x4 Serial LCD Display (I2C).              |
+
+- 
 ## Project Goals
 
 The main goals of this project are:  
@@ -47,10 +53,10 @@ Each task runs at a predefined interval without an RTOS, ensuring efficient exec
 ### Wiring & Connections
 To set up the hardware, connect the components as follows:  
 
-| Peripheral | Interface | STM32 Pins Used |
-|------------|-----------|-----------------|
+| Peripheral | Interface | STM32L432KC Pins Used                             |
+|------------|-----------|---------------------------------------------------|
 | **IS25LP128F (Flash)** | SPI | PA5 (SCK), PA6 (MISO), PA7 (MOSI), PA4 (CS) |
-| **SerLCD (LCD)**       | I2C | PB6 (SDA), PB7 (SCL) |
+| **SerLCD (LCD)**       | I2C | PB6 (SDA), PB7 (SCL)                        |
 
 ### Circuit Overview
 Below is the circuit of the STM32L432KC with the flash memory and LCD display:  
