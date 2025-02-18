@@ -8,7 +8,7 @@
   /*  Defines                                                                            */
   /* ----------------------------------------------------------------------------------- */
 
-  #define DISPLAY_ADDRESS1                  0x72U            /* This is the default address of the OpenLCD */
+  #define DISPLAY_ADDRESS                   0x72U            /* This is the default address of the OpenLCD */
   #define MAX_LINES                            2U            /* display lines (1, 2 or 4)                  */
   #define MAX_COLUMNS                         16U            /* display columns (16 or 20)                 */
 
@@ -28,17 +28,17 @@
   #define SAVE_CURRENT_DISPLAY_AS_SPLASH    0x0AU            /* 10, Ctrl+j, command to save current text on display as splash    */
 
   // special commands
-  #define LCD_RETURNHOME                    0x02U
-  #define LCD_ENTRYMODESET                  0x04U
-  #define LCD_DISPLAYCONTROL                0x08U
-  #define LCD_CURSORSHIFT                   0x10U
-  #define LCD_SETDDRAMADDR                  0x80U
+  #define LCD_RETURNHOME                    (uint8_t)0x02U
+  #define LCD_ENTRYMODESET                  (uint8_t)0x04U
+  #define LCD_DISPLAYCONTROL                (uint8_t)0x08U
+  #define LCD_CURSORSHIFT                   (uint8_t)0x10U
+  #define LCD_SETDDRAMADDR                  (uint8_t)0x80U
 
   // flags for display entry mode
-  #define LCD_ENTRYRIGHT                    0x00U
-  #define LCD_ENTRYLEFT                     0x02U
-  #define LCD_ENTRYSHIFTINCREMENT           0x01U
-  #define LCD_ENTRYSHIFTDECREMENT           0x00U
+  #define LCD_ENTRYRIGHT                    (uint8_t)0x00U
+  #define LCD_ENTRYLEFT                     (uint8_t)0x02U
+  #define LCD_ENTRYSHIFTINCREMENT           (uint8_t)0x01U
+  #define LCD_ENTRYSHIFTDECREMENT           (uint8_t)0x00U
 
   // flags for display on/off control
   #define LCD_DISPLAYON                     0x04U

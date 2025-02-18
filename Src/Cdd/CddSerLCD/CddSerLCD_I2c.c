@@ -5,9 +5,15 @@
 
 
 /*----------------------------------------------------------------------------*/
+/*                             Function Prototypes                            */
+/*----------------------------------------------------------------------------*/
+static void CddSerLcd_msDelays(unsigned ms_count);
+
+
+/*----------------------------------------------------------------------------*/
 /*                             Global variables                               */
 /*----------------------------------------------------------------------------*/
-static uint8_t CddSerLcd_SlaveAddr = DISPLAY_ADDRESS1;
+static uint8_t CddSerLcd_SlaveAddr = DISPLAY_ADDRESS;
 static uint8_t CddSerLcd_Control   = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
 static uint8_t CddSerLcd_Mode      = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
 
@@ -21,7 +27,7 @@ static uint8_t CddSerLcd_Mode      = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
 
 - @return void
 -----------------------------------------------------------------------------*/
-void CddSerLcd_msDelays(unsigned ms_count)
+static void CddSerLcd_msDelays(unsigned ms_count)
 {
   ms_count *= 10U;
 
@@ -47,7 +53,7 @@ uint8_t CddSerLcd_Init(void)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-  uint8_t TransmitData[6] =
+  uint8_t TransmitData[6U] =
   {
     SPECIAL_COMMAND,                            /* special command character */
     LCD_DISPLAYCONTROL | CddSerLcd_Control,       /* display command           */
@@ -58,7 +64,7 @@ uint8_t CddSerLcd_Init(void)
   };
 
   /* transmission of data stream */
-  I2C_Transmit((DISPLAY_ADDRESS1 << 1U), TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   CddSerLcd_msDelays(50U);
 
@@ -96,8 +102,11 @@ uint8_t CddSerLcd_SetCursor(uint8_t col, uint8_t row)
 {
   uint8_t row_offsets[] = {0x00U, 0x40U, 0x14U, 0x54U};
 
-  //send the command
-  return CddSerLcd_SpecialCommand(LCD_SETDDRAMADDR | (col + row_offsets[row]));
+  /*send the command */
+
+  uint8_t RetValue = (uint8_t)CddSerLcd_SpecialCommand((uint8_t)LCD_SETDDRAMADDR | (col + row_offsets[row]));
+
+  return RetValue;
 }
 
 
@@ -188,7 +197,8 @@ uint8_t CddSerLcd_Autoscroll(void)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_NoAutoscroll(void)
 {
-  CddSerLcd_Mode &= ~LCD_ENTRYSHIFTINCREMENT;
+  CddSerLcd_Mode &= (uint8_t)(~LCD_ENTRYSHIFTINCREMENT);
+
   return CddSerLcd_SpecialCommand(LCD_ENTRYMODESET | CddSerLcd_Mode);
 }
 
@@ -231,9 +241,9 @@ uint8_t CddSerLcd_Write(uint8_t ByteToWrite)
   uint8_t retval = LCD_OK;
 
   // transmission of data stream
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, (uint8_t*)ByteToWrite, 1U);
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), &ByteToWrite, 1U);
 
-  CddSerLcd_msDelays(10); // wait a bit
+  CddSerLcd_msDelays(10U); // wait a bit
 
   return retval;
 }
@@ -253,7 +263,7 @@ uint8_t CddSerLcd_WriteString(char *buffer)
   uint8_t retval = LCD_OK;
 
   // transmission of data stream
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U , (uint8_t*)buffer, strlen(buffer));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U) , (uint8_t*)buffer, (uint16_t)strlen(buffer));
 
   CddSerLcd_msDelays(50U); //This takes a bit longer
 
@@ -273,27 +283,27 @@ uint8_t CddSerLcd_WriteString(char *buffer)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_CreateChar(uint8_t location, uint8_t *charmap)
 {
-  location &= 0x7; // we only have 8 locations 0-7
+  location &= 0x7U; // we only have 8 locations 0-7
 
   // create i2c data stream
   uint8_t retval = LCD_OK;
 
-  uint8_t TransmitData[10] =
+  uint8_t TransmitData[10U] =
   {
     SETTING_COMMAND,
-      27 + location,
-         charmap[0],
-         charmap[1],
-         charmap[2],
-         charmap[3],
-         charmap[4],
-         charmap[5],
-         charmap[6],
-         charmap[7]
+      27U + location,
+         charmap[0U],
+         charmap[1U],
+         charmap[2U],
+         charmap[3U],
+         charmap[4U],
+         charmap[5U],
+         charmap[6U],
+         charmap[7U]
   };
 
   // transmission of data stream
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));   // transmit data
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));   // transmit data
 
   CddSerLcd_msDelays(50); //This takes a bit longer
 
@@ -348,7 +358,7 @@ uint8_t CddSerLcd_LeftToRight(void)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_RightToLeft(void)
 {
-   CddSerLcd_Mode &= ~LCD_ENTRYLEFT;
+   CddSerLcd_Mode &= (uint8_t)(~LCD_ENTRYLEFT);
    return CddSerLcd_SpecialCommand(LCD_ENTRYMODESET | CddSerLcd_Mode);
 }
 
@@ -369,7 +379,7 @@ uint8_t CddSerLcd_RightToLeft(void)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_NoDisplay(void)
 {
-  CddSerLcd_Control &= ~LCD_DISPLAYON;
+  CddSerLcd_Control &= (uint8_t)(~LCD_DISPLAYON);
   return CddSerLcd_SpecialCommand(LCD_DISPLAYCONTROL | CddSerLcd_Control);
 }
 
@@ -401,7 +411,7 @@ uint8_t CddSerLcd_Display(void)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_NoCursor(void)
 {
-  CddSerLcd_Control &= ~LCD_CURSORON;
+  CddSerLcd_Control &= (uint8_t)(~LCD_CURSORON);
   return CddSerLcd_SpecialCommand(LCD_DISPLAYCONTROL | CddSerLcd_Control);
 }
 
@@ -434,7 +444,7 @@ uint8_t CddSerLcd_Cursor(void)
 -----------------------------------------------------------------------------*/
 uint8_t CddSerLcd_NoBlink(void)
 {
-  CddSerLcd_Control &= ~LCD_BLINKON;
+  CddSerLcd_Control &= (uint8_t)(~LCD_BLINKON);
   return CddSerLcd_SpecialCommand(LCD_DISPLAYCONTROL | CddSerLcd_Control);
 }
 
@@ -471,14 +481,14 @@ uint8_t CddSerLcd_EnableSystemMessages(void)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-    uint8_t TransmitData[2] =
+    uint8_t TransmitData[2U] =
     {
       SETTING_COMMAND,                   /* special command character */
       ENABLE_SYSTEM_MESSAGE_DISPLAY,     /* set '.' character         */
     };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   CddSerLcd_msDelays(10U);
 
@@ -501,16 +511,16 @@ uint8_t CddSerLcd_DisableSystemMessages(void)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-    uint8_t TransmitData[2] =
+    uint8_t TransmitData[2U] =
     {
       SETTING_COMMAND,
       DISABLE_SYSTEM_MESSAGE_DISPLAY,
     };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(10);
+  CddSerLcd_msDelays(10U);
 
   return retval;
 }
@@ -537,26 +547,26 @@ uint8_t CddSerLcd_SetBacklight(uint16_t r, uint16_t g, uint16_t b)
   uint8_t retval = LCD_OK;
 
   // size reduction of the percentage to a value between 0 and 29
-  if(r != 0) { r = r * 29 / 255; }
-  if(g != 0) { g = g * 29 / 255; }
-  if(b != 0) { b = b * 29 / 255; }
+  if(r != 0U) { r = (uint16_t)((r * 29U) / 255U); }
+  if(g != 0U) { g = (uint16_t)((g * 29U) / 255U); }
+  if(b != 0U) { b = (uint16_t)((b * 29U) / 255U); }
 
   // create i2c data stream
-  uint8_t TransmitData[10] =
+  uint8_t TransmitData[10U] =
   {
-    SPECIAL_COMMAND,                                         /* Send special command character  */
-    LCD_DISPLAYCONTROL | (CddSerLcd_Control & ~LCD_DISPLAYON), /* turn display off                */
-    SETTING_COMMAND,     (128 + (uint8_t)r),                 /* red  : 0...100% ~ 0...29        */
-    SETTING_COMMAND,     (158 + (uint8_t)g),                 /* green: 0...100% ~ 0...29        */
-    SETTING_COMMAND,     (188 + (uint8_t)b),                 /* blue : 0...100% ~ 0...29        */
-    SPECIAL_COMMAND,                                         /* Send special command character  */
+    SPECIAL_COMMAND,                                                        /* Send special command character  */
+    LCD_DISPLAYCONTROL | (CddSerLcd_Control & (uint8_t)(~LCD_DISPLAYON)),   /* turn display off                */
+    SETTING_COMMAND,     (128U + (uint8_t)r),                               /* red  : 0...100% ~ 0...29        */
+    SETTING_COMMAND,     (158U + (uint8_t)g),                               /* green: 0...100% ~ 0...29        */
+    SETTING_COMMAND,     (188U + (uint8_t)b),                               /* blue : 0...100% ~ 0...29        */
+    SPECIAL_COMMAND,                                                        /* Send special command character  */
     LCD_DISPLAYCONTROL | (CddSerLcd_Control |= LCD_DISPLAYON)
   }; // turn display off as before
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(50);
+  CddSerLcd_msDelays(50U);
 
   return retval;
 }
@@ -578,7 +588,7 @@ uint8_t CddSerLcd_SetFastBacklight(uint8_t r, uint8_t g, uint8_t b)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-  uint8_t TransmitData[5] =
+  uint8_t TransmitData[5U] =
   {
     SETTING_COMMAND,                 /* special command character      */
     SET_RGB_COMMAND,                 /* set RGB character '+' or plus  */
@@ -588,7 +598,7 @@ uint8_t CddSerLcd_SetFastBacklight(uint8_t r, uint8_t g, uint8_t b)
   };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   return retval;
 }
@@ -608,7 +618,7 @@ uint8_t CddSerLcd_SetContrast(uint8_t new_val)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-  uint8_t TransmitData[3] =
+  uint8_t TransmitData[3U] =
   {
     SETTING_COMMAND,                  /* special command character */
     CONTRAST_COMMAND,                 /* send contrast command     */
@@ -616,7 +626,7 @@ uint8_t CddSerLcd_SetContrast(uint8_t new_val)
   };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   CddSerLcd_msDelays(10);
 
@@ -641,7 +651,7 @@ uint8_t CddSerLcd_SetAddress(uint8_t new_addr)
   uint8_t retval = LCD_OK;
 
   /* create i2c data stream */
-  uint8_t TransmitData[3] =
+  uint8_t TransmitData[3U] =
   {
     SETTING_COMMAND,             /* special command character */
     ADDRESS_COMMAND,             /* send address command      */
@@ -649,7 +659,7 @@ uint8_t CddSerLcd_SetAddress(uint8_t new_addr)
   };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   /* Update our own address so we can still talk to the display */
   if(retval == LCD_OK) { CddSerLcd_SlaveAddr = new_addr; }
@@ -686,7 +696,7 @@ uint8_t CddSerLcd_EnableSplash(void)
   };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
   CddSerLcd_msDelays(10U);
 
@@ -707,16 +717,16 @@ uint8_t CddSerLcd_DisableSplash(void)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-  uint8_t TransmitData[2] =
+  uint8_t TransmitData[2U] =
   {
     SETTING_COMMAND,
     DISABLE_SPLASH_DISPLAY,
   };
 
   /* transmission of data stream */
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(10);
+  CddSerLcd_msDelays(10U);
 
   return retval;
 }
@@ -736,16 +746,16 @@ uint8_t CddSerLcd_SaveSplash(void)
   uint8_t retval = LCD_OK;
 
   // create i2c data stream
-  uint8_t TransmitData[2] =
+  uint8_t TransmitData[2U] =
   {
     SETTING_COMMAND,
     SAVE_CURRENT_DISPLAY_AS_SPLASH,
   };
 
   // transmission of data stream
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(10);
+  CddSerLcd_msDelays(10U);
 
   return retval;
 }
@@ -770,9 +780,9 @@ uint8_t CddSerLcd_Command(uint8_t command)
 
   uint8_t TransmitData[2U] = {SETTING_COMMAND, command};
 
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(10); /* Wait a bit longer for special display commands */
+  CddSerLcd_msDelays(10U); /* Wait a bit longer for special display commands */
 
   return retval;
 }
@@ -793,9 +803,9 @@ uint8_t CddSerLcd_SpecialCommand(uint8_t command)
 
   uint8_t TransmitData[2U] = {SPECIAL_COMMAND, command};
 
-  I2C_Transmit(DISPLAY_ADDRESS1 << 1U, TransmitData, sizeof(TransmitData));
+  I2C_Transmit((uint16_t)(DISPLAY_ADDRESS << 1U), TransmitData, sizeof(TransmitData));
 
-  CddSerLcd_msDelays(50); //Wait a bit longer for special display commands
+  CddSerLcd_msDelays(50U); //Wait a bit longer for special display commands
 
   return retval;
 }

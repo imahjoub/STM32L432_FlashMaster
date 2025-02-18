@@ -8,7 +8,7 @@
 /* ----------------------------------------------------------------------------------- */
 /*  Functions prototypes                                                               */
 /* ----------------------------------------------------------------------------------- */
-static void CddI2c_TransferConfig(uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request);
+static void CddI2c_TransferConfig(uint16_t DevAddress, uint16_t Size, uint32_t Mode, uint32_t Request);
 
 
 /*----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ void CddI2c_Init(void)
 
 - @return void
 -----------------------------------------------------------------------------*/
-static void CddI2c_TransferConfig(uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request)
+static void CddI2c_TransferConfig(uint16_t DevAddress, uint16_t Size, uint32_t Mode, uint32_t Request)
 {
   /* Slave address */
   uint32_t DeviceAddress  = (uint32_t)(DevAddress                & CDD_I2C_CR2_SADD);
