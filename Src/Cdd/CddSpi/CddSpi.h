@@ -30,9 +30,9 @@
   void CddSpi_CsEnable(void);
   void CddSpi_CsDisable(void);
 
-  void SPI_Receive        (uint8_t *pRxBuffer, uint32_t DataSize);
+  void SPI_Receive        (      uint8_t *pRxBuffer, uint32_t DataSize);
   void SPI_Transmit       (const uint8_t* pTxBuffer, uint32_t DataSize);
-  void SPI_TransmitReceive(uint8_t *pRxBuffer, uint16_t DataSize);
+  void SPI_TransmitReceive(      uint8_t *pRxBuffer, uint32_t DataSize);
 
 
 #endif // CDD_SPI_2023_08_22_H

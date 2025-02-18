@@ -461,7 +461,7 @@ uint8_t Flash_ReadManufactutrerAndDevID(void)
   Flash_Receive(data, 2U);
   CddSpi_CsDisable();
 
-  return data;
+  return data[0];
 }
 
 /*----------------------------------------------------------------------------
@@ -582,7 +582,7 @@ uint8_t Flash_readStsRegister(void)
 
   CddSpi_CsDisable();
 
-  return (uint32_t)Receive;
+  return Receive[0];
 
 }
 

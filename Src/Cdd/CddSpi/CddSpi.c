@@ -141,10 +141,10 @@ void SPI_Transmit(const uint8_t* pTxBuffer, uint32_t DataSize)
 
  - @return void
  ---------------------------------------------------*/
-void SPI_TransmitReceive(uint8_t *pRxBuffer, uint16_t DataSize)
+void SPI_TransmitReceive(uint8_t *pRxBuffer, uint32_t DataSize)
 {
-  uint16_t RxTransferCount = DataSize;
-  uint16_t TxTransferCount = DataSize;
+  uint32_t RxTransferCount = DataSize;
+  uint32_t TxTransferCount = DataSize;
 
   /* Transmit and Receive data */
   while((TxTransferCount > 0U) || (RxTransferCount > 0U))

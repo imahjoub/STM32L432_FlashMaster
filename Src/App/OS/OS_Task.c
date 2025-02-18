@@ -10,22 +10,25 @@
 #include <Mcal/Mcu.h>
 #include <Mcal/Reg.h>
 #include <Util/UtilTimer.h>
+#include <Util/Md5/Md5.h>
 
 //#define OS_TASK_USE_LED
-//#define OS_TASK_USE_FLASH
-//#define OS_TASK_USE_SERLCD_I2C
+#define OS_TASK_USE_FLASH
+#define OS_TASK_USE_SERLCD_I2C
 
-CddExtFlash_PageType AppPage;
 static uint64_t TaskTimer02;
+static uint8_t ReadBuffer [260U]    = { 0U };
+static uint8_t WriteBuffer[256U]    = { 0U };
+static uint8_t HashWriteBuffer[256] = { 0U };
+static uint8_t HashReadBuffer [256] = { 0U };
 
-uint8_t ReadBuffer[260U]  = { 0U };
-uint8_t WriteBuffer[256U] = { 0U };
 
-typedef enum { JobIdle, JobRead, JobWrite, JobErase, JobCheck, NoJob }  ExtFlash_JobType;
+typedef enum { JobIdle, JobRead, JobWrite, JobErase, JobCheck, JobSucceeded, JobFailed }  ExtFlash_JobType;
 ExtFlash_JobType ExtFlashCurrentJob = JobIdle;
 
 bool JobEraseDone = false;
 bool JobWriteDone = false;
+bool HashIsOk     = false;
 
 #if defined(OS_TASK_USE_FLASH)
 
@@ -134,16 +137,26 @@ void Task02_Func(void)
 
     case JobRead:
       Flash_Read(0x00UL, ReadBuffer, 259U);
-      ExtFlashCurrentJob = NoJob;
+      ExtFlashCurrentJob = JobCheck;
       break;
 
-    //case JobCheck:
-    //  break;
+    case JobCheck:
+      Md5_Calculate((uint8_t*)&WriteBuffer, 256U, (uint8_t*)&HashWriteBuffer);
+      Md5_Calculate((uint8_t*)&ReadBuffer, 256U,  (uint8_t*)&HashReadBuffer);
+      HashIsOk = Md5_Check((uint8_t*)&HashWriteBuffer, (uint8_t*)&HashReadBuffer);
+      ExtFlashCurrentJob = HashIsOk ? JobSucceeded : JobFailed;
+      break;
 
-    case NoJob:
+    case JobSucceeded:
+      /* Do nothing */
+      break;
+
+    case JobFailed:
+      /* Do nothing */
       break;
 
     default:
+      /* Do nothing */
       break;
     }
   }
@@ -167,52 +180,48 @@ void Task03_Init(void)
 
 void Task03_Func(void)
 {
-
-  (void)CddSerLcd_WriteString("FlashMaster running...");
-  (void)CddSerLcd_Clear();
-
 #if defined(OS_TASK_USE_SERLCD_I2C)
 
-    //if (TimerTimeout(TaskTimer02))
-    //{
-      //TaskTimer02 = TimerStart(6000U);
+  switch (ExtFlashCurrentJob)
+  {
+  case JobIdle:
+    (void)CddSerLcd_WriteString("FlashMaster JobIdle...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      switch (ExtFlashCurrentJob)
-      {
-      case JobIdle:
-        (void)CddSerLcd_WriteString("FlashMaster JobIdle...");
-        (void)CddSerLcd_Clear();
-        break;
+  case JobErase:
+    (void)CddSerLcd_WriteString("FlashMaster JobErase...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      case JobErase:
-        (void)CddSerLcd_WriteString("FlashMaster JobErase...");
-        (void)CddSerLcd_Clear();
-        break;
+  case JobWrite:
+    (void)CddSerLcd_WriteString("FlashMaster JobWrite...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      case JobWrite:
-        (void)CddSerLcd_WriteString("FlashMaster JobWrite...");
-        (void)CddSerLcd_Clear();
-        break;
+  case JobRead:
+    (void)CddSerLcd_WriteString("FlashMaster JobRead...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      case JobRead:
-        (void)CddSerLcd_WriteString("FlashMaster JobRead...");
-        (void)CddSerLcd_Clear();
-        break;
+  case JobCheck:
+    (void)CddSerLcd_WriteString("FlashMaster JobCheck...");
+    (void)CddSerLcd_Clear();
+  break;
 
-      //case JobCheck:
-      //(void)CddSerLcd_WriteString("FlashMaster JobCheck...");
-      //(void)CddSerLcd_Clear();
-      //break;
+  case JobSucceeded:
+    (void)CddSerLcd_WriteString("FlashMaster JobSucceeded...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      case NoJob:
-        (void)CddSerLcd_WriteString("FlashMaster NoJob...");
-        (void)CddSerLcd_Clear();
-        break;
+  case JobFailed:
+    (void)CddSerLcd_WriteString("FlashMaster JobFailed...");
+    (void)CddSerLcd_Clear();
+    break;
 
-      default:
-        break;
-      }
-    //}
+  default:
+    break;
+  }
 
 #endif
 }
