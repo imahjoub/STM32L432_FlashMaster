@@ -1,7 +1,13 @@
 #include <Cdd/CddSpi/CddSpi.h>
+#include <Mcal/Gpio.h>
 #include <Mcal/Reg.h>
 
 
+/*--------------------------------------------------
+ - static functions
+-------------------------------------------------- */
+static void WaitFifoStateUntilTimeout(uint32_t Fifo, uint32_t State);
+static void CheckEndRxTxTransaction(void);
 
 /*--------------------------------------------------
  - @brief CddSpi_Init
@@ -15,142 +21,51 @@ void CddSpi_Init(void)
   /* ---  GPIO configuration  --- */
   /* Enable clock for GPIOA */
   RCC_AHB2ENR |= (uint32_t)(1UL << 0U);
-
-  /* Configure GPIO pins for SPI (SPI1 on PA5, PA6, and PA7) */
-  /* Set PA5, PA6, PA7 to alternate function mode            */
-  GPIOA_MODER &= (uint32_t)(~(1U << 10U));
-  GPIOA_MODER |= (uint32_t) (1U << 11U);
-
-  GPIOA_MODER &= (uint32_t)(~(1U << 12U));
-  GPIOA_MODER |= (uint32_t)(1U << 13U);
-
-  GPIOA_MODER &= (uint32_t)(~(1U << 14U));
-  GPIOA_MODER |= (uint32_t) (1U << 15U);
-
-
-  /* Set alternate function for PA5, PA6, PA7 (SPI1) */
-  GPIOA_AFRL  |= (uint32_t)((5U << 20U));
-  GPIOA_AFRL  |= (uint32_t)((5U << 24U));
-  GPIOA_AFRL  |= (uint32_t)((5U << 28U));
-
-  /* ---  SPI configuration  --- */
-  /* Enable the Spi peripheral clock */
   RCC_APB2ENR |= (uint32_t)(1UL << 12U);
 
-  /* Set Software slave management     */
-  /* Internal slave select             */
-  /* Software slave management enabled */
-  SPI1_CR1 |= (uint32_t)(1U << 8U);
-  SPI1_CR1 |= (uint32_t)(1U << 9U);
+  GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-  /* Baud rate configuration */
-  SPI1_CR1 |= (uint32_t)(2UL << 3U);
+  // Configure SPI1 SCK (PA5), MISO (PA6), MOSI (PA7)
+  GPIO_InitStruct.Pin       = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
+  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull      = GPIO_NOPULL;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
 
-  /* Configure SPI */
-  /* Set master mode, clock polarity 0, clock phase 0 */
-  SPI1_CR1 |= (uint32_t)((0UL << 0U)| (0UL << 1U) | (1UL << 2U));
+  GPIO_Init((GPIO_TypeDef *)GPIOA_BASE, &GPIO_InitStruct);
 
-  /* Enable Tx/Rx buffer DMA  */
-  //SPI1_CR2 |= (uint32_t)((1UL << 0U) | (1UL << 1U));
+  // Configure CS pin as output
+  GPIO_InitStruct.Pin   = GPIO_PIN_4;
+  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull  = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 
-  /* Enable SPI */
+  GPIO_Init((GPIO_TypeDef *)GPIOA_BASE, &GPIO_InitStruct);
+
+  /* Disable SPI peripheral */
+  SPI1_CR1 &= ~(uint32_t)(1UL << 6U);
+
+
+
+  /*----------------------- SPIx CR1 & CR2 Configuration ---------------------*/
+  /* Configure : SPI Mode, Communication Mode, Clock polarity and phase, NSS management,
+  Communication speed, First bit and CRC calculation state */
+
+  SPI1_CR1 |= (((0x1UL << 2U) | (0x1UL << 8U))    // SPI_MODE_MASTER;
+              |((0x1UL << 9U)                )    // SPI_NSS_SOFT;
+              |((0x2UL << (3U))              ));  // SPI_BAUDRATEPRESCALER_8
+
+
+  SPI1_CR2 |=   (((0x1UL << 9U)  >> 16U))     // SPI_NSS_SOFT
+              | ((0x00000700U)          )     // SPI_DATASIZE_8BIT
+              | ((0x1UL << 12U)         );    //
+
+  /* Set RX FIFO threshold to 8-bit */
+  SPI1_CR2 |= (1UL << 12U);
+
+
+  /* Enable SPI peripheral */
   SPI1_CR1 |= (uint32_t)(1UL << 6U);
-}
-
-
-/*--------------------------------------------------
- - @brief CddSpi_CsInit
-
- - @desc Initializes the Chip Select (CS) lines
-         for SPI communication.
-
- - @return void
- ---------------------------------------------------*/
-void CddSpi_CsInit(void)
-{
-  /* Configure GPIO pins for SPI PA4 CS */
-  /* Set PA4 to output mode             */
-  /* Set output speed to high           */
-  /* No pull-up, pull-down              */
-  GPIOA_MODER   |= (uint32_t)(1UL << 8U);
-  GPIOA_MODER   &= (uint32_t)(~(1UL << 9U));
-}
-
-
-/*--------------------------------------------------
- - @brief CddSpi_WriteMultipleBytes
-
- - @desc Writes multiple bytes to an SPI device.
-
- - @param pSrc Pointer to the source data array
- - @param DataLen The number of bytes needs to be transmitted.
-
- - @return bool Returns write operation was
-           successful or not.
- ---------------------------------------------------*/
-bool CddSpi_WriteMultipleBytes(const uint8_t* pSrc, const unsigned DataLen)
-{
-  for(unsigned index = (unsigned) 0U; index < DataLen; ++index)
-  {
-    (void) CddSpi_TransferSingleByte(pSrc[index]);
-  }
-
-  /* TBD make a significant check here */
-  return true;
-}
-
-bool CddSpi_ReadMultipleBytes(uint8_t* pDest, const unsigned DataLen)
-{
-  for(unsigned index = (unsigned) 0U; index < DataLen; ++index)
-  {
-    pDest[index] = CddSpi_TransferSingleByte(0xFFU);
-  }
-
-  /* TBD make a significant check here */
-  return true;
-}
-
-
-/*--------------------------------------------------
- - @brief CddSpi_TransferSingleByte
-
- - @desc This function sends one byte to the SPI bus
-
- - @param TxData Byte to be sent over SPI.
-
- - @return uint8_t Received byte from SPI transaction.
- ---------------------------------------------------*/
-uint8_t CddSpi_TransferSingleByte(const uint8_t TxData)
-{
-  /* Put data into TXFIFO */
-  SPI1_DR = (uint8_t)TxData;
-
-  /* Wait until transmission complete */
-  while (!(SPI1_SR & (1UL << 1U)));
-
-  /* Wait until receive buffer not empty */
-  while (!(SPI1_SR & (1UL << 0U)));
-
-  /* Empty the RXFIFO */
-  return (uint8_t)(SPI1_DR);
-}
-
-
-/*--------------------------------------------------
- - @brief CddSpi_WriteRead
-
- - @desc Performs a write-read operation over SPI
-
- - @param TxData Byte to be transmitted over SPI.
-
- - @return uint8_t Received byte from the SPI
- ---------------------------------------------------*/
-uint8_t CddSpi_WriteRead(uint8_t TxData)
-{
-  uint8_t ReadBuff = 0U;
-  CddSpi_TransferSingleByte(TxData);
-  ReadBuff = CddSpi_TransferSingleByte(0xFFU);
-  return ReadBuff;
 }
 
 
@@ -183,4 +98,131 @@ void CddSpi_CsDisable(void)
 {
   /* Set the CE bit */
   GPIOA_ODR |= (uint32_t)(1UL << 4U);
+}
+
+
+/*--------------------------------------------------
+ - @brief SPI_Transmit
+
+ - @desc This function sends data to the SPI bus
+
+ - @param pTxBuffer: data to be sent over SPI.
+          DataSize : data length
+
+ - @return void
+ ---------------------------------------------------*/
+void SPI_Transmit(const uint8_t* pTxBuffer, uint32_t DataSize)
+{
+  /* Set the transaction information */
+  uint16_t TxTransferCount = DataSize;
+
+  while(TxTransferCount > 0U)
+  {
+    /* Wait until TXE flag is set to send data */
+    if(SPI1_SR & (0x1UL << CDD_SPI_SR_TXE_POS))
+    {
+      *((volatile uint8_t*) & SPI1_DR) = *((const uint8_t*)(const uint8_t*)pTxBuffer);
+      (const uint8_t*)pTxBuffer++;
+      TxTransferCount--;
+    }
+  }
+
+  /* Check the end of the transaction */
+  CheckEndRxTxTransaction();
+}
+
+/*--------------------------------------------------
+ - @brief SPI_TransmitReceive
+
+ - @desc function performs a write-read operation over SPI
+
+ - @param pRxBuffer: receive buffer to store data
+           DataSize : data length
+
+ - @return void
+ ---------------------------------------------------*/
+void SPI_TransmitReceive(uint8_t *pRxBuffer, uint16_t DataSize)
+{
+  uint16_t RxTransferCount = DataSize;
+  uint16_t TxTransferCount = DataSize;
+
+  /* Transmit and Receive data */
+  while((TxTransferCount > 0U) || (RxTransferCount > 0U))
+  {
+    /* Transmit data if TXE is set and Tx buffer has data */
+    if((SPI1_SR & (1UL << 1U)) && (TxTransferCount > 0U))
+    {
+      *((volatile uint8_t*)&SPI1_DR) = (uint8_t)0xFFU;
+      TxTransferCount--;
+    }
+
+    /* Receive data if RXNE is set and Rx buffer has space */
+    if((SPI1_SR & (1UL << 0U)) && (RxTransferCount > 0U))
+    {
+      *pRxBuffer++ = *((volatile uint8_t*)&SPI1_DR);
+      RxTransferCount--;
+    }
+  }
+}
+
+
+/*--------------------------------------------------
+ - @brief SPI_Receive
+
+ - @desc function performs a read operation over SPI
+
+ - @param pRxBuffer: receive buffer to store data
+           DataSize : data length
+
+ - @return void
+ ---------------------------------------------------*/
+void SPI_Receive(uint8_t *pRxBuffer, uint32_t DataSize)
+{
+  /* Call transmit-receive function to send Dummy data on Tx line and generate clock on CLK line */
+  SPI_TransmitReceive(pRxBuffer, DataSize);
+}
+
+
+
+/*--------------------------------------------------
+ - @brief WaitFifoStateUntilTimeout
+
+ - @desc
+
+ - @param
+
+
+ - @return void
+ ---------------------------------------------------*/
+static void WaitFifoStateUntilTimeout(uint32_t Fifo, uint32_t State)
+{
+  while ((SPI1_SR & Fifo) != State)
+  {
+    /* If FIFO is FRLVL and state is EMPTY, flush the data register */
+    if ((Fifo == CDD_SPI_SR_FRLVL) && (State == CDD_SPI_FRLVL_EMPTY))
+    {
+      (void)*(volatile uint8_t *)&SPI1_DR; // Flush SPI1_DR with a blank read
+    }
+  }
+}
+
+
+/*--------------------------------------------------
+ - @brief CheckEndRxTxTransaction
+
+ - @desc
+
+ - @param
+
+
+ - @return void
+ ---------------------------------------------------*/
+static void CheckEndRxTxTransaction(void)
+{
+  /* Control if the TX fifo is empty */
+  WaitFifoStateUntilTimeout(CDD_SPI_FLAG_FTLVL, CDD_SPI_FTLVL_EMPTY);
+
+  /* Control if the RX fifo is empty */
+  WaitFifoStateUntilTimeout(CDD_SPI_SR_FRLVL, CDD_SPI_FRLVL_EMPTY);
+
 }

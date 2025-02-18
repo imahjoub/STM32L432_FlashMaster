@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\Src\Cdd\Cddi2c\CddI2c.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.c" />
     <ClCompile Include="..\..\Src\Cdd\CddSpi\CddSpi.c" />
+    <ClCompile Include="..\..\Src\Mcal\Gpio.c" />
     <ClCompile Include="..\..\Src\Mcal\Gpt.c" />
     <ClCompile Include="..\..\Src\Mcal\Mcu.c" />
     <ClCompile Include="..\..\Src\Mcal\SysTick.c" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\..\Src\Cdd\Cddi2c\CddI2c.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSerLCD\CddSerLCD_I2c.h" />
     <ClInclude Include="..\..\Src\Cdd\CddSpi\CddSpi.h" />
+    <ClInclude Include="..\..\Src\Mcal\Gpio.h" />
     <ClInclude Include="..\..\Src\Mcal\Gpt.h" />
     <ClInclude Include="..\..\Src\Mcal\Mcu.h" />
     <ClInclude Include="..\..\Src\Mcal\Reg.h" />

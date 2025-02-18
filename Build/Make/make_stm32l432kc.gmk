@@ -22,8 +22,8 @@ ifeq ($(TYP_OS),win)
 PATH_TOOLS      = $(CURDIR)/../tools
 PATH_TOOLS_UTIL = $(PATH_TOOLS)/util
 PATH_TOOLS_GCC  = $(PATH_TOOLS)/gcc/gcc-13.2.1-arm-none-eabi/bin
-PATH_ST_PERIPH  = $(PATH_SRC)/Mcal/ThirdParty/STM32F4xx_StdPeriph_Driver
-PATH_ST_CMSIS   = $(PATH_SRC)/Mcal/ThirdParty/CMSIS
+PATH_ST_PERIPH  = $(PATH_SRC)/Mcal/ThirdParty/stm32l4xx_driver_lib
+#PATH_ST_CMSIS   = $(PATH_SRC)/Mcal/ThirdParty/CMSIS
 
 
 CC              = $(PATH_TOOLS_GCC)/arm-none-eabi-g++.exe
@@ -85,9 +85,15 @@ WFLAGS         = -Wall                                                     \
 
 C_ST_INCLUDE   =
 
-C_INCLUDES     = -I$(PATH_SRC)
+C_INCLUDES     =  -I$(PATH_SRC)                                             \
 
-C_DEFINES      =
+#                  -I$(PATH_ST_PERIPH)/Inc/Legacy                            \
+#                  -I$(PATH_ST_PERIPH)/Inc                                   \
+#                  -I$(PATH_ST_PERIPH)/../CMSIS/Device/ST/STM32L4xx/Include  \
+#                  -I$(PATH_ST_PERIPH)/../CMSIS/Include
+
+C_DEFINES :=    $(C_DEFINES)
+
 
 CFLAGS_BASE    = $(WFLAGS)                                                 \
                  -mcpu=cortex-m4                                           \
@@ -135,30 +141,31 @@ LDFLAGS        = $(CPPFLAGS)                                               \
                  -Wl,--print-memory-usage                                  \
                  -Wl,-Map,$(PATH_BIN)/stm32f446re.map
 
+SRC_STM32      =
+
 
 #------------------------------------------------------------------------------
 # Source files
 #------------------------------------------------------------------------------
-SRC_FILES      = $(PATH_SRC)/App/App                                       \
-                 $(PATH_SRC)/App/OS/OS_Task                                \
-                 $(PATH_SRC)/App/Shape/AppShape                            \
-                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                   \
-                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess       \
-                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                             \
-                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                   \
-                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                             \
-                 $(PATH_SRC)/Mcal/Gpt                                      \
-                 $(PATH_SRC)/Mcal/Mcu                                      \
-                 $(PATH_SRC)/Mcal/SysTick                                  \
-                 $(PATH_SRC)/OS/OS                                         \
-                 $(PATH_SRC)/StartUp/IntVect                               \
-                 $(PATH_SRC)/StartUp/SysStartup                            \
+SRC_FILES      = $(PATH_SRC)/App/App                                        \
+                 $(PATH_SRC)/App/OS/OS_Task                                 \
+                 $(PATH_SRC)/Cdd/CddI2c/CddI2c                              \
+                 $(PATH_SRC)/Cdd/CddSerLCD/CddSerLCD_I2c                    \
+                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash_DataProcess        \
+                 $(PATH_SRC)/Cdd/CddSpi/CddSpi                              \
+                 $(PATH_SRC)/Mcal/Gpio                                      \
+                 $(PATH_SRC)/Mcal/Gpt                                       \
+                 $(PATH_SRC)/Mcal/Mcu                                       \
+                 $(PATH_SRC)/Mcal/SysTick                                   \
+                 $(PATH_SRC)/OS/OS                                          \
+                 $(PATH_SRC)/StartUp/IntVect                                \
+                 $(PATH_SRC)/StartUp/SysStartup                             \
                  $(PATH_SRC)/Util/Md5/Md5
 
+#                 $(PATH_SRC)/Cdd/CddExtFlash/CddExtFlash                    \
+#                 $(PATH_SRC)/App/SerLCD                                     \
+#                 $(PATH_SRC)/App/Flash                                      \
 
-
-#                 $(PATH_SRC)/Cdd/CddDma/CddDma                             \
-#                 $(PATH_SRC)/Util/Sha256/Sha256                            \
 
 
 #------------------------------------------------------------------------------
