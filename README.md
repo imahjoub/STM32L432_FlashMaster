@@ -18,7 +18,6 @@
 This project implements **bare-metal** drivers for the **IS25LP128F** serial flash memory and the **SerLCD** 20x4 display on the **STM32L432KC** development board.
 The flash memory is controlled via **SPI**, and the LCD is driven using **I2C**, all without relying on STM32 HAL, CMSIS, or any third-party libraries.
 
-&nbsp;&nbsp;&nbsp;&nbsp;
 
 ## Hardware Used
 
@@ -28,7 +27,7 @@ The flash memory is controlled via **SPI**, and the LCD is driven using **I2C**,
 | **IS25LP128F**        | Serial Flash Memory (SPI).                           |
 | **SerLCD**            | SparkFun 20x4 Serial LCD Display (I2C).              |
 
-- 
+
 ## Project Goals
 
 The main goals of this project are:  
@@ -38,6 +37,7 @@ The main goals of this project are:
 - Implement reliable data storage and retrieval from the flash memory.
 - Keep the code minimal, optimized, and dependency-free.
 
+
 ## Task Scheduling & Application  
 
 The project uses a simple bare-metal scheduler to manage three tasks:  
@@ -46,7 +46,8 @@ The project uses a simple bare-metal scheduler to manage three tasks:
 - **Task02 (Flash Memory Handler)** : Handles SPI flash operations, including erase, write, read, and verification every 5 seconds.  
 - **Task03 (LCD Display)**          : Displays the current flash operation status on the SerLCD via I2C.  
 
-Each task runs at a predefined interval without an RTOS, ensuring efficient execution.  
+Each task runs based on the time intervals set for it without an RTOS.
+
 
 ## Getting Started
 
