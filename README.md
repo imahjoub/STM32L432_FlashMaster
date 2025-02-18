@@ -60,3 +60,6 @@ To set up the hardware, connect the components as follows:
 
 ### Circuit Overview
 Below is the circuit of the STM32L432KC with the flash memory and LCD display:  
+
+![IMG_0675](https://github.com/user-attachments/assets/22441bd3-793f-4753-89ff-9966460a2b2c)
+
