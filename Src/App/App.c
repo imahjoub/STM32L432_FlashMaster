@@ -1,21 +1,6 @@
-#include <stdint.h>
-#include <stdbool.h>
-
 #include <Mcal/Mcu.h>
-#include <Mcal/SysTick.h>
+#include <Mcal/Systick.h>
 #include <OS/OS.h>
-
-#include <Cdd/CddExtFlash/CddExtFlash.h>
-#include <Cdd/CddExtFlash/CddExtFlash_DataProcess.h>
-
-#include <Cdd/CddSerLCD/CddSerLCD_I2c.h>
-#include <Cdd/CddI2c/CddI2c.h>
-#include <Cdd/CddSpi/CddSpi.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <Util/UtilTimer.h>
-#include <Util/Md5/Md5.h>
 
 int main(void)
 {
