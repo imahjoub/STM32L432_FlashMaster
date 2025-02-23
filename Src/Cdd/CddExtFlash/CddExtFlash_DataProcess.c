@@ -64,7 +64,7 @@ void Flash_WaitForWriteToBeEnabled(void)
 
   do
   {
-    Flash_Receive(&buffer[1U], 1U);  //SR1 is repeteadly sent until Flash is selected
+    Flash_Receive(&buffer[1U], 1U);
   } while (!(buffer[1U] & SR1_BIT_WEL));
 
   CddSpi_CsDisable();
@@ -93,7 +93,7 @@ void Flash_WaitForWritingComplete(void)
   do
   {
     buffer[1U] = 0xFFU;
-    Flash_Receive(&buffer[1U], 1U);  /*SR1 is repeteadly sent until Flash is selected */
+    Flash_Receive(&buffer[1U], 1U);
   } while ((buffer[1U] & SR1_BIT_BUSY));
 
   CddSpi_CsDisable();
@@ -125,7 +125,7 @@ void Flash_Read(uint32_t addr, uint8_t* data, uint32_t dataSize)
 
   CddSpi_CsEnable();
 
-  SPI_Transmit(buffer, 4U);  // "normal/slow" read command doesn't need sending dummy byte
+  SPI_Transmit(buffer, 4U);
 
   uint8_t DummyRead[1U] = {0xFFU};
 

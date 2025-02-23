@@ -55,12 +55,12 @@ uint8_t CddSerLcd_Init(void)
   // create i2c data stream
   uint8_t TransmitData[6U] =
   {
-    SPECIAL_COMMAND,                            /* special command character */
+    SPECIAL_COMMAND,                              /* special command character */
     LCD_DISPLAYCONTROL | CddSerLcd_Control,       /* display command           */
-    SPECIAL_COMMAND,                            /* command character         */
+    SPECIAL_COMMAND,                              /* command character         */
     LCD_ENTRYMODESET   | CddSerLcd_Mode,          /* entry mode command        */
-    SETTING_COMMAND,                            /* Put LCD into setting mode */
-    CLEAR_COMMAND                               /* clear display             */
+    SETTING_COMMAND,                              /* Put LCD into setting mode */
+    CLEAR_COMMAND                                 /* clear display             */
   };
 
   /* transmission of data stream */
